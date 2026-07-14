@@ -7,6 +7,7 @@ import { validateKnowledgeBase } from "./validate_knowledge_base.mjs";
 const PROVINCES = ["江苏", "浙江", "山西", "湖北", "四川", "山东", "甘肃", "安徽"];
 const POLICY_HEADERS = [
   "文件标题",
+  "知识摘要",
   "详细解读",
   "发文编号",
   "发布单位",
@@ -41,6 +42,7 @@ function joinSourceAttachments(documentIds, documents) {
 function policyRow(document) {
   return [
     document.title,
+    document.knowledgeSummary,
     document.detailedSummary,
     document.documentNumber,
     document.issuer,
@@ -103,10 +105,11 @@ export async function exportKnowledgeBase(inputPath, outputPath) {
   writeSheet(
     workbook,
     "基础概念",
-    ["概念", "通俗解释", "详细解读", "关联机制", "适用范围", "来源文件", "发文编号", "链接", "查看文件", "附件归档", "核验日期"],
+    ["概念", "通俗解释", "知识摘要", "详细解读", "关联机制", "适用范围", "来源文件", "发文编号", "链接", "查看文件", "附件归档", "核验日期"],
     store.concepts.map((concept) => [
       concept.name,
       concept.plainExplanation,
+      concept.knowledgeSummary,
       concept.detailedSummary,
       (concept.relatedMechanisms ?? []).join("；"),
       concept.scope,
@@ -146,10 +149,10 @@ export async function exportKnowledgeBase(inputPath, outputPath) {
     store.updateEvents.map((event) => [event.occurredAt, event.type, event.subjectId, event.note]),
   );
 
-  await workbook.inspect({ kind: "table", range: "基础概念!A1:K2", include: "values" });
+  await workbook.inspect({ kind: "table", range: "基础概念!A1:L2", include: "values" });
   await workbook.inspect({ kind: "match", searchTerm: "#REF!|#DIV/0!|#VALUE!|#NAME\\?|#N/A", options: { useRegex: true, maxResults: 50 } });
-  await workbook.render({ sheetName: "基础概念", range: "A1:K2", scale: 1 });
-  await workbook.render({ sheetName: "江苏", range: "A1:J2", scale: 1 });
+  await workbook.render({ sheetName: "基础概念", range: "A1:L2", scale: 1 });
+  await workbook.render({ sheetName: "江苏", range: "A1:K2", scale: 1 });
 
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   const output = await SpreadsheetFile.exportXlsx(workbook);

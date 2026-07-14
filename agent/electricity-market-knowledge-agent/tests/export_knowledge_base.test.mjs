@@ -1,9 +1,22 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { FileBlob, SpreadsheetFile } from "@oai/artifact-tool";
+import { createRequire } from "node:module";
+import { pathToFileURL } from "node:url";
 import { exportKnowledgeBase } from "../scripts/export_knowledge_base.mjs";
 
+async function loadArtifactTool() {
+  try {
+    return await import("@oai/artifact-tool");
+  } catch (error) {
+    if (error?.code !== "ERR_MODULE_NOT_FOUND") throw error;
+    const requireFromWorkspace = createRequire(`${process.cwd()}/package.json`);
+    const resolvedPath = requireFromWorkspace.resolve("@oai/artifact-tool");
+    return import(pathToFileURL(resolvedPath).href);
+  }
+}
+
 test("exports all required knowledge-base sheets", async () => {
+  const { FileBlob, SpreadsheetFile } = await loadArtifactTool();
   const outputPath = "outputs/test-electricity-market.xlsx";
   await exportKnowledgeBase(
     "agent/electricity-market-knowledge-agent/tests/fixtures/minimal-knowledge.json",
@@ -32,10 +45,11 @@ test("exports all required knowledge-base sheets", async () => {
 
   const provinceHeader = await workbook.inspect({
     kind: "table",
-    range: "江苏!A1:J1",
+    range: "江苏!A1:K1",
     include: "values",
   });
   assert.match(provinceHeader.ndjson, /文件标题/);
+  assert.match(provinceHeader.ndjson, /知识摘要/);
   assert.match(provinceHeader.ndjson, /详细解读/);
   assert.match(provinceHeader.ndjson, /发布单位/);
   assert.match(provinceHeader.ndjson, /发布日期/);

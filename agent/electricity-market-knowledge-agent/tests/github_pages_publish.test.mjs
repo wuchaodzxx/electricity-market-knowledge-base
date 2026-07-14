@@ -25,6 +25,7 @@ function sampleStore() {
         status: "有效",
         firstRecordedAt: "2026-07-14",
         lastVerifiedAt: "2026-07-14",
+        knowledgeSummary: "示例政策用于验证 GitHub Pages 首页生成、知识摘要展示和 Excel 下载。",
         detailedSummary: "示例政策详细解读，用于验证 GitHub Pages 首页生成。",
       },
     ],
@@ -33,6 +34,7 @@ function sampleStore() {
         id: "concept-1",
         name: "机制电价",
         plainExplanation: "示例解释。",
+        knowledgeSummary: "机制电价示例摘要，用于验证 GitHub Pages 发布时的知识摘要字段。",
         detailedSummary: "示例详细解读。",
         relatedMechanisms: ["差价结算"],
         scope: "国家",
@@ -64,14 +66,19 @@ test("prepares GitHub Pages index and dated web archive", async () => {
   const nojekyll = await fs.readFile(path.join(tmpDir, "docs", ".nojekyll"), "utf8");
   const siteHeroAsset = await fs.stat(path.join(tmpDir, "docs", "assets", "electricity-market-hero.png"));
   const archiveHeroAsset = await fs.stat(path.join(tmpDir, "outputs", "assets", "electricity-market-hero.png"));
+  const excelFile = await fs.stat(path.join(tmpDir, "docs", "downloads", "电力市场知识库-2026-07-14.xlsx"));
 
   assert.match(siteHtml, /电力市场知识库/);
+  assert.match(siteHtml, /downloads\/电力市场知识库-2026-07-14\.xlsx/);
+  assert.match(siteHtml, /导出 Excel/);
   assert.match(siteHtml, /assets\/electricity-market-hero\.png/);
   assert.match(siteHtml, /hero-card/);
   assert.match(archiveHtml, /电力市场知识库/);
   assert.match(archiveHtml, /assets\/electricity-market-hero\.png/);
   assert.ok(siteHeroAsset.size > 1000);
   assert.ok(archiveHeroAsset.size > 1000);
+  assert.ok(excelFile.size > 1000);
+  assert.equal(result.excelPath, path.join(tmpDir, "docs", "downloads", "电力市场知识库-2026-07-14.xlsx"));
   assert.equal(nojekyll, "");
   assert.equal(result.pagesUrl, "https://wuchaodzxx.github.io/electricity-market-knowledge-base/");
 });

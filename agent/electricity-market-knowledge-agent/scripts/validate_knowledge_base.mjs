@@ -24,6 +24,16 @@ function hasText(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
 
+function validateKnowledgeSummary(label, value, errors) {
+  if (!hasText(value)) {
+    errors.push(`${label} 缺少 knowledgeSummary`);
+    return;
+  }
+  if (Array.from(value.trim()).length > 200) {
+    errors.push(`${label} 的 knowledgeSummary 必须控制在 200 字以内`);
+  }
+}
+
 function isOfficialUrl(value) {
   try {
     const url = new URL(value);
@@ -77,6 +87,7 @@ export function validateKnowledgeBase(store) {
     for (const field of ["title", "documentNumber", "issuer", "publishedAt", "scope", "status", "firstRecordedAt", "lastVerifiedAt", "localFilePath", "detailedSummary"]) {
       if (!hasText(document[field])) errors.push(`政策文件 ${document.id || "<空>"} 缺少 ${field}`);
     }
+    validateKnowledgeSummary(`政策文件 ${document.id || "<空>"}`, document.knowledgeSummary, errors);
     if (!isOfficialUrl(document.officialUrl)) {
       errors.push(`政策文件 ${document.id || "<空>"} 缺少官方 https 链接`);
     }
@@ -114,6 +125,7 @@ export function validateKnowledgeBase(store) {
     if (!hasText(concept.id) || !hasText(concept.name) || !hasText(concept.plainExplanation) || !hasText(concept.detailedSummary)) {
       errors.push(`基础概念 ${concept.id || "<空>"} 缺少名称、通俗解释或详细解读`);
     }
+    validateKnowledgeSummary(`基础概念 ${concept.id || "<空>"}`, concept.knowledgeSummary, errors);
     validateSourceReferences(concept, documentIds, errors);
   }
 
@@ -124,6 +136,7 @@ export function validateKnowledgeBase(store) {
     for (const field of ["tradingProduct", "detailedSummary", "eligibleParticipants", "managementRequirements", "admissionCriteria", "participationProcess", "assessmentMethod", "status", "lastVerifiedAt"]) {
       if (!hasText(rule[field])) errors.push(`省份规则 ${rule.id || "<空>"} 缺少 ${field}`);
     }
+    validateKnowledgeSummary(`省份规则 ${rule.id || "<空>"}`, rule.knowledgeSummary, errors);
     if (hasText(rule.status) && !VALID_STATUSES.has(rule.status)) {
       errors.push(`省份规则 ${rule.id || "<空>"} 的状态无效`);
     }

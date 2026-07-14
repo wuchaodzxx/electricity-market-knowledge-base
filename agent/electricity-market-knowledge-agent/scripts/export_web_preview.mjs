@@ -8,7 +8,7 @@ const HERO_ASSET_FILE = "electricity-market-hero.png";
 const HERO_ASSET_RELATIVE_PATH = `assets/${HERO_ASSET_FILE}`;
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const HERO_ASSET_SOURCE_PATH = path.resolve(SCRIPT_DIR, "../assets", HERO_ASSET_FILE);
-const POLICY_COLUMNS = ["文件标题", "详细解读", "发文编号", "发布单位", "发布日期", "链接", "查看文件", "附件归档", "状态", "最后核验日期"];
+const POLICY_COLUMNS = ["文件标题", "知识摘要", "发文编号", "发布单位", "发布日期", "链接", "查看文件", "附件归档", "状态", "最后核验日期"];
 
 function joinSourceField(documentIds, documents, field) {
   return documentIds
@@ -33,9 +33,10 @@ function joinSourceAttachments(documentIds, documents) {
 function policyRow(document) {
   return {
     title: document.title,
+    detail: document.detailedSummary,
     values: [
       document.title,
-      document.detailedSummary,
+      document.knowledgeSummary,
       document.documentNumber,
       document.issuer,
       document.publishedAt,
@@ -54,13 +55,14 @@ function buildSheets(store) {
   const sheets = [
     {
       name: "基础概念",
-      columns: ["概念", "通俗解释", "详细解读", "关联机制", "适用范围", "来源文件", "发文编号", "链接", "查看文件", "附件归档", "核验日期"],
+      columns: ["概念", "通俗解释", "知识摘要", "关联机制", "适用范围", "来源文件", "发文编号", "链接", "查看文件", "附件归档", "核验日期"],
       rows: store.concepts.map((concept) => ({
         title: concept.name,
+        detail: concept.detailedSummary,
         values: [
           concept.name,
           concept.plainExplanation,
-          concept.detailedSummary,
+          concept.knowledgeSummary,
           (concept.relatedMechanisms ?? []).join("；"),
           concept.scope,
           joinSourceField(concept.sourceDocumentIds, documents, "title"),
@@ -107,10 +109,11 @@ function jsonForHtml(value) {
   return JSON.stringify(value).replaceAll("<", "\\u003c").replaceAll(">", "\\u003e").replaceAll("&", "\\u0026");
 }
 
-function renderHtml(store) {
+function renderHtml(store, { excelDownloadHref } = {}) {
   const data = {
     generatedAt: new Date().toISOString().slice(0, 10),
     lastUpdatedAt: store.metadata.lastUpdatedAt,
+    excelDownloadHref: excelDownloadHref ?? `downloads/电力市场知识库-${store.metadata.lastUpdatedAt}.xlsx`,
     sheets: buildSheets(store),
   };
 
@@ -278,25 +281,35 @@ function renderHtml(store) {
     .toolbar {
       flex: 0 0 auto;
       z-index: 10;
-      display: grid;
-      gap: 12px;
-      padding: 18px;
+      display: block;
+      padding: 10px 12px;
       border-bottom: 1px solid rgba(219, 229, 238, .9);
       background: rgba(248, 250, 252, .86);
       backdrop-filter: blur(16px);
     }
+    .compact-toolbar,
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
     .tabs {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+      flex: 1 1 auto;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 2px 0;
+      min-width: 0;
     }
     .tab {
       border: 1px solid var(--line);
       background: rgba(255, 255, 255, .88);
       border-radius: 999px;
-      padding: 9px 15px;
+      padding: 7px 12px;
       cursor: pointer;
       color: var(--ink);
+      white-space: nowrap;
       box-shadow: 0 4px 14px rgba(15, 23, 42, .04);
       transition: transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
     }
@@ -312,18 +325,12 @@ function renderHtml(store) {
       font-weight: 700;
       box-shadow: 0 10px 28px rgba(7, 86, 107, .26);
     }
-    .search-row {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
     #searchInput {
-      width: min(680px, 100%);
+      flex: 0 0 clamp(240px, 28vw, 420px);
       border: 1px solid #cfdbe7;
-      border-radius: 16px;
-      padding: 13px 16px;
-      font-size: 15px;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 14px;
       background: rgba(255, 255, 255, .94);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), 0 6px 18px rgba(15, 23, 42, .05);
       outline: none;
@@ -333,6 +340,26 @@ function renderHtml(store) {
       box-shadow: 0 0 0 4px rgba(34, 211, 238, .16), 0 8px 22px rgba(15, 23, 42, .08);
     }
     .hint { color: var(--muted); font-size: 13px; }
+    .result-meta {
+      flex: 0 0 auto;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .export-button {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 9px 13px;
+      background: linear-gradient(135deg, var(--brand-strong), #0e7490);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 750;
+      box-shadow: 0 8px 20px rgba(7, 86, 107, .18);
+    }
+    .export-button:hover { text-decoration: none; filter: brightness(1.04); }
     .card {
       flex: 1 1 auto;
       display: flex;
@@ -342,16 +369,6 @@ function renderHtml(store) {
       border: 0;
       border-radius: 0;
       overflow: hidden;
-    }
-    .sheet-meta {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 14px;
-      background: linear-gradient(90deg, rgba(229, 245, 246, .8), rgba(255, 255, 255, .72));
     }
     .table-wrap,
     .table-scroll-region {
@@ -393,6 +410,10 @@ function renderHtml(store) {
       overflow: hidden;
       max-width: 360px;
       line-height: 1.55;
+    }
+    .summary-tooltip {
+      cursor: help;
+      border-bottom: 1px dotted rgba(7, 86, 107, .38);
     }
     .empty {
       padding: 42px;
@@ -507,7 +528,10 @@ function renderHtml(store) {
       .header-meta .meta-chip:nth-child(n+2) { display: none; }
       main { padding: 10px 10px 16px; }
       .knowledge-shell { border-radius: 18px; }
-      .toolbar { padding: 14px; }
+      .toolbar { padding: 8px; }
+      .toolbar-row { flex-wrap: wrap; }
+      #searchInput { flex: 1 1 100%; }
+      .tabs { order: 2; flex-basis: 100%; }
       .modal-backdrop { padding: 10px; }
     }
   </style>
@@ -529,14 +553,14 @@ function renderHtml(store) {
   <main class="fixed-workbench">
     <section class="knowledge-shell">
       <section class="toolbar" aria-label="筛选工具">
-        <div id="tabs" class="tabs"></div>
-        <div class="search-row">
+        <div class="compact-toolbar toolbar-row">
           <input id="searchInput" type="search" placeholder="搜索概念、政策、交易品种、文号、适用对象……" />
-          <span class="hint">长文本折叠显示，点击“查看详情”阅读完整内容；“链接”跳转官方来源，“查看文件”打开归档 PDF，“附件归档”打开保存的附件。</span>
+          <div id="tabs" class="tabs"></div>
+          <span id="resultMeta" class="result-meta"></span>
+          <a id="exportExcelLink" class="export-button" href="${data.excelDownloadHref}" download>导出 Excel</a>
         </div>
       </section>
       <section class="card">
-        <div id="sheetMeta" class="sheet-meta"></div>
         <div id="tableWrap" class="table-wrap table-scroll-region"></div>
       </section>
     </section>
@@ -555,11 +579,11 @@ function renderHtml(store) {
     let activeSheetIndex = 0;
     let visibleRows = [];
 
-    const longLabels = new Set(["详细解读", "政策/规则总结", "通俗解释", "适用对象", "管理要求", "准入条件", "参与流程", "考核方式", "说明"]);
+    const longLabels = new Set(["知识摘要", "政策/规则总结", "通俗解释", "适用对象", "管理要求", "准入条件", "参与流程", "考核方式", "说明"]);
     const tabs = document.getElementById("tabs");
     const tableWrap = document.getElementById("tableWrap");
     const searchInput = document.getElementById("searchInput");
-    const sheetMeta = document.getElementById("sheetMeta");
+    const resultMeta = document.getElementById("resultMeta");
     const modal = document.getElementById("detailModal");
     const modalTitle = document.getElementById("modalTitle");
     const modalDetails = document.getElementById("modalDetails");
@@ -644,6 +668,7 @@ function renderHtml(store) {
     }
 
     function detailTextForRow(sheet, row) {
+      if (row.detail) return row.detail;
       const preferredLabels = ["详细解读", "政策/规则总结", "通俗解释", "说明"];
       for (const label of preferredLabels) {
         const index = sheet.columns.indexOf(label);
@@ -678,13 +703,14 @@ function renderHtml(store) {
       if (label === "查看文件") return renderLinks(value, "查看文件");
       if (label === "附件归档") return renderAttachmentLinks(value);
       const safe = escapeHtml(value);
+      if (label === "知识摘要") return '<div class="clamped-text summary-tooltip" title="' + safe + '">' + safe + '</div>';
       if (longLabels.has(label) || safe.length > 90) return '<div class="clamped-text">' + safe + '</div>';
       if (label === "状态" && value === "待核验") return '<span class="badge">待核验</span>';
       return safe || '<span class="hint">未收录</span>';
     }
 
     function rowSearchText(sheet, row) {
-      return sheet.columns.concat(row.values).join(" ").toLowerCase();
+      return sheet.columns.concat(row.values, row.detail ?? "").join(" ").toLowerCase();
     }
 
     function renderTabs() {
@@ -698,7 +724,7 @@ function renderHtml(store) {
       const sheet = appData.sheets[activeSheetIndex];
       const query = searchInput.value.trim().toLowerCase();
       visibleRows = sheet.rows.filter((row) => !query || rowSearchText(sheet, row).includes(query));
-      sheetMeta.innerHTML = '<span>当前页：<strong>' + escapeHtml(sheet.name) + '</strong></span><span>显示 ' + visibleRows.length + ' / ' + sheet.rows.length + ' 条</span>';
+      resultMeta.textContent = '显示 ' + visibleRows.length + ' / ' + sheet.rows.length + ' 条';
 
       if (visibleRows.length === 0) {
         tableWrap.innerHTML = '<div class="empty">没有匹配记录</div>';
@@ -755,7 +781,7 @@ async function copyWebAssets(outputPath) {
   await fs.copyFile(HERO_ASSET_SOURCE_PATH, path.join(assetDir, HERO_ASSET_FILE));
 }
 
-export async function exportWebPreview(inputPath, outputPath) {
+export async function exportWebPreview(inputPath, outputPath, options = {}) {
   const store = JSON.parse(await fs.readFile(inputPath, "utf8"));
   const validationErrors = validateKnowledgeBase(store);
   if (validationErrors.length > 0) {
@@ -764,7 +790,7 @@ export async function exportWebPreview(inputPath, outputPath) {
 
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   await copyWebAssets(outputPath);
-  await fs.writeFile(outputPath, renderHtml(store), "utf8");
+  await fs.writeFile(outputPath, renderHtml(store, options), "utf8");
 }
 
 function readOption(name) {

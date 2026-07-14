@@ -29,6 +29,7 @@ const store = {
           localFilePath: "source-files/attachments/2026-01-01-示例文件(苏发改价格〔2026〕1号)/rule.docx",
         },
       ],
+      knowledgeSummary: "示例文件用于测试政策文件的知识摘要字段，要求内容简明、可用于表格快速扫读，并控制在 200 字以内。",
       detailedSummary: "这是一段用于测试的政策文件详细解读，说明文件的适用范围、核心要求和后续规则整理依据。",
     },
   ],
@@ -67,6 +68,24 @@ test("rejects a policy document whose local archive is not a PDF", () => {
   );
 });
 
+test("rejects a policy document without knowledge summary", () => {
+  const invalidStore = structuredClone(store);
+  invalidStore.policyDocuments[0].knowledgeSummary = "";
+  assert.match(
+    validateKnowledgeBase(invalidStore).join("\n"),
+    /knowledgeSummary/,
+  );
+});
+
+test("rejects a knowledge summary longer than 200 characters", () => {
+  const invalidStore = structuredClone(store);
+  invalidStore.policyDocuments[0].knowledgeSummary = "超".repeat(201);
+  assert.match(
+    validateKnowledgeBase(invalidStore).join("\n"),
+    /200/,
+  );
+});
+
 test("rejects unsafe local attachment paths", () => {
   const invalidStore = structuredClone(store);
   invalidStore.policyDocuments[0].localAttachments[0].localFilePath = "../secret.docx";
@@ -82,6 +101,7 @@ test("rejects a rule with a missing source document", () => {
     id: "rule-1",
     province: "江苏",
     tradingProduct: "绿电交易",
+    knowledgeSummary: "绿电交易规则摘要，用于验证省份规则的知识摘要字段。",
     detailedSummary: "这是一段用于测试的省份规则详细总结，说明交易品种的适用对象、准入和考核要求。",
     eligibleParticipants: "用户",
     managementRequirements: "按规则执行",
@@ -104,6 +124,7 @@ test("rejects a provincial rule without detailed summary", () => {
     id: "rule-1",
     province: "江苏",
     tradingProduct: "绿电交易",
+    knowledgeSummary: "绿电交易规则摘要，用于验证省份规则的知识摘要字段。",
     detailedSummary: "",
     eligibleParticipants: "用户",
     managementRequirements: "按规则执行",

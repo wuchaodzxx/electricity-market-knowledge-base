@@ -32,6 +32,7 @@ test("skill preserves the user's detailed-summary and export requirements", asyn
     "不是一句话",
     "按文件复杂度自动调整",
     "尽可能完整",
+    "所有知识增加、更新都必须写入更新记录",
     "政策/规则总结",
     "无需反复确认",
   ]) {
@@ -52,6 +53,10 @@ test("skill preserves web preview requirements", async () => {
     "头部固定",
     "头部不展示英文标题",
     "中文标题和元信息排版紧凑清晰",
+    "紧凑工具栏",
+    "知识摘要",
+    "200 字以内",
+    "导出 Excel",
     "搜索框和页签固定",
     "表格区域滚动",
     "省份页按政策文件维度",

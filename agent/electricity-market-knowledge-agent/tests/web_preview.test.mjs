@@ -35,6 +35,7 @@ function sampleStore() {
         status: "有效",
         firstRecordedAt: "2026-07-14",
         lastVerifiedAt: "2026-07-14",
+        knowledgeSummary: "江苏示例政策用于验证省份页以政策文件维度展示，摘要控制在 200 字以内，完整内容仍可通过详情查看。",
         detailedSummary: longSummary,
       },
       {
@@ -50,6 +51,7 @@ function sampleStore() {
         status: "有效",
         firstRecordedAt: "2026-07-14",
         lastVerifiedAt: "2026-07-14",
+        knowledgeSummary: "国家示例政策用于验证知识摘要、详情弹窗和来源归档链接，摘要用于表格快速扫读。",
         detailedSummary: "### 政策定位\n- **核心**：用于验证结构化详情渲染。\n\n### 主要要求\n- 详情弹窗只展示详细解读。",
       },
     ],
@@ -58,6 +60,7 @@ function sampleStore() {
         id: "concept-1",
         name: "机制电价",
         plainExplanation: "用于差价结算的基准价格。",
+        knowledgeSummary: "机制电价是新能源价格结算机制中的基准参数，用于纳入机制电量与市场均价之间的差价结算。",
         detailedSummary: longSummary,
         relatedMechanisms: ["机制电量", "差价结算"],
         scope: "国家",
@@ -70,6 +73,7 @@ function sampleStore() {
         id: "rule-1",
         province: "江苏",
         tradingProduct: "中长期交易",
+        knowledgeSummary: "江苏中长期交易规则摘要，用于验证省份规则也具备 200 字以内知识摘要。",
         detailedSummary: longSummary,
         eligibleParticipants: "发电企业、售电公司、电力用户。",
         managementRequirements: "按交易规则完成申报、成交、结算和信息披露。",
@@ -115,19 +119,25 @@ test("exports an optimized local HTML web preview", async () => {
     "height: 70px",
     "position: fixed",
     "fixed-workbench",
+    "compact-toolbar",
+    "toolbar-row",
     "table-scroll-region",
+    "exportExcelLink",
+    "导出 Excel",
     "backdrop-filter",
     "knowledge-shell",
     "基础概念",
     "国家政策",
     "江苏",
     "文件标题",
+    "知识摘要",
     "发布单位",
     "发布日期",
     "查看文件",
     "查看详情",
     "detailModal",
     "renderStructuredDetail",
+    "summary-tooltip",
     "detail-body",
     "detail-section",
     "clamped-text",
@@ -143,6 +153,8 @@ test("exports an optimized local HTML web preview", async () => {
   }
   assert.ok(!html.includes("Electricity Market Knowledge Base"), "头部不应展示英文标题");
   assert.ok(!html.includes("class=\"eyebrow\""), "头部不应继续使用英文 eyebrow 排版");
+  assert.ok(!html.includes("当前页："), "页面不应保留当前页描述区域");
+  assert.ok(!html.includes(">详细解读</th>"), "网页表格不应继续显示详细解读列名");
   assert.ok(!html.includes("background: linear-gradient(135deg, #0f4c5c, #167182)"), "头部不应继续使用旧的纯色渐变背景");
   assert.ok(!html.includes("modalDetails.innerHTML = sheet.columns.map"), "详情弹窗不应重复展示所有字段");
   assert.ok(!html.includes("grid-template-columns: 140px 1fr"), "详情弹窗不应继续使用字段-值详情表格");

@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import { exportKnowledgeBase } from "./export_knowledge_base.mjs";
 import { exportWebPreview } from "./export_web_preview.mjs";
 
 function readOption(name) {
@@ -23,12 +24,18 @@ export async function prepareGitHubPagesSite({
   }
 
   const archivePath = path.join(outputsDir, `电力市场知识库-网页预览-${date}.html`);
-  await exportWebPreview(inputPath, archivePath);
-  await exportWebPreview(inputPath, sitePath);
+  const excelFileName = `电力市场知识库-${date}.xlsx`;
+  const excelPath = path.join(path.dirname(sitePath), "downloads", excelFileName);
+  const excelDownloadHref = `downloads/${excelFileName}`;
+
+  await exportKnowledgeBase(inputPath, excelPath);
+  await exportWebPreview(inputPath, archivePath, { excelDownloadHref });
+  await exportWebPreview(inputPath, sitePath, { excelDownloadHref });
   await fs.writeFile(path.join(path.dirname(sitePath), ".nojekyll"), "", "utf8");
 
   return {
     archivePath,
+    excelPath,
     sitePath,
     pagesUrl: "https://wuchaodzxx.github.io/electricity-market-knowledge-base/",
   };

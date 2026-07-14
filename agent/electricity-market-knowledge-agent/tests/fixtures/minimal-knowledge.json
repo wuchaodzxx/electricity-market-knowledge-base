@@ -17,6 +17,7 @@
       "status": "有效",
       "firstRecordedAt": "2026-07-14",
       "lastVerifiedAt": "2026-07-14",
+      "knowledgeSummary": "江苏示例政策用于验证省份页按政策文件维度导出，并检查知识摘要、详细解读和来源归档字段。",
       "detailedSummary": "### 政策定位\n- 用于验证省份页按政策文件维度导出。",
       "localFilePath": "source-files/2026-01-01-江苏示例政策(苏发改价〔2026〕1号).pdf",
       "localAttachments": []

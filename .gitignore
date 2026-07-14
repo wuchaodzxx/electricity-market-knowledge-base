@@ -3,5 +3,6 @@
 outputs/*.xlsx
 outputs/*.png
 outputs/*.ndjson
+docs/downloads/*.inspect.ndjson
 node_modules/
 node_modules
