@@ -108,3 +108,18 @@ export function validateKnowledgeBase(store) {
 
   return errors;
 }
+
+function readOption(name) {
+  const position = process.argv.indexOf(name);
+  return position === -1 ? undefined : process.argv[position + 1];
+}
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const inputPath = readOption("--input");
+  if (!inputPath) throw new Error("用法：node validate_knowledge_base.mjs --input <知识库.json>");
+  const fs = await import("node:fs/promises");
+  const store = JSON.parse(await fs.readFile(inputPath, "utf8"));
+  const errors = validateKnowledgeBase(store);
+  if (errors.length > 0) throw new Error(`知识库校验失败：\n${errors.join("\n")}`);
+  console.log("知识库校验通过");
+}

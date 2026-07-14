@@ -1,1 +1,6 @@
 .worktrees/
+outputs/*.xlsx
+outputs/*.png
+outputs/*.ndjson
+node_modules/
+node_modules
