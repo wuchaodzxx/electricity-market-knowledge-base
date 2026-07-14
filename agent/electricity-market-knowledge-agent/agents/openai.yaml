@@ -1,6 +1,6 @@
 interface:
   display_name: "电力市场知识库"
-  short_description: "八省电力市场知识库维护、导出、网页预览和公开发布"
+  short_description: "八省电力市场知识库维护、导出、网页预览和 Gitee 发布"
   default_prompt: "使用 $electricity-market-knowledge-agent 维护或查询电力市场知识库。"
 policy:
   allow_implicit_invocation: true

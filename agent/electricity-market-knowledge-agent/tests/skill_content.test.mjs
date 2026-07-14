@@ -56,21 +56,23 @@ test("skill preserves web preview requirements", async () => {
   }
 });
 
-test("skill preserves GitHub Pages publish requirements", async () => {
+test("skill preserves Gitee publish requirements", async () => {
   const skill = await fs.readFile(
     "agent/electricity-market-knowledge-agent/SKILL.md",
     "utf8",
   );
   for (const requiredText of [
-    "publish_github_pages.mjs",
-    "GitHub Pages",
+    "publish_gitee_pages.mjs",
+    "Gitee",
     "docs/index.html",
     "公开访问",
-    "wuchaodzxx/electricity-market-knowledge-base",
-    "https://wuchaodzxx.github.io/electricity-market-knowledge-base/",
+    "https://gitee.com/wuchaodzxx/electricity-market-knowledge-base.git",
+    "https://wuchaodzxx.gitee.io/electricity-market-knowledge-base/",
+    "gitee main",
   ]) {
     assert.match(skill, new RegExp(requiredText.replaceAll("/", "\\/")));
   }
+  assert.doesNotMatch(skill, /GitHub Pages|github\.io|publish_github_pages\.mjs/);
 });
 
 test("skill preserves source-file archive requirements", async () => {
