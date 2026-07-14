@@ -37,6 +37,21 @@ function sampleStore() {
         lastVerifiedAt: "2026-07-14",
         detailedSummary: longSummary,
       },
+      {
+        id: "doc-2",
+        title: "示例国家政策",
+        documentNumber: "国发〔2026〕1号",
+        issuer: "国务院",
+        publishedAt: "2026-02-01",
+        officialUrl: "https://example.gov.cn/national",
+        localFilePath: "source-files/2026-02-01-示例国家政策(国发〔2026〕1号).pdf",
+        localAttachments: [],
+        scope: "国家",
+        status: "有效",
+        firstRecordedAt: "2026-07-14",
+        lastVerifiedAt: "2026-07-14",
+        detailedSummary: "### 政策定位\n- **核心**：用于验证结构化详情渲染。\n\n### 主要要求\n- 详情弹窗只展示详细解读。",
+      },
     ],
     concepts: [
       {
@@ -93,15 +108,25 @@ test("exports an optimized local HTML web preview", async () => {
     "电力市场知识库",
     "assets/electricity-market-hero.png",
     "hero-card",
+    "app-header",
+    "height: 70px",
+    "position: fixed",
+    "fixed-workbench",
+    "table-scroll-region",
     "backdrop-filter",
     "knowledge-shell",
     "基础概念",
     "国家政策",
     "江苏",
-    "政策/规则总结",
+    "文件标题",
+    "发布单位",
+    "发布日期",
     "查看文件",
     "查看详情",
     "detailModal",
+    "renderStructuredDetail",
+    "detail-body",
+    "detail-section",
     "clamped-text",
     "searchInput",
     "https://example.gov.cn/policy",
@@ -114,4 +139,6 @@ test("exports an optimized local HTML web preview", async () => {
     assert.ok(html.includes(expectedText), `网页应包含：${expectedText}`);
   }
   assert.ok(!html.includes("background: linear-gradient(135deg, #0f4c5c, #167182)"), "头部不应继续使用旧的纯色渐变背景");
+  assert.ok(!html.includes("modalDetails.innerHTML = sheet.columns.map"), "详情弹窗不应重复展示所有字段");
+  assert.ok(!html.includes("grid-template-columns: 140px 1fr"), "详情弹窗不应继续使用字段-值详情表格");
 });

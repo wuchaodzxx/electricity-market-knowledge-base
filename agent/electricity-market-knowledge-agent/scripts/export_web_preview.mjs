@@ -8,6 +8,7 @@ const HERO_ASSET_FILE = "electricity-market-hero.png";
 const HERO_ASSET_RELATIVE_PATH = `assets/${HERO_ASSET_FILE}`;
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const HERO_ASSET_SOURCE_PATH = path.resolve(SCRIPT_DIR, "../assets", HERO_ASSET_FILE);
+const POLICY_COLUMNS = ["文件标题", "详细解读", "发文编号", "发布单位", "发布日期", "链接", "查看文件", "附件归档", "状态", "最后核验日期"];
 
 function joinSourceField(documentIds, documents, field) {
   return documentIds
@@ -27,6 +28,24 @@ function joinSourceAttachments(documentIds, documents) {
     .map((documentId) => formatAttachments(documents.get(documentId)?.localAttachments ?? []))
     .filter(Boolean)
     .join("；");
+}
+
+function policyRow(document) {
+  return {
+    title: document.title,
+    values: [
+      document.title,
+      document.detailedSummary,
+      document.documentNumber,
+      document.issuer,
+      document.publishedAt,
+      document.officialUrl,
+      document.localFilePath,
+      formatAttachments(document.localAttachments ?? []),
+      document.status,
+      document.lastVerifiedAt,
+    ],
+  };
 }
 
 function buildSheets(store) {
@@ -55,67 +74,20 @@ function buildSheets(store) {
     },
     {
       name: "国家政策",
-      columns: ["文件标题", "详细解读", "发文编号", "发布单位", "发布日期", "链接", "查看文件", "附件归档", "状态", "最后核验日期"],
+      columns: POLICY_COLUMNS,
       rows: store.policyDocuments
         .filter((document) => document.scope === "国家")
-        .map((document) => ({
-          title: document.title,
-          values: [
-            document.title,
-            document.detailedSummary,
-            document.documentNumber,
-            document.issuer,
-            document.publishedAt,
-            document.officialUrl,
-            document.localFilePath,
-            formatAttachments(document.localAttachments ?? []),
-            document.status,
-            document.lastVerifiedAt,
-          ],
-        })),
+        .map((document) => policyRow(document)),
     },
   ];
 
   for (const province of PROVINCES) {
     sheets.push({
       name: province,
-      columns: [
-        "交易品种",
-        "政策/规则总结",
-        "适用对象",
-        "管理要求",
-        "准入条件",
-        "参与流程",
-        "考核方式",
-        "来源文件",
-        "发文编号",
-        "链接",
-        "查看文件",
-        "附件归档",
-        "状态",
-        "最后核验日期",
-      ],
-      rows: store.provincialRules
-        .filter((rule) => rule.province === province)
-        .map((rule) => ({
-          title: `${rule.province}｜${rule.tradingProduct}`,
-          values: [
-            rule.tradingProduct,
-            rule.detailedSummary,
-            rule.eligibleParticipants,
-            rule.managementRequirements,
-            rule.admissionCriteria,
-            rule.participationProcess,
-            rule.assessmentMethod,
-            joinSourceField(rule.sourceDocumentIds, documents, "title"),
-            joinSourceField(rule.sourceDocumentIds, documents, "documentNumber"),
-            joinSourceField(rule.sourceDocumentIds, documents, "officialUrl"),
-            joinSourceField(rule.sourceDocumentIds, documents, "localFilePath"),
-            joinSourceAttachments(rule.sourceDocumentIds, documents),
-            rule.status,
-            rule.lastVerifiedAt,
-          ],
-        })),
+      columns: POLICY_COLUMNS,
+      rows: store.policyDocuments
+        .filter((document) => document.scope === province)
+        .map((document) => policyRow(document)),
     });
   }
 
@@ -172,34 +144,41 @@ function renderHtml(store) {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
       background: var(--bg-radial);
       color: var(--ink);
-    }
-    header {
-      position: relative;
-      min-height: 278px;
+      height: 100vh;
       overflow: hidden;
-      padding: 34px 32px 84px;
+    }
+    .app-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 30;
+      height: 70px;
+      overflow: hidden;
+      padding: 0 24px;
       background-image:
         linear-gradient(90deg, rgba(3, 19, 35, .94) 0%, rgba(6, 41, 61, .82) 34%, rgba(6, 58, 76, .38) 72%, rgba(5, 24, 41, .58) 100%),
         url("${HERO_ASSET_RELATIVE_PATH}");
       background-size: cover;
-      background-position: center;
+      background-position: center 42%;
       color: #fff;
+      box-shadow: 0 14px 40px rgba(7, 20, 34, .22);
     }
-    header::before {
+    .app-header::before {
       content: "";
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(circle at 20% 28%, rgba(34, 211, 238, .24), transparent 32%),
-        linear-gradient(180deg, transparent 58%, rgba(243, 247, 251, .96) 100%);
+        radial-gradient(circle at 24% 38%, rgba(34, 211, 238, .22), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(0, 18, 32, .16));
       pointer-events: none;
     }
-    header::after {
+    .app-header::after {
       content: "";
       position: absolute;
-      left: 32px;
-      right: 32px;
-      bottom: 34px;
+      left: 24px;
+      right: 24px;
+      bottom: 0;
       height: 1px;
       background: linear-gradient(90deg, rgba(34, 211, 238, .65), rgba(246, 165, 26, .38), transparent);
       opacity: .8;
@@ -207,21 +186,28 @@ function renderHtml(store) {
     .hero-card {
       position: relative;
       z-index: 1;
-      width: min(920px, 100%);
-      padding: 28px 30px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      width: min(1480px, 100%);
+      margin: 0 auto;
+      padding: 0;
       border: 1px solid rgba(255, 255, 255, .22);
-      border-radius: 28px;
-      background: linear-gradient(135deg, rgba(8, 51, 68, .62), rgba(8, 83, 102, .24));
-      box-shadow: 0 28px 90px rgba(0, 15, 31, .32);
+      border-width: 0 1px;
+      border-radius: 0;
+      background: linear-gradient(135deg, rgba(8, 51, 68, .18), rgba(8, 83, 102, .08));
+      box-shadow: none;
       backdrop-filter: blur(14px);
     }
     .eyebrow {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      margin: 0 0 14px;
+      margin: 0;
       color: #bff7ff;
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 800;
       letter-spacing: .12em;
       text-transform: uppercase;
@@ -235,23 +221,27 @@ function renderHtml(store) {
       box-shadow: 0 0 18px rgba(34, 211, 238, .95);
     }
     h1 {
-      margin: 0 0 12px;
-      font-size: clamp(30px, 5vw, 54px);
+      margin: 0;
+      font-size: 22px;
       line-height: 1.05;
       letter-spacing: -.04em;
+      white-space: nowrap;
     }
     .subhead {
-      max-width: 760px;
+      flex: 1;
       margin: 0;
       color: rgba(255, 255, 255, .88);
-      line-height: 1.75;
-      font-size: 15px;
+      line-height: 1.5;
+      font-size: 13px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .hero-metrics {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 20px;
+      margin: 0;
     }
     .metric-chip {
       display: inline-flex;
@@ -259,31 +249,40 @@ function renderHtml(store) {
       gap: 7px;
       border: 1px solid rgba(255, 255, 255, .2);
       border-radius: 999px;
-      padding: 8px 12px;
+      padding: 6px 10px;
       background: rgba(255, 255, 255, .1);
       color: rgba(255, 255, 255, .92);
-      font-size: 13px;
+      font-size: 12px;
       backdrop-filter: blur(10px);
     }
     .metric-chip strong { color: #fff; }
     main {
-      position: relative;
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      bottom: 0;
       z-index: 2;
       max-width: 1480px;
-      margin: -52px auto 0;
-      padding: 0 24px 46px;
+      margin: 0 auto;
+      padding: 14px 24px 24px;
+      display: flex;
+      min-height: 0;
     }
     .knowledge-shell {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
       border: 1px solid rgba(255, 255, 255, .76);
-      border-radius: 28px;
+      border-radius: 22px;
       background: rgba(255, 255, 255, .72);
       box-shadow: var(--shadow);
       backdrop-filter: blur(16px);
       overflow: hidden;
     }
     .toolbar {
-      position: sticky;
-      top: 0;
+      flex: 0 0 auto;
       z-index: 10;
       display: grid;
       gap: 12px;
@@ -341,6 +340,10 @@ function renderHtml(store) {
     }
     .hint { color: var(--muted); font-size: 13px; }
     .card {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
       background: rgba(255, 255, 255, .92);
       border: 0;
       border-radius: 0;
@@ -356,7 +359,13 @@ function renderHtml(store) {
       font-size: 14px;
       background: linear-gradient(90deg, rgba(229, 245, 246, .8), rgba(255, 255, 255, .72));
     }
-    .table-wrap { overflow: auto; max-height: calc(100vh - 260px); }
+    .table-wrap,
+    .table-scroll-region {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
+      max-height: none;
+    }
     table {
       border-collapse: separate;
       border-spacing: 0;
@@ -449,20 +458,41 @@ function renderHtml(store) {
       padding: 8px 12px;
       cursor: pointer;
     }
-    .details {
-      display: grid;
-      grid-template-columns: 140px 1fr;
-      gap: 0;
-      padding: 6px 20px 22px;
+    .detail-body {
+      padding: 18px 22px 28px;
+      color: #263546;
+      line-height: 1.82;
+      font-size: 15px;
     }
-    .details dt, .details dd {
-      margin: 0;
-      padding: 12px 0;
-      border-bottom: 1px solid #f0f2f5;
-      line-height: 1.75;
+    .detail-section {
+      margin: 0 0 18px;
+      padding: 16px 18px;
+      border: 1px solid #e4edf4;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #ffffff, #f8fcff);
     }
-    .details dt { color: var(--muted); font-weight: 700; }
-    .details dd { white-space: pre-wrap; }
+    .detail-section h3 {
+      margin: 0 0 10px;
+      color: #07566b;
+      font-size: 17px;
+    }
+    .detail-section p { margin: 8px 0; }
+    .detail-section ul {
+      margin: 8px 0 0;
+      padding-left: 22px;
+    }
+    .detail-section li { margin: 6px 0; }
+    .detail-section strong {
+      color: #083344;
+      background: linear-gradient(180deg, transparent 58%, rgba(34, 211, 238, .22) 0);
+      padding: 0 2px;
+    }
+    mark {
+      border-radius: 6px;
+      padding: 1px 4px;
+      background: #fff1c2;
+      color: #7c2d12;
+    }
     .badge {
       display: inline-flex;
       align-items: center;
@@ -474,20 +504,21 @@ function renderHtml(store) {
       font-weight: 700;
     }
     @media (max-width: 720px) {
-      header { padding: 22px 16px 78px; min-height: 300px; }
-      header::after { left: 18px; right: 18px; }
-      .hero-card { padding: 22px 18px; border-radius: 22px; }
-      main { margin-top: -48px; padding: 0 12px 28px; }
-      .knowledge-shell { border-radius: 22px; }
+      .app-header { padding: 0 12px; }
+      .app-header::after { left: 12px; right: 12px; }
+      .eyebrow { display: none; }
+      .hero-card { gap: 10px; }
+      .subhead { display: none; }
+      .hero-metrics .metric-chip:nth-child(n+2) { display: none; }
+      main { padding: 10px 10px 16px; }
+      .knowledge-shell { border-radius: 18px; }
       .toolbar { padding: 14px; }
-      .details { grid-template-columns: 1fr; }
-      .details dt { border-bottom: 0; padding-bottom: 0; }
       .modal-backdrop { padding: 10px; }
     }
   </style>
 </head>
 <body>
-  <header>
+  <header class="app-header">
     <section class="hero-card" aria-label="电力市场知识库概览">
       <p class="eyebrow">Electricity Market Knowledge Base</p>
       <h1>电力市场知识库</h1>
@@ -499,7 +530,7 @@ function renderHtml(store) {
       </div>
     </section>
   </header>
-  <main>
+  <main class="fixed-workbench">
     <section class="knowledge-shell">
       <section class="toolbar" aria-label="筛选工具">
         <div id="tabs" class="tabs"></div>
@@ -510,7 +541,7 @@ function renderHtml(store) {
       </section>
       <section class="card">
         <div id="sheetMeta" class="sheet-meta"></div>
-        <div id="tableWrap" class="table-wrap"></div>
+        <div id="tableWrap" class="table-wrap table-scroll-region"></div>
       </section>
     </section>
   </main>
@@ -520,7 +551,7 @@ function renderHtml(store) {
         <h2 id="modalTitle" class="modal-title">详情</h2>
         <button class="close-button" type="button" onclick="closeModal()">关闭</button>
       </div>
-      <dl id="modalDetails" class="details"></dl>
+      <div id="modalDetails" class="detail-body"></div>
     </article>
   </div>
   <script>
@@ -544,6 +575,85 @@ function renderHtml(store) {
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
+    }
+
+    function renderInline(value) {
+      return escapeHtml(value)
+        .replace(/\\*\\*([^*]+)\\*\\*/g, "<strong>$1</strong>")
+        .replace(/==([^=]+)==/g, "<mark>$1</mark>");
+    }
+
+    function splitSentences(value) {
+      return String(value ?? "")
+        .split(/(?<=[。；])\\s*/)
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
+
+    function renderStructuredDetail(value) {
+      const text = String(value ?? "").trim();
+      if (!text) return '<section class="detail-section"><p>未收录详细解读。</p></section>';
+
+      if (!/^#{2,3}\\s|^-\\s|^\\d+[.、]\\s/m.test(text)) {
+        const items = splitSentences(text);
+        return '<section class="detail-section"><h3>详细解读</h3><ul>' + items.map((item) => '<li>' + renderInline(item) + '</li>').join("") + '</ul></section>';
+      }
+
+      const lines = text.split(/\\r?\\n/);
+      const sections = [];
+      let current = { title: "详细解读", blocks: [] };
+      let listItems = [];
+
+      function flushList() {
+        if (listItems.length > 0) {
+          current.blocks.push({ type: "list", items: listItems });
+          listItems = [];
+        }
+      }
+
+      function flushSection() {
+        flushList();
+        if (current.blocks.length > 0 || current.title !== "详细解读") sections.push(current);
+      }
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed) {
+          flushList();
+          continue;
+        }
+        const headingMatch = trimmed.match(/^#{2,3}\\s+(.+)$/);
+        if (headingMatch) {
+          flushSection();
+          current = { title: headingMatch[1], blocks: [] };
+          continue;
+        }
+        const listMatch = trimmed.match(/^(?:[-*]|\\d+[.、])\\s+(.+)$/);
+        if (listMatch) {
+          listItems.push(listMatch[1]);
+          continue;
+        }
+        flushList();
+        current.blocks.push({ type: "paragraph", text: trimmed });
+      }
+      flushSection();
+
+      return sections.map((section) => {
+        const blocks = section.blocks.map((block) => {
+          if (block.type === "list") return '<ul>' + block.items.map((item) => '<li>' + renderInline(item) + '</li>').join("") + '</ul>';
+          return '<p>' + renderInline(block.text) + '</p>';
+        }).join("");
+        return '<section class="detail-section"><h3>' + renderInline(section.title) + '</h3>' + blocks + '</section>';
+      }).join("");
+    }
+
+    function detailTextForRow(sheet, row) {
+      const preferredLabels = ["详细解读", "政策/规则总结", "通俗解释", "说明"];
+      for (const label of preferredLabels) {
+        const index = sheet.columns.indexOf(label);
+        if (index !== -1 && row.values[index]) return row.values[index];
+      }
+      return row.values.join("\\n");
     }
 
     function renderLinks(value, linkText) {
@@ -620,10 +730,7 @@ function renderHtml(store) {
       const sheet = appData.sheets[activeSheetIndex];
       const row = visibleRows[rowIndex];
       modalTitle.textContent = row.title || sheet.name;
-      modalDetails.innerHTML = sheet.columns.map((column, columnIndex) => {
-        const value = column === "链接" ? renderLinks(row.values[columnIndex], "官方链接") : column === "查看文件" ? renderLinks(row.values[columnIndex], "查看文件") : column === "附件归档" ? renderAttachmentLinks(row.values[columnIndex]) : escapeHtml(row.values[columnIndex] || "未收录");
-        return '<dt>' + escapeHtml(column) + '</dt><dd>' + value + '</dd>';
-      }).join("");
+      modalDetails.innerHTML = renderStructuredDetail(detailTextForRow(sheet, row));
       modal.classList.add("open");
     }
 

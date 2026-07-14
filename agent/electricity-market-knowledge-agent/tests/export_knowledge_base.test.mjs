@@ -32,10 +32,14 @@ test("exports all required knowledge-base sheets", async () => {
 
   const provinceHeader = await workbook.inspect({
     kind: "table",
-    range: "江苏!A1:N1",
+    range: "江苏!A1:J1",
     include: "values",
   });
-  assert.match(provinceHeader.ndjson, /政策\/规则总结/);
+  assert.match(provinceHeader.ndjson, /文件标题/);
+  assert.match(provinceHeader.ndjson, /详细解读/);
+  assert.match(provinceHeader.ndjson, /发布单位/);
+  assert.match(provinceHeader.ndjson, /发布日期/);
   assert.match(provinceHeader.ndjson, /查看文件/);
   assert.match(provinceHeader.ndjson, /附件归档/);
+  assert.doesNotMatch(provinceHeader.ndjson, /政策\/规则总结|适用对象|管理要求|准入条件|参与流程|考核方式/);
 });

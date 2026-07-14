@@ -5,16 +5,12 @@ import { pathToFileURL } from "node:url";
 import { validateKnowledgeBase } from "./validate_knowledge_base.mjs";
 
 const PROVINCES = ["江苏", "浙江", "山西", "湖北", "四川", "山东", "甘肃", "安徽"];
-const PROVINCE_HEADERS = [
-  "交易品种",
-  "政策/规则总结",
-  "适用对象",
-  "管理要求",
-  "准入条件",
-  "参与流程",
-  "考核方式",
-  "来源文件",
+const POLICY_HEADERS = [
+  "文件标题",
+  "详细解读",
   "发文编号",
+  "发布单位",
+  "发布日期",
   "链接",
   "查看文件",
   "附件归档",
@@ -40,6 +36,21 @@ function joinSourceAttachments(documentIds, documents) {
     .map((documentId) => formatAttachments(documents.get(documentId)?.localAttachments ?? []))
     .filter(Boolean)
     .join("；");
+}
+
+function policyRow(document) {
+  return [
+    document.title,
+    document.detailedSummary,
+    document.documentNumber,
+    document.issuer,
+    document.publishedAt,
+    document.officialUrl,
+    document.localFilePath,
+    formatAttachments(document.localAttachments ?? []),
+    document.status,
+    document.lastVerifiedAt,
+  ];
 }
 
 async function loadArtifactTool() {
@@ -111,35 +122,20 @@ export async function exportKnowledgeBase(inputPath, outputPath) {
   writeSheet(
     workbook,
     "国家政策",
-    ["文件标题", "详细解读", "发文编号", "发布单位", "发布日期", "链接", "查看文件", "附件归档", "状态", "最后核验日期"],
+    POLICY_HEADERS,
     store.policyDocuments
       .filter((document) => document.scope === "国家")
-      .map((document) => [document.title, document.detailedSummary, document.documentNumber, document.issuer, document.publishedAt, document.officialUrl, document.localFilePath, formatAttachments(document.localAttachments ?? []), document.status, document.lastVerifiedAt]),
+      .map((document) => policyRow(document)),
   );
 
   for (const province of PROVINCES) {
     writeSheet(
       workbook,
       province,
-      PROVINCE_HEADERS,
-      store.provincialRules
-        .filter((rule) => rule.province === province)
-        .map((rule) => [
-          rule.tradingProduct,
-          rule.detailedSummary ?? "",
-          rule.eligibleParticipants,
-          rule.managementRequirements,
-          rule.admissionCriteria,
-          rule.participationProcess,
-          rule.assessmentMethod,
-          joinSourceField(rule.sourceDocumentIds, documents, "title"),
-          joinSourceField(rule.sourceDocumentIds, documents, "documentNumber"),
-          joinSourceField(rule.sourceDocumentIds, documents, "officialUrl"),
-          joinSourceField(rule.sourceDocumentIds, documents, "localFilePath"),
-          joinSourceAttachments(rule.sourceDocumentIds, documents),
-          rule.status,
-          rule.lastVerifiedAt,
-        ]),
+      POLICY_HEADERS,
+      store.policyDocuments
+        .filter((document) => document.scope === province)
+        .map((document) => policyRow(document)),
     );
   }
 
@@ -153,7 +149,7 @@ export async function exportKnowledgeBase(inputPath, outputPath) {
   await workbook.inspect({ kind: "table", range: "基础概念!A1:K2", include: "values" });
   await workbook.inspect({ kind: "match", searchTerm: "#REF!|#DIV/0!|#VALUE!|#NAME\\?|#N/A", options: { useRegex: true, maxResults: 50 } });
   await workbook.render({ sheetName: "基础概念", range: "A1:K2", scale: 1 });
-  await workbook.render({ sheetName: "江苏", range: "A1:N2", scale: 1 });
+  await workbook.render({ sheetName: "江苏", range: "A1:J2", scale: 1 });
 
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   const output = await SpreadsheetFile.exportXlsx(workbook);

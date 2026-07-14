@@ -5,7 +5,23 @@
     "lastUpdatedAt": "2026-07-14"
   },
   "concepts": [],
-  "policyDocuments": [],
+  "policyDocuments": [
+    {
+      "id": "doc-js-test",
+      "title": "江苏示例政策",
+      "documentNumber": "苏发改价〔2026〕1号",
+      "issuer": "江苏省发展和改革委员会",
+      "publishedAt": "2026-01-01",
+      "officialUrl": "https://example.gov.cn/js-policy",
+      "scope": "江苏",
+      "status": "有效",
+      "firstRecordedAt": "2026-07-14",
+      "lastVerifiedAt": "2026-07-14",
+      "detailedSummary": "### 政策定位\n- 用于验证省份页按政策文件维度导出。",
+      "localFilePath": "source-files/2026-01-01-江苏示例政策(苏发改价〔2026〕1号).pdf",
+      "localAttachments": []
+    }
+  ],
   "provincialRules": [],
   "updateEvents": []
 }
