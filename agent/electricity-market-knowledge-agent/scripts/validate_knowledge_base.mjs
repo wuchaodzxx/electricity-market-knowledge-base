@@ -83,6 +83,25 @@ export function validateKnowledgeBase(store) {
     if (hasText(document.localFilePath) && document.localFilePath.includes("..")) {
       errors.push(`政策文件 ${document.id || "<空>"} 的 localFilePath 不得包含上级目录`);
     }
+    if (hasText(document.localFilePath) && !document.localFilePath.toLowerCase().endsWith(".pdf")) {
+      errors.push(`政策文件 ${document.id || "<空>"} 的 localFilePath 必须指向 PDF 归档文件`);
+    }
+    if (document.localAttachments !== undefined) {
+      if (!Array.isArray(document.localAttachments)) {
+        errors.push(`政策文件 ${document.id || "<空>"} 的 localAttachments 必须是数组`);
+      } else {
+        for (const [attachmentIndex, attachment] of document.localAttachments.entries()) {
+          const label = `政策文件 ${document.id || "<空>"} 的 localAttachments[${attachmentIndex}]`;
+          if (!hasText(attachment?.title)) errors.push(`${label} 缺少 title`);
+          if (!isOfficialUrl(attachment?.officialUrl)) errors.push(`${label} 缺少官方 https 链接`);
+          if (!hasText(attachment?.localFilePath)) {
+            errors.push(`${label} 缺少 localFilePath`);
+          } else if (attachment.localFilePath.includes("..")) {
+            errors.push(`${label} 的 localFilePath 不得包含上级目录`);
+          }
+        }
+      }
+    }
     if (hasText(document.status) && !VALID_STATUSES.has(document.status)) {
       errors.push(`政策文件 ${document.id || "<空>"} 的状态无效`);
     }

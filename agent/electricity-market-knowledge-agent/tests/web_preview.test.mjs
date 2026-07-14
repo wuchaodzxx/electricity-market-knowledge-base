@@ -23,7 +23,14 @@ function sampleStore() {
         issuer: "江苏省发展和改革委员会",
         publishedAt: "2026-01-01",
         officialUrl: "https://example.gov.cn/policy",
-        localFilePath: "source-files/2026-01-01-示例政策文件(苏发改价格〔2026〕1号).html",
+        localFilePath: "source-files/2026-01-01-示例政策文件(苏发改价格〔2026〕1号).pdf",
+        localAttachments: [
+          {
+            title: "附件：交易执行规则",
+            officialUrl: "https://example.gov.cn/files/rule.docx",
+            localFilePath: "source-files/attachments/2026-01-01-示例政策文件(苏发改价格〔2026〕1号)/rule.docx",
+          },
+        ],
         scope: "江苏",
         status: "有效",
         firstRecordedAt: "2026-07-14",
@@ -92,8 +99,11 @@ test("exports an optimized local HTML web preview", async () => {
     "clamped-text",
     "searchInput",
     "https://example.gov.cn/policy",
-    "source-files/2026-01-01-示例政策文件(苏发改价格〔2026〕1号).html",
+    "source-files/2026-01-01-示例政策文件(苏发改价格〔2026〕1号).pdf",
     "target=\"_blank\"",
+    "附件归档",
+    "附件：交易执行规则",
+    "source-files/attachments/2026-01-01-示例政策文件(苏发改价格〔2026〕1号)/rule.docx",
   ]) {
     assert.ok(html.includes(expectedText), `网页应包含：${expectedText}`);
   }

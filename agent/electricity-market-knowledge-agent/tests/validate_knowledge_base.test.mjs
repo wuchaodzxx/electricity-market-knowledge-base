@@ -21,7 +21,14 @@ const store = {
       status: "有效",
       firstRecordedAt: "2026-07-14",
       lastVerifiedAt: "2026-07-14",
-      localFilePath: "source-files/2026-01-01-示例文件(苏发改价格〔2026〕1号).html",
+      localFilePath: "source-files/2026-01-01-示例文件(苏发改价格〔2026〕1号).pdf",
+      localAttachments: [
+        {
+          title: "附件：交易执行规则",
+          officialUrl: "https://example.gov.cn/files/rule.docx",
+          localFilePath: "source-files/attachments/2026-01-01-示例文件(苏发改价格〔2026〕1号)/rule.docx",
+        },
+      ],
       detailedSummary: "这是一段用于测试的政策文件详细解读，说明文件的适用范围、核心要求和后续规则整理依据。",
     },
   ],
@@ -48,6 +55,24 @@ test("rejects a policy document without local archived file path", () => {
   assert.match(
     validateKnowledgeBase(invalidStore).join("\n"),
     /localFilePath/,
+  );
+});
+
+test("rejects a policy document whose local archive is not a PDF", () => {
+  const invalidStore = structuredClone(store);
+  invalidStore.policyDocuments[0].localFilePath = "source-files/2026-01-01-示例文件(苏发改价格〔2026〕1号).html";
+  assert.match(
+    validateKnowledgeBase(invalidStore).join("\n"),
+    /PDF/,
+  );
+});
+
+test("rejects unsafe local attachment paths", () => {
+  const invalidStore = structuredClone(store);
+  invalidStore.policyDocuments[0].localAttachments[0].localFilePath = "../secret.docx";
+  assert.match(
+    validateKnowledgeBase(invalidStore).join("\n"),
+    /localAttachments/,
   );
 });
 

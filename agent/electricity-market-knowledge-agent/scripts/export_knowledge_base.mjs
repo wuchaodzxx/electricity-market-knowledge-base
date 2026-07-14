@@ -16,6 +16,8 @@ const PROVINCE_HEADERS = [
   "来源文件",
   "发文编号",
   "链接",
+  "查看文件",
+  "附件归档",
   "状态",
   "最后核验日期",
 ];
@@ -23,6 +25,19 @@ const PROVINCE_HEADERS = [
 function joinSourceField(documentIds, documents, field) {
   return documentIds
     .map((documentId) => documents.get(documentId)?.[field] ?? "")
+    .filter(Boolean)
+    .join("；");
+}
+
+function formatAttachments(attachments = []) {
+  return attachments
+    .map((attachment) => `${attachment.title}：${attachment.localFilePath}`)
+    .join("；");
+}
+
+function joinSourceAttachments(documentIds, documents) {
+  return documentIds
+    .map((documentId) => formatAttachments(documents.get(documentId)?.localAttachments ?? []))
     .filter(Boolean)
     .join("；");
 }
@@ -77,7 +92,7 @@ export async function exportKnowledgeBase(inputPath, outputPath) {
   writeSheet(
     workbook,
     "基础概念",
-    ["概念", "通俗解释", "详细解读", "关联机制", "适用范围", "来源文件", "发文编号", "链接", "核验日期"],
+    ["概念", "通俗解释", "详细解读", "关联机制", "适用范围", "来源文件", "发文编号", "链接", "查看文件", "附件归档", "核验日期"],
     store.concepts.map((concept) => [
       concept.name,
       concept.plainExplanation,
@@ -87,6 +102,8 @@ export async function exportKnowledgeBase(inputPath, outputPath) {
       joinSourceField(concept.sourceDocumentIds, documents, "title"),
       joinSourceField(concept.sourceDocumentIds, documents, "documentNumber"),
       joinSourceField(concept.sourceDocumentIds, documents, "officialUrl"),
+      joinSourceField(concept.sourceDocumentIds, documents, "localFilePath"),
+      joinSourceAttachments(concept.sourceDocumentIds, documents),
       concept.lastVerifiedAt,
     ]),
   );
@@ -94,10 +111,10 @@ export async function exportKnowledgeBase(inputPath, outputPath) {
   writeSheet(
     workbook,
     "国家政策",
-    ["文件标题", "详细解读", "发文编号", "发布单位", "发布日期", "链接", "状态", "最后核验日期"],
+    ["文件标题", "详细解读", "发文编号", "发布单位", "发布日期", "链接", "查看文件", "附件归档", "状态", "最后核验日期"],
     store.policyDocuments
       .filter((document) => document.scope === "国家")
-      .map((document) => [document.title, document.detailedSummary, document.documentNumber, document.issuer, document.publishedAt, document.officialUrl, document.status, document.lastVerifiedAt]),
+      .map((document) => [document.title, document.detailedSummary, document.documentNumber, document.issuer, document.publishedAt, document.officialUrl, document.localFilePath, formatAttachments(document.localAttachments ?? []), document.status, document.lastVerifiedAt]),
   );
 
   for (const province of PROVINCES) {
@@ -118,6 +135,8 @@ export async function exportKnowledgeBase(inputPath, outputPath) {
           joinSourceField(rule.sourceDocumentIds, documents, "title"),
           joinSourceField(rule.sourceDocumentIds, documents, "documentNumber"),
           joinSourceField(rule.sourceDocumentIds, documents, "officialUrl"),
+          joinSourceField(rule.sourceDocumentIds, documents, "localFilePath"),
+          joinSourceAttachments(rule.sourceDocumentIds, documents),
           rule.status,
           rule.lastVerifiedAt,
         ]),
@@ -131,10 +150,10 @@ export async function exportKnowledgeBase(inputPath, outputPath) {
     store.updateEvents.map((event) => [event.occurredAt, event.type, event.subjectId, event.note]),
   );
 
-  await workbook.inspect({ kind: "table", range: "基础概念!A1:I2", include: "values" });
+  await workbook.inspect({ kind: "table", range: "基础概念!A1:K2", include: "values" });
   await workbook.inspect({ kind: "match", searchTerm: "#REF!|#DIV/0!|#VALUE!|#NAME\\?|#N/A", options: { useRegex: true, maxResults: 50 } });
-  await workbook.render({ sheetName: "基础概念", range: "A1:I2", scale: 1 });
-  await workbook.render({ sheetName: "江苏", range: "A1:L2", scale: 1 });
+  await workbook.render({ sheetName: "基础概念", range: "A1:K2", scale: 1 });
+  await workbook.render({ sheetName: "江苏", range: "A1:N2", scale: 1 });
 
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   const output = await SpreadsheetFile.exportXlsx(workbook);
