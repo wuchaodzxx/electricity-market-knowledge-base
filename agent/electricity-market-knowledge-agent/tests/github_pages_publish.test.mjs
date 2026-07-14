@@ -62,9 +62,16 @@ test("prepares GitHub Pages index and dated web archive", async () => {
   const siteHtml = await fs.readFile(sitePath, "utf8");
   const archiveHtml = await fs.readFile(result.archivePath, "utf8");
   const nojekyll = await fs.readFile(path.join(tmpDir, "docs", ".nojekyll"), "utf8");
+  const siteHeroAsset = await fs.stat(path.join(tmpDir, "docs", "assets", "electricity-market-hero.png"));
+  const archiveHeroAsset = await fs.stat(path.join(tmpDir, "outputs", "assets", "electricity-market-hero.png"));
 
   assert.match(siteHtml, /电力市场知识库/);
+  assert.match(siteHtml, /assets\/electricity-market-hero\.png/);
+  assert.match(siteHtml, /hero-card/);
   assert.match(archiveHtml, /电力市场知识库/);
+  assert.match(archiveHtml, /assets\/electricity-market-hero\.png/);
+  assert.ok(siteHeroAsset.size > 1000);
+  assert.ok(archiveHeroAsset.size > 1000);
   assert.equal(nojekyll, "");
   assert.equal(result.pagesUrl, "https://wuchaodzxx.github.io/electricity-market-knowledge-base/");
 });

@@ -87,8 +87,14 @@ test("exports an optimized local HTML web preview", async () => {
   await exportWebPreview(inputPath, outputPath);
 
   const html = await fs.readFile(outputPath, "utf8");
+  const heroAsset = await fs.stat(path.join(tmpDir, "assets", "electricity-market-hero.png"));
+  assert.ok(heroAsset.size > 1000, "网页预览应复制电力元素 hero 背景图资产");
   for (const expectedText of [
     "电力市场知识库",
+    "assets/electricity-market-hero.png",
+    "hero-card",
+    "backdrop-filter",
+    "knowledge-shell",
     "基础概念",
     "国家政策",
     "江苏",
@@ -107,4 +113,5 @@ test("exports an optimized local HTML web preview", async () => {
   ]) {
     assert.ok(html.includes(expectedText), `网页应包含：${expectedText}`);
   }
+  assert.ok(!html.includes("background: linear-gradient(135deg, #0f4c5c, #167182)"), "头部不应继续使用旧的纯色渐变背景");
 });

@@ -1,9 +1,13 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { validateKnowledgeBase } from "./validate_knowledge_base.mjs";
 
 const PROVINCES = ["江苏", "浙江", "山西", "湖北", "四川", "山东", "甘肃", "安徽"];
+const HERO_ASSET_FILE = "electricity-market-hero.png";
+const HERO_ASSET_RELATIVE_PATH = `assets/${HERO_ASSET_FILE}`;
+const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
+const HERO_ASSET_SOURCE_PATH = path.resolve(SCRIPT_DIR, "../assets", HERO_ASSET_FILE);
 
 function joinSourceField(documentIds, documents, field) {
   return documentIds
@@ -147,38 +151,146 @@ function renderHtml(store) {
   <style>
     :root {
       color-scheme: light;
-      --bg: #f6f8fb;
+      --bg: #f3f7fb;
+      --bg-radial: radial-gradient(circle at 16% 0%, rgba(20, 184, 166, .16), transparent 34%),
+        radial-gradient(circle at 88% 8%, rgba(245, 158, 11, .14), transparent 28%),
+        linear-gradient(180deg, #eef6fb 0%, #f8fafc 52%, #eef3f7 100%);
       --card: #ffffff;
-      --ink: #18212f;
+      --ink: #101828;
       --muted: #667085;
-      --line: #e5e7eb;
-      --brand: #0f4c5c;
-      --brand-soft: #e6f3f5;
-      --accent: #f59e0b;
+      --line: #dbe5ee;
+      --brand: #07566b;
+      --brand-strong: #083344;
+      --brand-soft: #e5f5f6;
+      --accent: #f6a51a;
+      --cyan: #22d3ee;
+      --shadow: 0 24px 70px rgba(15, 23, 42, .12);
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-      background: var(--bg);
+      background: var(--bg-radial);
       color: var(--ink);
     }
     header {
-      padding: 28px 32px 18px;
-      background: linear-gradient(135deg, #0f4c5c, #167182);
+      position: relative;
+      min-height: 278px;
+      overflow: hidden;
+      padding: 34px 32px 84px;
+      background-image:
+        linear-gradient(90deg, rgba(3, 19, 35, .94) 0%, rgba(6, 41, 61, .82) 34%, rgba(6, 58, 76, .38) 72%, rgba(5, 24, 41, .58) 100%),
+        url("${HERO_ASSET_RELATIVE_PATH}");
+      background-size: cover;
+      background-position: center;
       color: #fff;
     }
-    h1 { margin: 0 0 8px; font-size: 28px; }
-    .subhead { margin: 0; opacity: .88; }
-    main { padding: 18px 24px 40px; }
+    header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 28%, rgba(34, 211, 238, .24), transparent 32%),
+        linear-gradient(180deg, transparent 58%, rgba(243, 247, 251, .96) 100%);
+      pointer-events: none;
+    }
+    header::after {
+      content: "";
+      position: absolute;
+      left: 32px;
+      right: 32px;
+      bottom: 34px;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(34, 211, 238, .65), rgba(246, 165, 26, .38), transparent);
+      opacity: .8;
+    }
+    .hero-card {
+      position: relative;
+      z-index: 1;
+      width: min(920px, 100%);
+      padding: 28px 30px;
+      border: 1px solid rgba(255, 255, 255, .22);
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(8, 51, 68, .62), rgba(8, 83, 102, .24));
+      box-shadow: 0 28px 90px rgba(0, 15, 31, .32);
+      backdrop-filter: blur(14px);
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 14px;
+      color: #bff7ff;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--cyan);
+      box-shadow: 0 0 18px rgba(34, 211, 238, .95);
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(30px, 5vw, 54px);
+      line-height: 1.05;
+      letter-spacing: -.04em;
+    }
+    .subhead {
+      max-width: 760px;
+      margin: 0;
+      color: rgba(255, 255, 255, .88);
+      line-height: 1.75;
+      font-size: 15px;
+    }
+    .hero-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .metric-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, .1);
+      color: rgba(255, 255, 255, .92);
+      font-size: 13px;
+      backdrop-filter: blur(10px);
+    }
+    .metric-chip strong { color: #fff; }
+    main {
+      position: relative;
+      z-index: 2;
+      max-width: 1480px;
+      margin: -52px auto 0;
+      padding: 0 24px 46px;
+    }
+    .knowledge-shell {
+      border: 1px solid rgba(255, 255, 255, .76);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, .72);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      overflow: hidden;
+    }
     .toolbar {
       position: sticky;
       top: 0;
       z-index: 10;
       display: grid;
       gap: 12px;
-      padding: 14px 0;
-      background: var(--bg);
+      padding: 18px;
+      border-bottom: 1px solid rgba(219, 229, 238, .9);
+      background: rgba(248, 250, 252, .86);
+      backdrop-filter: blur(16px);
     }
     .tabs {
       display: flex;
@@ -187,17 +299,25 @@ function renderHtml(store) {
     }
     .tab {
       border: 1px solid var(--line);
-      background: var(--card);
+      background: rgba(255, 255, 255, .88);
       border-radius: 999px;
-      padding: 8px 14px;
+      padding: 9px 15px;
       cursor: pointer;
       color: var(--ink);
+      box-shadow: 0 4px 14px rgba(15, 23, 42, .04);
+      transition: transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
+    }
+    .tab:hover {
+      transform: translateY(-1px);
+      border-color: rgba(34, 211, 238, .42);
+      box-shadow: 0 8px 22px rgba(15, 23, 42, .08);
     }
     .tab.active {
-      background: var(--brand);
+      background: linear-gradient(135deg, var(--brand-strong), #0e7490);
       border-color: var(--brand);
       color: #fff;
       font-weight: 700;
+      box-shadow: 0 10px 28px rgba(7, 86, 107, .26);
     }
     .search-row {
       display: flex;
@@ -207,30 +327,36 @@ function renderHtml(store) {
     }
     #searchInput {
       width: min(680px, 100%);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 12px 14px;
+      border: 1px solid #cfdbe7;
+      border-radius: 16px;
+      padding: 13px 16px;
       font-size: 15px;
-      background: #fff;
+      background: rgba(255, 255, 255, .94);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), 0 6px 18px rgba(15, 23, 42, .05);
+      outline: none;
+    }
+    #searchInput:focus {
+      border-color: rgba(34, 211, 238, .78);
+      box-shadow: 0 0 0 4px rgba(34, 211, 238, .16), 0 8px 22px rgba(15, 23, 42, .08);
     }
     .hint { color: var(--muted); font-size: 13px; }
     .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
+      background: rgba(255, 255, 255, .92);
+      border: 0;
+      border-radius: 0;
       overflow: hidden;
-      box-shadow: 0 10px 24px rgba(15, 23, 42, .06);
     }
     .sheet-meta {
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      padding: 14px 16px;
+      padding: 16px 20px;
       border-bottom: 1px solid var(--line);
       color: var(--muted);
       font-size: 14px;
+      background: linear-gradient(90deg, rgba(229, 245, 246, .8), rgba(255, 255, 255, .72));
     }
-    .table-wrap { overflow: auto; max-height: calc(100vh - 230px); }
+    .table-wrap { overflow: auto; max-height: calc(100vh - 260px); }
     table {
       border-collapse: separate;
       border-spacing: 0;
@@ -241,20 +367,22 @@ function renderHtml(store) {
     th, td {
       border-bottom: 1px solid var(--line);
       border-right: 1px solid #eef0f3;
-      padding: 10px 12px;
+      padding: 12px 14px;
       text-align: left;
       vertical-align: top;
-      background: #fff;
+      background: rgba(255, 255, 255, .98);
     }
     th {
       position: sticky;
       top: 0;
       z-index: 2;
-      background: #f1f5f9;
-      color: #344054;
+      background: #eaf3f7;
+      color: #274155;
       white-space: nowrap;
+      font-size: 13px;
+      letter-spacing: .02em;
     }
-    tr:hover td { background: #fbfdff; }
+    tr:hover td { background: #f8fcff; }
     .clamped-text {
       display: -webkit-box;
       -webkit-line-clamp: 3;
@@ -268,40 +396,44 @@ function renderHtml(store) {
       text-align: center;
       color: var(--muted);
     }
-    a { color: #0969da; text-decoration: none; }
+    a { color: #08738a; text-decoration: none; font-weight: 650; }
     a:hover { text-decoration: underline; }
     .detail-button {
       border: 0;
-      border-radius: 10px;
-      padding: 8px 10px;
-      background: var(--brand-soft);
-      color: var(--brand);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: linear-gradient(135deg, #e0fbff, #fff7e6);
+      color: #07566b;
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
+      box-shadow: 0 6px 14px rgba(7, 86, 107, .1);
     }
-    .detail-button:hover { outline: 2px solid #b8dfe5; }
+    .detail-button:hover { outline: 2px solid rgba(34, 211, 238, .34); }
     .modal-backdrop {
       display: none;
       position: fixed;
       inset: 0;
       z-index: 50;
-      background: rgba(15, 23, 42, .48);
+      background: rgba(7, 20, 34, .56);
       padding: 28px;
+      backdrop-filter: blur(6px);
     }
     .modal-backdrop.open { display: grid; place-items: center; }
     .modal {
       width: min(980px, 100%);
       max-height: min(760px, 92vh);
       overflow: auto;
-      background: #fff;
-      border-radius: 18px;
+      background: linear-gradient(180deg, #ffffff, #fbfdff);
+      border-radius: 24px;
       box-shadow: 0 24px 80px rgba(15, 23, 42, .28);
+      border: 1px solid rgba(255, 255, 255, .8);
     }
     .modal-header {
       position: sticky;
       top: 0;
-      background: #fff;
+      background: rgba(255, 255, 255, .92);
+      backdrop-filter: blur(12px);
       display: flex;
       justify-content: space-between;
       gap: 12px;
@@ -342,8 +474,12 @@ function renderHtml(store) {
       font-weight: 700;
     }
     @media (max-width: 720px) {
-      header { padding: 22px 18px 16px; }
-      main { padding: 12px; }
+      header { padding: 22px 16px 78px; min-height: 300px; }
+      header::after { left: 18px; right: 18px; }
+      .hero-card { padding: 22px 18px; border-radius: 22px; }
+      main { margin-top: -48px; padding: 0 12px 28px; }
+      .knowledge-shell { border-radius: 22px; }
+      .toolbar { padding: 14px; }
       .details { grid-template-columns: 1fr; }
       .details dt { border-bottom: 0; padding-bottom: 0; }
       .modal-backdrop { padding: 10px; }
@@ -352,20 +488,30 @@ function renderHtml(store) {
 </head>
 <body>
   <header>
-    <h1>电力市场知识库</h1>
-    <p class="subhead">网页预览 · 数据更新日期：${data.lastUpdatedAt} · 生成日期：${data.generatedAt}</p>
-  </header>
-  <main>
-    <section class="toolbar" aria-label="筛选工具">
-      <div id="tabs" class="tabs"></div>
-      <div class="search-row">
-        <input id="searchInput" type="search" placeholder="搜索概念、政策、交易品种、文号、适用对象……" />
-        <span class="hint">长文本默认折叠，点击“查看详情”阅读完整内容；“链接”跳转官方来源，“查看文件”打开本站归档 PDF，“附件归档”打开本站保存的附件。</span>
+    <section class="hero-card" aria-label="电力市场知识库概览">
+      <p class="eyebrow">Electricity Market Knowledge Base</p>
+      <h1>电力市场知识库</h1>
+      <p class="subhead">面向电力市场小白的政策、概念与省级交易规则知识库。长文本默认折叠，来源链接和本地归档文件可直接跳转查看。</p>
+      <div class="hero-metrics" aria-label="知识库元信息">
+        <span class="metric-chip">数据更新 <strong>${data.lastUpdatedAt}</strong></span>
+        <span class="metric-chip">网页生成 <strong>${data.generatedAt}</strong></span>
+        <span class="metric-chip">覆盖 <strong>国家 + 8 省</strong></span>
       </div>
     </section>
-    <section class="card">
-      <div id="sheetMeta" class="sheet-meta"></div>
-      <div id="tableWrap" class="table-wrap"></div>
+  </header>
+  <main>
+    <section class="knowledge-shell">
+      <section class="toolbar" aria-label="筛选工具">
+        <div id="tabs" class="tabs"></div>
+        <div class="search-row">
+          <input id="searchInput" type="search" placeholder="搜索概念、政策、交易品种、文号、适用对象……" />
+          <span class="hint">长文本折叠显示，点击“查看详情”阅读完整内容；“链接”跳转官方来源，“查看文件”打开归档 PDF，“附件归档”打开保存的附件。</span>
+        </div>
+      </section>
+      <section class="card">
+        <div id="sheetMeta" class="sheet-meta"></div>
+        <div id="tableWrap" class="table-wrap"></div>
+      </section>
     </section>
   </main>
   <div id="detailModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -500,6 +646,12 @@ function renderHtml(store) {
 </html>`;
 }
 
+async function copyWebAssets(outputPath) {
+  const assetDir = path.join(path.dirname(outputPath), "assets");
+  await fs.mkdir(assetDir, { recursive: true });
+  await fs.copyFile(HERO_ASSET_SOURCE_PATH, path.join(assetDir, HERO_ASSET_FILE));
+}
+
 export async function exportWebPreview(inputPath, outputPath) {
   const store = JSON.parse(await fs.readFile(inputPath, "utf8"));
   const validationErrors = validateKnowledgeBase(store);
@@ -508,6 +660,7 @@ export async function exportWebPreview(inputPath, outputPath) {
   }
 
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
+  await copyWebAssets(outputPath);
   await fs.writeFile(outputPath, renderHtml(store), "utf8");
 }
 

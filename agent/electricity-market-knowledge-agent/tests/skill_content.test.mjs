@@ -47,6 +47,9 @@ test("skill preserves web preview requirements", async () => {
   for (const requiredText of [
     "export_web_preview.mjs",
     "网页预览",
+    "电力元素背景图",
+    "整体美学设计",
+    "长文本折叠",
     "查看详情",
     "弹窗",
     "链接可点击",
