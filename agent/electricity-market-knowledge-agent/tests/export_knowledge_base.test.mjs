@@ -29,4 +29,11 @@ test("exports all required knowledge-base sheets", async () => {
   ]) {
     assert.match(result.ndjson, new RegExp(sheetName));
   }
+
+  const provinceHeader = await workbook.inspect({
+    kind: "table",
+    range: "江苏!A1:L1",
+    include: "values",
+  });
+  assert.match(provinceHeader.ndjson, /政策\/规则总结/);
 });

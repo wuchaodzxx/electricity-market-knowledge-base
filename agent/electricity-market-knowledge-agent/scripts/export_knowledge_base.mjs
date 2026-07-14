@@ -1,11 +1,13 @@
 import fs from "node:fs/promises";
+import { createRequire } from "node:module";
 import path from "node:path";
-import { SpreadsheetFile, Workbook } from "@oai/artifact-tool";
+import { pathToFileURL } from "node:url";
 import { validateKnowledgeBase } from "./validate_knowledge_base.mjs";
 
 const PROVINCES = ["江苏", "浙江", "山西", "湖北", "四川", "山东", "甘肃", "安徽"];
 const PROVINCE_HEADERS = [
   "交易品种",
+  "政策/规则总结",
   "适用对象",
   "管理要求",
   "准入条件",
@@ -25,6 +27,17 @@ function joinSourceField(documentIds, documents, field) {
     .join("；");
 }
 
+async function loadArtifactTool() {
+  try {
+    return await import("@oai/artifact-tool");
+  } catch (error) {
+    if (error?.code !== "ERR_MODULE_NOT_FOUND") throw error;
+    const requireFromWorkspace = createRequire(path.join(process.cwd(), "package.json"));
+    const resolvedPath = requireFromWorkspace.resolve("@oai/artifact-tool");
+    return import(pathToFileURL(resolvedPath).href);
+  }
+}
+
 function writeSheet(workbook, name, headers, rows) {
   const sheet = workbook.worksheets.add(name);
   sheet.showGridLines = false;
@@ -39,7 +52,7 @@ function writeSheet(workbook, name, headers, rows) {
   used.format.autofitColumns();
   for (let column = 0; column < headers.length; column += 1) {
     const range = sheet.getRangeByIndexes(0, column, Math.max(rows.length + 1, 2), 1);
-    range.format.columnWidth = column === headers.length - 3 ? 34 : 20;
+    range.format.columnWidth = column === 1 || column === headers.length - 3 ? 42 : 20;
   }
   sheet.getRangeByIndexes(0, 0, 1, headers.length).format = {
     fill: "#0F4C5C",
@@ -51,6 +64,7 @@ function writeSheet(workbook, name, headers, rows) {
 }
 
 export async function exportKnowledgeBase(inputPath, outputPath) {
+  const { SpreadsheetFile, Workbook } = await loadArtifactTool();
   const store = JSON.parse(await fs.readFile(inputPath, "utf8"));
   const validationErrors = validateKnowledgeBase(store);
   if (validationErrors.length > 0) {
@@ -63,10 +77,11 @@ export async function exportKnowledgeBase(inputPath, outputPath) {
   writeSheet(
     workbook,
     "基础概念",
-    ["概念", "通俗解释", "关联机制", "适用范围", "来源文件", "发文编号", "链接", "核验日期"],
+    ["概念", "通俗解释", "详细解读", "关联机制", "适用范围", "来源文件", "发文编号", "链接", "核验日期"],
     store.concepts.map((concept) => [
       concept.name,
       concept.plainExplanation,
+      concept.detailedSummary,
       (concept.relatedMechanisms ?? []).join("；"),
       concept.scope,
       joinSourceField(concept.sourceDocumentIds, documents, "title"),
@@ -79,10 +94,10 @@ export async function exportKnowledgeBase(inputPath, outputPath) {
   writeSheet(
     workbook,
     "国家政策",
-    ["文件标题", "发文编号", "发布单位", "发布日期", "链接", "状态", "最后核验日期"],
+    ["文件标题", "详细解读", "发文编号", "发布单位", "发布日期", "链接", "状态", "最后核验日期"],
     store.policyDocuments
       .filter((document) => document.scope === "国家")
-      .map((document) => [document.title, document.documentNumber, document.issuer, document.publishedAt, document.officialUrl, document.status, document.lastVerifiedAt]),
+      .map((document) => [document.title, document.detailedSummary, document.documentNumber, document.issuer, document.publishedAt, document.officialUrl, document.status, document.lastVerifiedAt]),
   );
 
   for (const province of PROVINCES) {
@@ -94,6 +109,7 @@ export async function exportKnowledgeBase(inputPath, outputPath) {
         .filter((rule) => rule.province === province)
         .map((rule) => [
           rule.tradingProduct,
+          rule.detailedSummary ?? "",
           rule.eligibleParticipants,
           rule.managementRequirements,
           rule.admissionCriteria,
@@ -115,10 +131,10 @@ export async function exportKnowledgeBase(inputPath, outputPath) {
     store.updateEvents.map((event) => [event.occurredAt, event.type, event.subjectId, event.note]),
   );
 
-  await workbook.inspect({ kind: "table", range: "基础概念!A1:H2", include: "values" });
+  await workbook.inspect({ kind: "table", range: "基础概念!A1:I2", include: "values" });
   await workbook.inspect({ kind: "match", searchTerm: "#REF!|#DIV/0!|#VALUE!|#NAME\\?|#N/A", options: { useRegex: true, maxResults: 50 } });
-  await workbook.render({ sheetName: "基础概念", range: "A1:H2", scale: 1 });
-  await workbook.render({ sheetName: "江苏", range: "A1:K2", scale: 1 });
+  await workbook.render({ sheetName: "基础概念", range: "A1:I2", scale: 1 });
+  await workbook.render({ sheetName: "江苏", range: "A1:L2", scale: 1 });
 
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   const output = await SpreadsheetFile.exportXlsx(workbook);
@@ -130,7 +146,7 @@ function readOption(name) {
   return position === -1 ? undefined : process.argv[position + 1];
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const inputPath = readOption("--input");
   const outputPath = readOption("--output");
   if (!inputPath || !outputPath) {

@@ -1,3 +1,5 @@
+import { pathToFileURL } from "node:url";
+
 const SUPPORTED_PROVINCES = new Set([
   "江苏",
   "浙江",
@@ -72,7 +74,7 @@ export function validateKnowledgeBase(store) {
     }
     documentIds.add(document.id);
 
-    for (const field of ["title", "documentNumber", "issuer", "publishedAt", "scope", "status", "firstRecordedAt", "lastVerifiedAt"]) {
+    for (const field of ["title", "documentNumber", "issuer", "publishedAt", "scope", "status", "firstRecordedAt", "lastVerifiedAt", "detailedSummary"]) {
       if (!hasText(document[field])) errors.push(`政策文件 ${document.id || "<空>"} 缺少 ${field}`);
     }
     if (!isOfficialUrl(document.officialUrl)) {
@@ -87,8 +89,8 @@ export function validateKnowledgeBase(store) {
   }
 
   for (const concept of store.concepts) {
-    if (!hasText(concept.id) || !hasText(concept.name) || !hasText(concept.plainExplanation)) {
-      errors.push(`基础概念 ${concept.id || "<空>"} 缺少名称或通俗解释`);
+    if (!hasText(concept.id) || !hasText(concept.name) || !hasText(concept.plainExplanation) || !hasText(concept.detailedSummary)) {
+      errors.push(`基础概念 ${concept.id || "<空>"} 缺少名称、通俗解释或详细解读`);
     }
     validateSourceReferences(concept, documentIds, errors);
   }
@@ -97,7 +99,7 @@ export function validateKnowledgeBase(store) {
     if (!hasText(rule.id) || !SUPPORTED_PROVINCES.has(rule.province)) {
       errors.push(`省份规则 ${rule.id || "<空>"} 的省份不在首期范围内`);
     }
-    for (const field of ["tradingProduct", "eligibleParticipants", "managementRequirements", "admissionCriteria", "participationProcess", "assessmentMethod", "status", "lastVerifiedAt"]) {
+    for (const field of ["tradingProduct", "detailedSummary", "eligibleParticipants", "managementRequirements", "admissionCriteria", "participationProcess", "assessmentMethod", "status", "lastVerifiedAt"]) {
       if (!hasText(rule[field])) errors.push(`省份规则 ${rule.id || "<空>"} 缺少 ${field}`);
     }
     if (hasText(rule.status) && !VALID_STATUSES.has(rule.status)) {
@@ -114,7 +116,7 @@ function readOption(name) {
   return position === -1 ? undefined : process.argv[position + 1];
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const inputPath = readOption("--input");
   if (!inputPath) throw new Error("用法：node validate_knowledge_base.mjs --input <知识库.json>");
   const fs = await import("node:fs/promises");

@@ -21,6 +21,7 @@ const store = {
       status: "有效",
       firstRecordedAt: "2026-07-14",
       lastVerifiedAt: "2026-07-14",
+      detailedSummary: "这是一段用于测试的政策文件详细解读，说明文件的适用范围、核心要求和后续规则整理依据。",
     },
   ],
   provincialRules: [],
@@ -46,6 +47,7 @@ test("rejects a rule with a missing source document", () => {
     id: "rule-1",
     province: "江苏",
     tradingProduct: "绿电交易",
+    detailedSummary: "这是一段用于测试的省份规则详细总结，说明交易品种的适用对象、准入和考核要求。",
     eligibleParticipants: "用户",
     managementRequirements: "按规则执行",
     admissionCriteria: "完成注册",
@@ -58,5 +60,27 @@ test("rejects a rule with a missing source document", () => {
   assert.match(
     validateKnowledgeBase(invalidStore).join("\n"),
     /missing-doc/,
+  );
+});
+
+test("rejects a provincial rule without detailed summary", () => {
+  const invalidStore = structuredClone(store);
+  invalidStore.provincialRules.push({
+    id: "rule-1",
+    province: "江苏",
+    tradingProduct: "绿电交易",
+    detailedSummary: "",
+    eligibleParticipants: "用户",
+    managementRequirements: "按规则执行",
+    admissionCriteria: "完成注册",
+    participationProcess: "注册后申报",
+    assessmentMethod: "按规则考核",
+    sourceDocumentIds: ["doc-1"],
+    status: "有效",
+    lastVerifiedAt: "2026-07-14",
+  });
+  assert.match(
+    validateKnowledgeBase(invalidStore).join("\n"),
+    /detailedSummary/,
   );
 });
