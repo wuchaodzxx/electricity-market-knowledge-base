@@ -74,10 +74,10 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
+      gap: 22px;
       width: min(1480px, 100%);
       margin: 0 auto;
-      padding: 0;
+      padding: 0 4px;
       border: 1px solid rgba(255, 255, 255, .22);
       border-width: 0 1px;
       border-radius: 0;
@@ -85,61 +85,55 @@
       box-shadow: none;
       backdrop-filter: blur(14px);
     }
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin: 0;
-      color: #bff7ff;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .12em;
-      text-transform: uppercase;
+    .header-title-block {
+      display: grid;
+      grid-template-columns: auto minmax(220px, 1fr);
+      align-items: baseline;
+      gap: 14px;
+      min-width: 0;
+      flex: 1 1 auto;
     }
-    .eyebrow::before {
-      content: "";
-      width: 9px;
-      height: 9px;
-      border-radius: 999px;
-      background: var(--cyan);
-      box-shadow: 0 0 18px rgba(34, 211, 238, .95);
-    }
-    h1 {
+    .header-title-block h1 {
       margin: 0;
-      font-size: 22px;
-      line-height: 1.05;
-      letter-spacing: -.04em;
+      font-size: 23px;
+      line-height: 1;
+      letter-spacing: -.03em;
       white-space: nowrap;
+      text-shadow: 0 8px 24px rgba(0, 0, 0, .28);
     }
     .subhead {
-      flex: 1;
       margin: 0;
       color: rgba(255, 255, 255, .88);
-      line-height: 1.5;
-      font-size: 13px;
+      line-height: 1.35;
+      font-size: 12px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      padding-left: 14px;
+      border-left: 1px solid rgba(191, 247, 255, .34);
     }
-    .hero-metrics {
+    .header-meta {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
       margin: 0;
+      flex: 0 0 auto;
     }
-    .metric-chip {
+    .meta-chip {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      border: 1px solid rgba(255, 255, 255, .2);
-      border-radius: 999px;
-      padding: 6px 10px;
-      background: rgba(255, 255, 255, .1);
+      gap: 6px;
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 12px;
+      padding: 5px 9px;
+      background: rgba(4, 28, 44, .24);
       color: rgba(255, 255, 255, .92);
-      font-size: 12px;
-      backdrop-filter: blur(10px);
+      font-size: 11px;
+      white-space: nowrap;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12);
     }
-    .metric-chip strong { color: #fff; }
+    .meta-chip strong { color: #fff; font-size: 12px; }
     main {
       position: fixed;
       top: 70px;
@@ -390,10 +384,11 @@
     @media (max-width: 720px) {
       .app-header { padding: 0 12px; }
       .app-header::after { left: 12px; right: 12px; }
-      .eyebrow { display: none; }
       .hero-card { gap: 10px; }
+      .header-title-block { grid-template-columns: 1fr; gap: 4px; }
+      .header-title-block h1 { font-size: 20px; }
       .subhead { display: none; }
-      .hero-metrics .metric-chip:nth-child(n+2) { display: none; }
+      .header-meta .meta-chip:nth-child(n+2) { display: none; }
       main { padding: 10px 10px 16px; }
       .knowledge-shell { border-radius: 18px; }
       .toolbar { padding: 14px; }
@@ -404,13 +399,14 @@
 <body>
   <header class="app-header">
     <section class="hero-card" aria-label="电力市场知识库概览">
-      <p class="eyebrow">Electricity Market Knowledge Base</p>
-      <h1>电力市场知识库</h1>
-      <p class="subhead">面向电力市场小白的政策、概念与省级交易规则知识库。长文本默认折叠，来源链接和本地归档文件可直接跳转查看。</p>
-      <div class="hero-metrics" aria-label="知识库元信息">
-        <span class="metric-chip">数据更新 <strong>2026-07-14</strong></span>
-        <span class="metric-chip">网页生成 <strong>2026-07-14</strong></span>
-        <span class="metric-chip">覆盖 <strong>国家 + 8 省</strong></span>
+      <div class="header-title-block">
+        <h1>电力市场知识库</h1>
+        <p class="subhead">政策、概念与省级交易规则一站式查询；长文本折叠展示，来源与本地归档可直接打开。</p>
+      </div>
+      <div class="header-meta" aria-label="知识库元信息">
+        <span class="meta-chip">数据更新 <strong>2026-07-14</strong></span>
+        <span class="meta-chip">网页生成 <strong>2026-07-14</strong></span>
+        <span class="meta-chip">覆盖 <strong>国家 + 8 省</strong></span>
       </div>
     </section>
   </header>

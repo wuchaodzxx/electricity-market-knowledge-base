@@ -109,6 +109,9 @@ test("exports an optimized local HTML web preview", async () => {
     "assets/electricity-market-hero.png",
     "hero-card",
     "app-header",
+    "header-title-block",
+    "header-meta",
+    "meta-chip",
     "height: 70px",
     "position: fixed",
     "fixed-workbench",
@@ -138,6 +141,8 @@ test("exports an optimized local HTML web preview", async () => {
   ]) {
     assert.ok(html.includes(expectedText), `网页应包含：${expectedText}`);
   }
+  assert.ok(!html.includes("Electricity Market Knowledge Base"), "头部不应展示英文标题");
+  assert.ok(!html.includes("class=\"eyebrow\""), "头部不应继续使用英文 eyebrow 排版");
   assert.ok(!html.includes("background: linear-gradient(135deg, #0f4c5c, #167182)"), "头部不应继续使用旧的纯色渐变背景");
   assert.ok(!html.includes("modalDetails.innerHTML = sheet.columns.map"), "详情弹窗不应重复展示所有字段");
   assert.ok(!html.includes("grid-template-columns: 140px 1fr"), "详情弹窗不应继续使用字段-值详情表格");
