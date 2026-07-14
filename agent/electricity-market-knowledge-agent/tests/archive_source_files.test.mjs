@@ -158,7 +158,7 @@ test("downloads official attachments and records them for detailed interpretatio
     publicPrefix: "source-files",
     fetchImpl,
     renderPdfImpl,
-    siteBaseUrl: "https://wuchaodzxx.gitee.io/electricity-market-knowledge-base/",
+    siteBaseUrl: "https://wuchaodzxx.github.io/electricity-market-knowledge-base/",
   });
 
   const updated = JSON.parse(await fs.readFile(inputPath, "utf8"));
