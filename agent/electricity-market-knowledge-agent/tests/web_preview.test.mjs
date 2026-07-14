@@ -23,6 +23,7 @@ function sampleStore() {
         issuer: "江苏省发展和改革委员会",
         publishedAt: "2026-01-01",
         officialUrl: "https://example.gov.cn/policy",
+        localFilePath: "source-files/2026-01-01-示例政策文件(苏发改价格〔2026〕1号).html",
         scope: "江苏",
         status: "有效",
         firstRecordedAt: "2026-07-14",
@@ -85,13 +86,15 @@ test("exports an optimized local HTML web preview", async () => {
     "国家政策",
     "江苏",
     "政策/规则总结",
+    "查看文件",
     "查看详情",
     "detailModal",
     "clamped-text",
     "searchInput",
     "https://example.gov.cn/policy",
+    "source-files/2026-01-01-示例政策文件(苏发改价格〔2026〕1号).html",
     "target=\"_blank\"",
   ]) {
-    assert.match(html, new RegExp(expectedText));
+    assert.ok(html.includes(expectedText), `网页应包含：${expectedText}`);
   }
 });

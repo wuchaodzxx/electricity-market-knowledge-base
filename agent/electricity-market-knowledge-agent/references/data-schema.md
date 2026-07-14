@@ -16,7 +16,7 @@
 
 ## 政策文件
 
-每条文件含 `id`、`title`、`documentNumber`、`issuer`、`publishedAt`、`officialUrl`、`scope`、`status`、`firstRecordedAt`、`lastVerifiedAt`、`detailedSummary`，可选 `replacesDocumentId` 与 `notes`。`detailedSummary` 必须说明文件具体讲了什么、提出了哪些要求、影响哪些主体和交易品种，不得只写一句话。
+每条文件含 `id`、`title`、`documentNumber`、`issuer`、`publishedAt`、`officialUrl`、`localFilePath`、`scope`、`status`、`firstRecordedAt`、`lastVerifiedAt`、`detailedSummary`，可选 `replacesDocumentId` 与 `notes`。`localFilePath` 指向已下载到本地并可由网页打开的来源文件副本，例如 `source-files/2026-01-30-关于完善发电侧容量电价机制的通知(发改价格〔2026〕114号).html`。`detailedSummary` 必须说明文件具体讲了什么、提出了哪些要求、影响哪些主体和交易品种，不得只写一句话。
 
 `documentNumber` 必须填写正式文号；官方文件或页面明确未提供正式文号时，填写唯一允许的标识：`未见正式文号`。不得猜测、补写或编造文号。
 

@@ -74,11 +74,14 @@ export function validateKnowledgeBase(store) {
     }
     documentIds.add(document.id);
 
-    for (const field of ["title", "documentNumber", "issuer", "publishedAt", "scope", "status", "firstRecordedAt", "lastVerifiedAt", "detailedSummary"]) {
+    for (const field of ["title", "documentNumber", "issuer", "publishedAt", "scope", "status", "firstRecordedAt", "lastVerifiedAt", "localFilePath", "detailedSummary"]) {
       if (!hasText(document[field])) errors.push(`政策文件 ${document.id || "<空>"} 缺少 ${field}`);
     }
     if (!isOfficialUrl(document.officialUrl)) {
       errors.push(`政策文件 ${document.id || "<空>"} 缺少官方 https 链接`);
+    }
+    if (hasText(document.localFilePath) && document.localFilePath.includes("..")) {
+      errors.push(`政策文件 ${document.id || "<空>"} 的 localFilePath 不得包含上级目录`);
     }
     if (hasText(document.status) && !VALID_STATUSES.has(document.status)) {
       errors.push(`政策文件 ${document.id || "<空>"} 的状态无效`);

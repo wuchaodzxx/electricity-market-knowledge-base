@@ -18,7 +18,7 @@ function buildSheets(store) {
   const sheets = [
     {
       name: "基础概念",
-      columns: ["概念", "通俗解释", "详细解读", "关联机制", "适用范围", "来源文件", "发文编号", "链接", "核验日期"],
+      columns: ["概念", "通俗解释", "详细解读", "关联机制", "适用范围", "来源文件", "发文编号", "链接", "查看文件", "核验日期"],
       rows: store.concepts.map((concept) => ({
         title: concept.name,
         values: [
@@ -30,13 +30,14 @@ function buildSheets(store) {
           joinSourceField(concept.sourceDocumentIds, documents, "title"),
           joinSourceField(concept.sourceDocumentIds, documents, "documentNumber"),
           joinSourceField(concept.sourceDocumentIds, documents, "officialUrl"),
+          joinSourceField(concept.sourceDocumentIds, documents, "localFilePath"),
           concept.lastVerifiedAt,
         ],
       })),
     },
     {
       name: "国家政策",
-      columns: ["文件标题", "详细解读", "发文编号", "发布单位", "发布日期", "链接", "状态", "最后核验日期"],
+      columns: ["文件标题", "详细解读", "发文编号", "发布单位", "发布日期", "链接", "查看文件", "状态", "最后核验日期"],
       rows: store.policyDocuments
         .filter((document) => document.scope === "国家")
         .map((document) => ({
@@ -48,6 +49,7 @@ function buildSheets(store) {
             document.issuer,
             document.publishedAt,
             document.officialUrl,
+            document.localFilePath,
             document.status,
             document.lastVerifiedAt,
           ],
@@ -69,6 +71,7 @@ function buildSheets(store) {
         "来源文件",
         "发文编号",
         "链接",
+        "查看文件",
         "状态",
         "最后核验日期",
       ],
@@ -87,6 +90,7 @@ function buildSheets(store) {
             joinSourceField(rule.sourceDocumentIds, documents, "title"),
             joinSourceField(rule.sourceDocumentIds, documents, "documentNumber"),
             joinSourceField(rule.sourceDocumentIds, documents, "officialUrl"),
+            joinSourceField(rule.sourceDocumentIds, documents, "localFilePath"),
             rule.status,
             rule.lastVerifiedAt,
           ],
@@ -339,7 +343,7 @@ function renderHtml(store) {
       <div id="tabs" class="tabs"></div>
       <div class="search-row">
         <input id="searchInput" type="search" placeholder="搜索概念、政策、交易品种、文号、适用对象……" />
-        <span class="hint">长文本默认折叠，点击“查看详情”阅读完整内容；蓝色链接可点击跳转官方来源。</span>
+        <span class="hint">长文本默认折叠，点击“查看详情”阅读完整内容；“链接”跳转官方来源，“查看文件”打开本站归档副本。</span>
       </div>
     </section>
     <section class="card">
@@ -379,16 +383,17 @@ function renderHtml(store) {
         .replaceAll("'", "&#039;");
     }
 
-    function renderLinks(value) {
+    function renderLinks(value, linkText) {
       return String(value ?? "")
         .split("；")
         .filter(Boolean)
-        .map((url, index) => '<a href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">官方链接' + (index + 1) + '</a>')
+        .map((url, index) => '<a href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">' + linkText + (index + 1) + '</a>')
         .join("<br>");
     }
 
     function renderCell(label, value) {
-      if (label === "链接") return renderLinks(value);
+      if (label === "链接") return renderLinks(value, "官方链接");
+      if (label === "查看文件") return renderLinks(value, "查看文件");
       const safe = escapeHtml(value);
       if (longLabels.has(label) || safe.length > 90) return '<div class="clamped-text">' + safe + '</div>';
       if (label === "状态" && value === "待核验") return '<span class="badge">待核验</span>';
@@ -439,7 +444,7 @@ function renderHtml(store) {
       const row = visibleRows[rowIndex];
       modalTitle.textContent = row.title || sheet.name;
       modalDetails.innerHTML = sheet.columns.map((column, columnIndex) => {
-        const value = column === "链接" ? renderLinks(row.values[columnIndex]) : escapeHtml(row.values[columnIndex] || "未收录");
+        const value = column === "链接" ? renderLinks(row.values[columnIndex], "官方链接") : column === "查看文件" ? renderLinks(row.values[columnIndex], "查看文件") : escapeHtml(row.values[columnIndex] || "未收录");
         return '<dt>' + escapeHtml(column) + '</dt><dd>' + value + '</dd>';
       }).join("");
       modal.classList.add("open");

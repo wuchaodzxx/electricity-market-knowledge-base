@@ -72,3 +72,21 @@ test("skill preserves GitHub Pages publish requirements", async () => {
     assert.match(skill, new RegExp(requiredText.replaceAll("/", "\\/")));
   }
 });
+
+test("skill preserves source-file archive requirements", async () => {
+  const skill = await fs.readFile(
+    "agent/electricity-market-knowledge-agent/SKILL.md",
+    "utf8",
+  );
+  for (const requiredText of [
+    "archive_source_files.mjs",
+    "docs/source-files",
+    "localFilePath",
+    "查看文件",
+    "新标签页",
+    "官方链接失效",
+    "2026-01-30-关于完善发电侧容量电价机制的通知(发改价格〔2026〕114号)",
+  ]) {
+    assert.match(skill, new RegExp(requiredText.replaceAll("/", "\\/").replaceAll("(", "\\(").replaceAll(")", "\\)")));
+  }
+});

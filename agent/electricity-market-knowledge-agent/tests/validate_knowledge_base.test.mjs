@@ -21,6 +21,7 @@ const store = {
       status: "有效",
       firstRecordedAt: "2026-07-14",
       lastVerifiedAt: "2026-07-14",
+      localFilePath: "source-files/2026-01-01-示例文件(苏发改价格〔2026〕1号).html",
       detailedSummary: "这是一段用于测试的政策文件详细解读，说明文件的适用范围、核心要求和后续规则整理依据。",
     },
   ],
@@ -38,6 +39,15 @@ test("rejects blank documentNumber", () => {
   assert.match(
     validateKnowledgeBase(invalidStore).join("\n"),
     /documentNumber/,
+  );
+});
+
+test("rejects a policy document without local archived file path", () => {
+  const invalidStore = structuredClone(store);
+  invalidStore.policyDocuments[0].localFilePath = "";
+  assert.match(
+    validateKnowledgeBase(invalidStore).join("\n"),
+    /localFilePath/,
   );
 });
 

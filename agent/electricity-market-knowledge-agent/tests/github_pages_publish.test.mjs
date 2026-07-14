@@ -20,6 +20,7 @@ function sampleStore() {
         issuer: "国家发展改革委",
         publishedAt: "2026-01-01",
         officialUrl: "https://example.gov.cn/policy",
+        localFilePath: "source-files/2026-01-01-示例政策(发改价格〔2026〕1号).html",
         scope: "国家",
         status: "有效",
         firstRecordedAt: "2026-07-14",
