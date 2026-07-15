@@ -53,7 +53,7 @@ function sampleStore() {
         status: "有效",
         firstRecordedAt: "2026-07-14",
         lastVerifiedAt: "2026-07-14",
-        knowledgeSummary: "**江苏示例政策**用于验证省份页以政策文件维度展示；==摘要重点==控制在 200 字以内，完整内容仍可通过详情查看。",
+        knowledgeSummary: "江苏示例政策用于验证省份页以政策文件维度展示；摘要重点控制在 200 字以内，完整内容仍可通过深度解读查看。",
         detailedSummary: longSummary,
       },
       {

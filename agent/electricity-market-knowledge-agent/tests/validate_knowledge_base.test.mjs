@@ -104,6 +104,24 @@ test("rejects a knowledge summary longer than 200 characters", () => {
   );
 });
 
+test("rejects markdown heading markers in knowledge summaries", () => {
+  const invalidStore = structuredClone(store);
+  invalidStore.policyDocuments[0].knowledgeSummary = "这是一段摘要。### 文件定位 这里不应混入 Markdown 标题。";
+  assert.match(
+    validateKnowledgeBase(invalidStore).join("\n"),
+    /Markdown 标题/,
+  );
+});
+
+test("rejects markdown formatting markers in knowledge summaries", () => {
+  const invalidStore = structuredClone(store);
+  invalidStore.policyDocuments[0].knowledgeSummary = "这是一段 **不应加粗** 的摘要。";
+  assert.match(
+    validateKnowledgeBase(invalidStore).join("\n"),
+    /纯文本/,
+  );
+});
+
 test("rejects unsafe local attachment paths", () => {
   const invalidStore = structuredClone(store);
   invalidStore.policyDocuments[0].localAttachments[0].localFilePath = "../secret.docx";

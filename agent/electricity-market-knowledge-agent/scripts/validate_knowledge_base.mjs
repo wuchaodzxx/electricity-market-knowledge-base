@@ -30,8 +30,15 @@ function validateKnowledgeSummary(label, value, errors) {
     errors.push(`${label} 缺少 knowledgeSummary`);
     return;
   }
-  if (Array.from(value.trim()).length > 200) {
+  const trimmed = value.trim();
+  if (Array.from(trimmed).length > 200) {
     errors.push(`${label} 的 knowledgeSummary 必须控制在 200 字以内`);
+  }
+  if (/#{1,6}\s*\S/.test(trimmed)) {
+    errors.push(`${label} 的 knowledgeSummary 不得包含 Markdown 标题标记`);
+  }
+  if (/(?:\*\*|__|`|==)/.test(trimmed)) {
+    errors.push(`${label} 的 knowledgeSummary 必须为纯文本，不得包含 Markdown 强调、代码或高亮标记`);
   }
 }
 
