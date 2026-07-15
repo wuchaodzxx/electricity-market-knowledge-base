@@ -412,8 +412,48 @@ function renderHtml(store, { excelDownloadHref } = {}) {
       line-height: 1.55;
     }
     .summary-tooltip {
-      cursor: help;
+      cursor: pointer;
+      border: 0;
       border-bottom: 1px dotted rgba(7, 86, 107, .38);
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      padding: 0;
+      width: 100%;
+    }
+    .summary-tooltip:hover,
+    .summary-tooltip:focus {
+      color: #07566b;
+      outline: none;
+      border-bottom-color: rgba(246, 165, 26, .9);
+    }
+    .summary-popover {
+      display: none;
+      position: fixed;
+      z-index: 80;
+      max-width: min(520px, calc(100vw - 28px));
+      max-height: min(320px, calc(100vh - 28px));
+      overflow: auto;
+      padding: 14px 16px;
+      border: 1px solid #d9e7ef;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .98);
+      color: #223448;
+      line-height: 1.75;
+      font-size: 14px;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, .22);
+      backdrop-filter: blur(12px);
+    }
+    .summary-popover.open { display: block; }
+    .summary-popover::before {
+      content: "知识摘要";
+      display: block;
+      margin-bottom: 6px;
+      color: #07566b;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: .02em;
     }
     .empty {
       padding: 42px;
@@ -565,6 +605,7 @@ function renderHtml(store, { excelDownloadHref } = {}) {
       </section>
     </section>
   </main>
+  <div id="summaryPopover" class="summary-popover" role="tooltip"></div>
   <div id="detailModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <article class="modal">
       <div class="modal-header">
@@ -587,6 +628,7 @@ function renderHtml(store, { excelDownloadHref } = {}) {
     const modal = document.getElementById("detailModal");
     const modalTitle = document.getElementById("modalTitle");
     const modalDetails = document.getElementById("modalDetails");
+    const summaryPopover = document.getElementById("summaryPopover");
 
     function escapeHtml(value) {
       return String(value ?? "")
@@ -698,12 +740,46 @@ function renderHtml(store, { excelDownloadHref } = {}) {
       }).join("<br>");
     }
 
+    function positionSummaryPopover(anchor) {
+      const margin = 14;
+      const rect = anchor.getBoundingClientRect();
+      const maxWidth = Math.min(520, window.innerWidth - margin * 2);
+      summaryPopover.style.maxWidth = maxWidth + "px";
+
+      const popoverRect = summaryPopover.getBoundingClientRect();
+      const left = Math.min(
+        Math.max(margin, rect.left),
+        Math.max(margin, window.innerWidth - popoverRect.width - margin)
+      );
+      const belowTop = rect.bottom + 8;
+      const aboveTop = rect.top - popoverRect.height - 8;
+      const top = belowTop + popoverRect.height + margin <= window.innerHeight
+        ? belowTop
+        : Math.max(margin, aboveTop);
+
+      summaryPopover.style.left = left + "px";
+      summaryPopover.style.top = top + "px";
+    }
+
+    function showSummaryPopover(event) {
+      event.stopPropagation();
+      const anchor = event.currentTarget;
+      const text = anchor.getAttribute("data-summary") || "";
+      summaryPopover.textContent = text || "未收录知识摘要。";
+      summaryPopover.classList.add("open");
+      positionSummaryPopover(anchor);
+    }
+
+    function hideSummaryPopover() {
+      summaryPopover.classList.remove("open");
+    }
+
     function renderCell(label, value) {
       if (label === "链接") return renderLinks(value, "官方链接");
       if (label === "查看文件") return renderLinks(value, "查看文件");
       if (label === "附件归档") return renderAttachmentLinks(value);
       const safe = escapeHtml(value);
-      if (label === "知识摘要") return '<div class="clamped-text summary-tooltip" title="' + safe + '">' + safe + '</div>';
+      if (label === "知识摘要") return '<button class="clamped-text summary-tooltip" type="button" data-summary="' + safe + '" onclick="showSummaryPopover(event)" onmouseenter="showSummaryPopover(event)" onfocus="showSummaryPopover(event)" onmouseleave="hideSummaryPopover()" onblur="hideSummaryPopover()">' + safe + '</button>';
       if (longLabels.has(label) || safe.length > 90) return '<div class="clamped-text">' + safe + '</div>';
       if (label === "状态" && value === "待核验") return '<span class="badge">待核验</span>';
       return safe || '<span class="hint">未收录</span>';
@@ -744,11 +820,13 @@ function renderHtml(store, { excelDownloadHref } = {}) {
     function switchSheet(index) {
       activeSheetIndex = index;
       searchInput.value = "";
+      hideSummaryPopover();
       renderTabs();
       renderTable();
     }
 
     function openDetail(rowIndex) {
+      hideSummaryPopover();
       const sheet = appData.sheets[activeSheetIndex];
       const row = visibleRows[rowIndex];
       modalTitle.textContent = row.title || sheet.name;
@@ -763,10 +841,21 @@ function renderHtml(store, { excelDownloadHref } = {}) {
     modal.addEventListener("click", (event) => {
       if (event.target === modal) closeModal();
     });
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") closeModal();
+    document.addEventListener("click", (event) => {
+      if (!event.target.closest(".summary-tooltip") && !summaryPopover.contains(event.target)) hideSummaryPopover();
     });
-    searchInput.addEventListener("input", renderTable);
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeModal();
+        hideSummaryPopover();
+      }
+    });
+    searchInput.addEventListener("input", () => {
+      hideSummaryPopover();
+      renderTable();
+    });
+    tableWrap.addEventListener("scroll", hideSummaryPopover);
+    window.addEventListener("resize", hideSummaryPopover);
 
     renderTabs();
     renderTable();
