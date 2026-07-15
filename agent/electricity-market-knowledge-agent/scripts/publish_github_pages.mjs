@@ -3,6 +3,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { exportKnowledgeBase } from "./export_knowledge_base.mjs";
 import { exportWebPreview } from "./export_web_preview.mjs";
+import { extractPolicyMarkdownFile } from "./extract_policy_markdown.mjs";
 
 function readOption(name) {
   const position = process.argv.indexOf(name);
@@ -27,7 +28,14 @@ export async function prepareGitHubPagesSite({
   const excelFileName = `电力市场知识库-${date}.xlsx`;
   const excelPath = path.join(path.dirname(sitePath), "downloads", excelFileName);
   const excelDownloadHref = `downloads/${excelFileName}`;
+  const docsRoot = path.dirname(sitePath);
 
+  await extractPolicyMarkdownFile({
+    inputPath,
+    outputPath: inputPath,
+    docsRoot,
+    extractedAt: date,
+  });
   await exportKnowledgeBase(inputPath, excelPath);
   await exportWebPreview(inputPath, archivePath, { excelDownloadHref });
   await exportWebPreview(inputPath, sitePath, { excelDownloadHref });

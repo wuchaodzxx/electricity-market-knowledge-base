@@ -12,6 +12,7 @@ const SUPPORTED_PROVINCES = new Set([
 ]);
 
 const VALID_STATUSES = new Set(["有效", "已废止", "被替代", "待核验"]);
+const VALID_OCR_STATUSES = new Set(["not-needed", "success", "partial", "failed", "not-run"]);
 const REQUIRED_TOP_LEVEL_KEYS = [
   "metadata",
   "concepts",
@@ -56,6 +57,30 @@ function validateSourceReferences(record, documentIds, errors) {
   }
 }
 
+function validateMarkdownPath(label, value, errors) {
+  if (value === undefined) return;
+  if (!hasText(value)) {
+    errors.push(`${label} 缺少 markdownFilePath`);
+    return;
+  }
+  if (value.includes("..") || !value.toLowerCase().endsWith(".md")) {
+    errors.push(`${label} 的 markdownFilePath 必须是安全的 .md 相对路径`);
+  }
+}
+
+function validateExtraction(label, extraction, errors) {
+  if (extraction === undefined) return;
+  if (!extraction || typeof extraction !== "object" || Array.isArray(extraction)) {
+    errors.push(`${label} 的 markdownExtraction 必须是对象`);
+    return;
+  }
+  if (!hasText(extraction.method)) errors.push(`${label} 的 markdownExtraction 缺少 method`);
+  if (!hasText(extraction.extractedAt)) errors.push(`${label} 的 markdownExtraction 缺少 extractedAt`);
+  if (!hasText(extraction.ocrStatus) || !VALID_OCR_STATUSES.has(extraction.ocrStatus)) {
+    errors.push(`${label} 的 markdownExtraction.ocrStatus 无效`);
+  }
+}
+
 export function validateKnowledgeBase(store) {
   const errors = [];
 
@@ -97,6 +122,8 @@ export function validateKnowledgeBase(store) {
     if (hasText(document.localFilePath) && !document.localFilePath.toLowerCase().endsWith(".pdf")) {
       errors.push(`政策文件 ${document.id || "<空>"} 的 localFilePath 必须指向 PDF 归档文件`);
     }
+    validateMarkdownPath(`政策文件 ${document.id || "<空>"}`, document.markdownFilePath, errors);
+    validateExtraction(`政策文件 ${document.id || "<空>"}`, document.markdownExtraction, errors);
     if (document.localAttachments !== undefined) {
       if (!Array.isArray(document.localAttachments)) {
         errors.push(`政策文件 ${document.id || "<空>"} 的 localAttachments 必须是数组`);
@@ -110,6 +137,19 @@ export function validateKnowledgeBase(store) {
           } else if (attachment.localFilePath.includes("..")) {
             errors.push(`${label} 的 localFilePath 不得包含上级目录`);
           }
+        }
+      }
+    }
+    if (document.attachmentMarkdownFiles !== undefined) {
+      if (!Array.isArray(document.attachmentMarkdownFiles)) {
+        errors.push(`政策文件 ${document.id || "<空>"} 的 attachmentMarkdownFiles 必须是数组`);
+      } else {
+        for (const [attachmentIndex, attachment] of document.attachmentMarkdownFiles.entries()) {
+          const label = `政策文件 ${document.id || "<空>"} 的 attachmentMarkdownFiles[${attachmentIndex}]`;
+          if (!hasText(attachment?.title)) errors.push(`${label} 缺少 title`);
+          if (!hasText(attachment?.sourceFilePath)) errors.push(`${label} 缺少 sourceFilePath`);
+          validateMarkdownPath(label, attachment?.markdownFilePath, errors);
+          validateExtraction(label, attachment?.extraction, errors);
         }
       }
     }

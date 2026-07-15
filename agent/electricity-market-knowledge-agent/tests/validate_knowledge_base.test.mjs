@@ -22,11 +22,29 @@ const store = {
       firstRecordedAt: "2026-07-14",
       lastVerifiedAt: "2026-07-14",
       localFilePath: "source-files/2026-01-01-示例文件(苏发改价格〔2026〕1号).pdf",
+      markdownFilePath: "knowledge-markdown/doc-1/政策正文.md",
+      markdownExtraction: {
+        method: "pdf-text",
+        ocrStatus: "not-needed",
+        extractedAt: "2026-07-15",
+      },
       localAttachments: [
         {
           title: "附件：交易执行规则",
           officialUrl: "https://example.gov.cn/files/rule.docx",
           localFilePath: "source-files/attachments/2026-01-01-示例文件(苏发改价格〔2026〕1号)/rule.docx",
+        },
+      ],
+      attachmentMarkdownFiles: [
+        {
+          title: "附件：交易执行规则",
+          sourceFilePath: "source-files/attachments/2026-01-01-示例文件(苏发改价格〔2026〕1号)/rule.docx",
+          markdownFilePath: "knowledge-markdown/doc-1/附件-交易执行规则.md",
+          extraction: {
+            method: "office",
+            ocrStatus: "not-needed",
+            extractedAt: "2026-07-15",
+          },
         },
       ],
       knowledgeSummary: "示例文件用于测试政策文件的知识摘要字段，要求内容简明、可用于表格快速扫读，并控制在 200 字以内。",
@@ -92,6 +110,24 @@ test("rejects unsafe local attachment paths", () => {
   assert.match(
     validateKnowledgeBase(invalidStore).join("\n"),
     /localAttachments/,
+  );
+});
+
+test("rejects unsafe policy markdown paths", () => {
+  const invalidStore = structuredClone(store);
+  invalidStore.policyDocuments[0].markdownFilePath = "../secret.md";
+  assert.match(
+    validateKnowledgeBase(invalidStore).join("\n"),
+    /markdownFilePath/,
+  );
+});
+
+test("rejects invalid markdown extraction status", () => {
+  const invalidStore = structuredClone(store);
+  invalidStore.policyDocuments[0].markdownExtraction.ocrStatus = "maybe";
+  assert.match(
+    validateKnowledgeBase(invalidStore).join("\n"),
+    /ocrStatus/,
   );
 });
 

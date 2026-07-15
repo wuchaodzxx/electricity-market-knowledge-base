@@ -23,6 +23,33 @@ function formatAttachments(attachments = []) {
     .join("；");
 }
 
+function markdownEntriesForDocument(document) {
+  const entries = [];
+  if (document.markdownFilePath) {
+    entries.push({
+      title: "政策正文",
+      sourceTitle: document.title,
+      markdownFilePath: document.markdownFilePath,
+      sourceFilePath: document.localFilePath,
+      extraction: document.markdownExtraction,
+    });
+  }
+  for (const attachment of document.attachmentMarkdownFiles ?? []) {
+    entries.push({
+      title: attachment.title,
+      sourceTitle: document.title,
+      markdownFilePath: attachment.markdownFilePath,
+      sourceFilePath: attachment.sourceFilePath,
+      extraction: attachment.extraction,
+    });
+  }
+  return entries;
+}
+
+function compareByPublishedAtDesc(left, right) {
+  return String(right.publishedAt ?? "").localeCompare(String(left.publishedAt ?? ""));
+}
+
 function joinSourceAttachments(documentIds, documents) {
   return documentIds
     .map((documentId) => formatAttachments(documents.get(documentId)?.localAttachments ?? []))
@@ -34,6 +61,7 @@ function policyRow(document) {
   return {
     title: document.title,
     detail: document.detailedSummary,
+    browserFiles: markdownEntriesForDocument(document),
     values: [
       document.title,
       document.knowledgeSummary,
@@ -51,6 +79,7 @@ function policyRow(document) {
 
 function buildSheets(store) {
   const documents = new Map(store.policyDocuments.map((document) => [document.id, document]));
+  const sortedPolicyDocuments = [...store.policyDocuments].sort(compareByPublishedAtDesc);
 
   const sheets = [
     {
@@ -59,6 +88,7 @@ function buildSheets(store) {
       rows: store.concepts.map((concept) => ({
         title: concept.name,
         detail: concept.detailedSummary,
+        browserFiles: concept.sourceDocumentIds.flatMap((documentId) => markdownEntriesForDocument(documents.get(documentId) ?? {})),
         values: [
           concept.name,
           concept.plainExplanation,
@@ -77,7 +107,7 @@ function buildSheets(store) {
     {
       name: "国家政策",
       columns: POLICY_COLUMNS,
-      rows: store.policyDocuments
+      rows: sortedPolicyDocuments
         .filter((document) => document.scope === "国家")
         .map((document) => policyRow(document)),
     },
@@ -87,7 +117,7 @@ function buildSheets(store) {
     sheets.push({
       name: province,
       columns: POLICY_COLUMNS,
-      rows: store.policyDocuments
+      rows: sortedPolicyDocuments
         .filter((document) => document.scope === province)
         .map((document) => policyRow(document)),
     });
@@ -96,7 +126,7 @@ function buildSheets(store) {
   sheets.push({
     name: "更新记录",
     columns: ["日期", "类型", "对象 ID", "说明"],
-    rows: store.updateEvents.map((event) => ({
+    rows: [...store.updateEvents].sort((left, right) => String(right.occurredAt ?? "").localeCompare(String(left.occurredAt ?? ""))).map((event) => ({
       title: `${event.type}｜${event.subjectId}`,
       values: [event.occurredAt, event.type, event.subjectId, event.note],
     })),
@@ -498,6 +528,27 @@ function renderHtml(store, { excelDownloadHref } = {}) {
       box-shadow: 0 6px 14px rgba(7, 86, 107, .1);
     }
     .detail-button:hover { outline: 2px solid rgba(34, 211, 238, .34); }
+    .browse-button {
+      border: 1px solid rgba(7, 86, 107, .18);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: #fff;
+      color: #07566b;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 6px 14px rgba(7, 86, 107, .06);
+      margin-left: 6px;
+    }
+    .browse-button:hover { outline: 2px solid rgba(246, 165, 26, .3); }
+    .browse-button[disabled] {
+      opacity: .42;
+      cursor: not-allowed;
+    }
+    .action-cell {
+      min-width: 182px;
+      white-space: nowrap;
+    }
     .modal-backdrop {
       display: none;
       position: fixed;
@@ -572,6 +623,74 @@ function renderHtml(store, { excelDownloadHref } = {}) {
       background: #fff1c2;
       color: #7c2d12;
     }
+    .markdown-browser-body {
+      padding: 18px 22px 28px;
+      color: #263546;
+      line-height: 1.82;
+      font-size: 15px;
+    }
+    .markdown-source-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+    .markdown-source-tab {
+      border: 1px solid #dce8ef;
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: #fff;
+      color: #07566b;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .markdown-source-tab.active {
+      background: linear-gradient(135deg, #e0fbff, #fff7e6);
+      border-color: rgba(34, 211, 238, .5);
+    }
+    .markdown-content {
+      border: 1px solid #e4edf4;
+      border-radius: 16px;
+      padding: 18px;
+      background: #fff;
+      max-height: 62vh;
+      overflow: auto;
+    }
+    .markdown-content h1,
+    .markdown-content h2,
+    .markdown-content h3 {
+      color: #07566b;
+      line-height: 1.35;
+    }
+    .markdown-content pre {
+      overflow: auto;
+      border-radius: 12px;
+      padding: 12px;
+      background: #f1f7f9;
+    }
+    .markdown-content code {
+      border-radius: 6px;
+      padding: 1px 5px;
+      background: #edf5f7;
+      color: #07566b;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .92em;
+    }
+    .markdown-content table {
+      min-width: 0;
+      width: 100%;
+      font-size: 13px;
+      border-collapse: collapse;
+    }
+    .markdown-content th,
+    .markdown-content td {
+      position: static;
+      padding: 8px 10px;
+      border: 1px solid #e4edf4;
+      background: #fff;
+    }
     .badge {
       display: inline-flex;
       align-items: center;
@@ -639,6 +758,15 @@ function renderHtml(store, { excelDownloadHref } = {}) {
       <div id="modalDetails" class="detail-body"></div>
     </article>
   </div>
+  <div id="knowledgeBrowserModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="browserTitle">
+    <article class="modal">
+      <div class="modal-header">
+        <h2 id="browserTitle" class="modal-title">知识浏览</h2>
+        <button class="close-button" type="button" onclick="closeKnowledgeBrowser()">关闭</button>
+      </div>
+      <div id="browserDetails" class="markdown-browser-body"></div>
+    </article>
+  </div>
   <script>
     const appData = ${jsonForHtml(data)};
     let activeSheetIndex = 0;
@@ -653,6 +781,9 @@ function renderHtml(store, { excelDownloadHref } = {}) {
     const modalTitle = document.getElementById("modalTitle");
     const modalDetails = document.getElementById("modalDetails");
     const summaryPopover = document.getElementById("summaryPopover");
+    const browserModal = document.getElementById("knowledgeBrowserModal");
+    const browserTitle = document.getElementById("browserTitle");
+    const browserDetails = document.getElementById("browserDetails");
 
     function escapeHtml(value) {
       return String(value ?? "")
@@ -687,6 +818,81 @@ function renderHtml(store, { excelDownloadHref } = {}) {
         if (listMatch) return "• " + renderInline(listMatch[1]);
         return renderInline(line);
       }).join("<br>");
+    }
+
+    function renderKnowledgeMarkdown(value) {
+      const text = String(value ?? "").replace(/^---[\\s\\S]*?---\\s*/, "").trim();
+      if (!text) return '<p>未提取到可浏览的 Markdown 内容。</p>';
+      const lines = text.split(/\\r?\\n/);
+      const html = [];
+      let inList = false;
+      let inCode = false;
+      let tableBuffer = [];
+
+      function flushList() {
+        if (inList) {
+          html.push("</ul>");
+          inList = false;
+        }
+      }
+
+      function flushTable() {
+        if (tableBuffer.length === 0) return;
+        const rows = tableBuffer.filter((line) => !/^\\|\\s*-+/.test(line));
+        html.push("<table><tbody>" + rows.map((line, rowIndex) => {
+          const cells = line.replace(/^\\||\\|$/g, "").split("|").map((cell) => cell.trim());
+          const tag = rowIndex === 0 ? "th" : "td";
+          return "<tr>" + cells.map((cell) => "<" + tag + ">" + renderInline(cell) + "</" + tag + ">").join("") + "</tr>";
+        }).join("") + "</tbody></table>");
+        tableBuffer = [];
+      }
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.startsWith("\\x60\\x60\\x60")) {
+          flushList();
+          flushTable();
+          html.push(inCode ? "</code></pre>" : "<pre><code>");
+          inCode = !inCode;
+          continue;
+        }
+        if (inCode) {
+          html.push(escapeHtml(line) + "\\n");
+          continue;
+        }
+        if (/^\\|.+\\|$/.test(trimmed)) {
+          flushList();
+          tableBuffer.push(trimmed);
+          continue;
+        }
+        flushTable();
+        if (!trimmed) {
+          flushList();
+          continue;
+        }
+        const heading = trimmed.match(/^(#{1,3})\\s+(.+)$/);
+        if (heading) {
+          flushList();
+          const level = Math.min(heading[1].length + 1, 4);
+          html.push("<h" + level + ">" + renderInline(heading[2]) + "</h" + level + ">");
+          continue;
+        }
+        const listItem = trimmed.match(/^(?:[-*]|\\d+[.、])\\s+(.+)$/);
+        if (listItem) {
+          if (!inList) {
+            html.push("<ul>");
+            inList = true;
+          }
+          html.push("<li>" + renderInline(listItem[1]) + "</li>");
+          continue;
+        }
+        flushList();
+        html.push("<p>" + renderInline(trimmed) + "</p>");
+      }
+      flushList();
+      flushTable();
+      if (inCode) html.push("</code></pre>");
+      return html.join("");
     }
 
     function splitSentences(value) {
@@ -856,7 +1062,9 @@ function renderHtml(store, { excelDownloadHref } = {}) {
         const cells = sheet.columns
           .map((column, columnIndex) => '<td>' + renderCell(column, row.values[columnIndex]) + '</td>')
           .join("");
-        return '<tr>' + cells + '<td><button class="detail-button" type="button" data-detail-index="' + rowIndex + '" onclick="openDetail(' + rowIndex + ')">查看详情</button></td></tr>';
+        const hasBrowserFiles = Array.isArray(row.browserFiles) && row.browserFiles.length > 0;
+        const browseButton = '<button class="browse-button" type="button" ' + (hasBrowserFiles ? 'onclick="openKnowledgeBrowser(' + rowIndex + ')"' : 'disabled title="尚未生成 Markdown 原文"') + '>知识浏览</button>';
+        return '<tr>' + cells + '<td class="action-cell"><button class="detail-button" type="button" data-detail-index="' + rowIndex + '" onclick="openDetail(' + rowIndex + ')">深度解读</button>' + browseButton + '</td></tr>';
       }).join("");
       tableWrap.innerHTML = '<table><thead><tr>' + header + '</tr></thead><tbody>' + rows + '</tbody></table>';
     }
@@ -882,8 +1090,51 @@ function renderHtml(store, { excelDownloadHref } = {}) {
       modal.classList.remove("open");
     }
 
+    async function openKnowledgeBrowser(rowIndex) {
+      hideSummaryPopover();
+      const sheet = appData.sheets[activeSheetIndex];
+      const row = visibleRows[rowIndex];
+      const files = row.browserFiles ?? [];
+      browserTitle.textContent = (row.title || sheet.name) + "｜知识浏览";
+      if (files.length === 0) {
+        browserDetails.innerHTML = '<p>尚未生成该条知识的 Markdown 原文。</p>';
+        browserModal.classList.add("open");
+        return;
+      }
+      browserDetails.innerHTML = '<div class="markdown-source-list">' + files.map((file, index) => '<button class="markdown-source-tab' + (index === 0 ? " active" : "") + '" type="button" onclick="loadKnowledgeMarkdown(' + rowIndex + ',' + index + ')">' + escapeHtml(file.title || ("文件" + (index + 1))) + '</button>').join("") + '</div><div id="markdownContent" class="markdown-content">正在加载 Markdown 内容……</div>';
+      browserModal.classList.add("open");
+      await loadKnowledgeMarkdown(rowIndex, 0);
+    }
+
+    async function loadKnowledgeMarkdown(rowIndex, fileIndex) {
+      const row = visibleRows[rowIndex];
+      const files = row.browserFiles ?? [];
+      const file = files[fileIndex];
+      const content = document.getElementById("markdownContent");
+      if (!file || !content) return;
+      document.querySelectorAll(".markdown-source-tab").forEach((button, index) => {
+        button.classList.toggle("active", index === fileIndex);
+      });
+      try {
+        const response = await fetch(file.markdownFilePath);
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const markdown = await response.text();
+        const meta = '<p class="hint">来源：' + escapeHtml(file.sourceFilePath || file.markdownFilePath) + '</p>';
+        content.innerHTML = meta + renderKnowledgeMarkdown(markdown);
+      } catch (error) {
+        content.innerHTML = '<p>Markdown 内容暂时无法加载。你仍可直接打开：<a href="' + escapeHtml(file.markdownFilePath) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(file.markdownFilePath) + '</a></p>';
+      }
+    }
+
+    function closeKnowledgeBrowser() {
+      browserModal.classList.remove("open");
+    }
+
     modal.addEventListener("click", (event) => {
       if (event.target === modal) closeModal();
+    });
+    browserModal.addEventListener("click", (event) => {
+      if (event.target === browserModal) closeKnowledgeBrowser();
     });
     document.addEventListener("click", (event) => {
       if (!event.target.closest(".summary-tooltip") && !summaryPopover.contains(event.target)) hideSummaryPopover();
@@ -891,6 +1142,7 @@ function renderHtml(store, { excelDownloadHref } = {}) {
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
         closeModal();
+        closeKnowledgeBrowser();
         hideSummaryPopover();
       }
     });

@@ -24,11 +24,29 @@ function sampleStore() {
         publishedAt: "2026-01-01",
         officialUrl: "https://example.gov.cn/policy",
         localFilePath: "source-files/2026-01-01-示例政策文件(苏发改价格〔2026〕1号).pdf",
+        markdownFilePath: "knowledge-markdown/doc-1/政策正文.md",
+        markdownExtraction: {
+          method: "pdf-text",
+          ocrStatus: "not-needed",
+          extractedAt: "2026-07-15",
+        },
         localAttachments: [
           {
             title: "附件：交易执行规则",
             officialUrl: "https://example.gov.cn/files/rule.docx",
             localFilePath: "source-files/attachments/2026-01-01-示例政策文件(苏发改价格〔2026〕1号)/rule.docx",
+          },
+        ],
+        attachmentMarkdownFiles: [
+          {
+            title: "附件：交易执行规则",
+            sourceFilePath: "source-files/attachments/2026-01-01-示例政策文件(苏发改价格〔2026〕1号)/rule.docx",
+            markdownFilePath: "knowledge-markdown/doc-1/附件-交易执行规则.md",
+            extraction: {
+              method: "office",
+              ocrStatus: "not-needed",
+              extractedAt: "2026-07-15",
+            },
           },
         ],
         scope: "江苏",
@@ -37,6 +55,22 @@ function sampleStore() {
         lastVerifiedAt: "2026-07-14",
         knowledgeSummary: "**江苏示例政策**用于验证省份页以政策文件维度展示；==摘要重点==控制在 200 字以内，完整内容仍可通过详情查看。",
         detailedSummary: longSummary,
+      },
+      {
+        id: "doc-3",
+        title: "更新的江苏政策",
+        documentNumber: "苏发改价格〔2026〕2号",
+        issuer: "江苏省发展和改革委员会",
+        publishedAt: "2026-03-01",
+        officialUrl: "https://example.gov.cn/policy-new",
+        localFilePath: "source-files/2026-03-01-更新的江苏政策(苏发改价格〔2026〕2号).pdf",
+        localAttachments: [],
+        scope: "江苏",
+        status: "有效",
+        firstRecordedAt: "2026-07-14",
+        lastVerifiedAt: "2026-07-14",
+        knowledgeSummary: "用于验证政策页按发布日期倒序展示，发布日期更新的政策应排在前面。",
+        detailedSummary: "用于验证排序。",
       },
       {
         id: "doc-2",
@@ -134,7 +168,13 @@ test("exports an optimized local HTML web preview", async () => {
     "发布单位",
     "发布日期",
     "查看文件",
-    "查看详情",
+    "深度解读",
+    "知识浏览",
+    "knowledgeBrowserModal",
+    "openKnowledgeBrowser",
+    "renderKnowledgeMarkdown",
+    "knowledge-markdown/doc-1/政策正文.md",
+    "knowledge-markdown/doc-1/附件-交易执行规则.md",
     "detailModal",
     "renderStructuredDetail",
     "summary-tooltip",
@@ -169,4 +209,14 @@ test("exports an optimized local HTML web preview", async () => {
   assert.ok(!html.includes("background: linear-gradient(135deg, #0f4c5c, #167182)"), "头部不应继续使用旧的纯色渐变背景");
   assert.ok(!html.includes("modalDetails.innerHTML = sheet.columns.map"), "详情弹窗不应重复展示所有字段");
   assert.ok(!html.includes("grid-template-columns: 140px 1fr"), "详情弹窗不应继续使用字段-值详情表格");
+  assert.ok(!html.includes(">查看详情</button>"), "详情按钮应改名为深度解读");
+  const dataMatch = html.match(/const appData = ([\s\S]*?);\n    let activeSheetIndex/);
+  assert.ok(dataMatch, "网页应内嵌 appData");
+  const appData = JSON.parse(dataMatch[1]);
+  const jiangsuSheet = appData.sheets.find((sheet) => sheet.name === "江苏");
+  assert.deepEqual(
+    jiangsuSheet.rows.map((row) => row.title),
+    ["更新的江苏政策", "示例政策文件"],
+    "同一省份政策应按发布日期倒序展示",
+  );
 });

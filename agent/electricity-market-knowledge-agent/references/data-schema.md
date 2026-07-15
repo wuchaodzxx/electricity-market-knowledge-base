@@ -16,7 +16,9 @@
 
 ## 政策文件
 
-每条文件含 `id`、`title`、`documentNumber`、`issuer`、`publishedAt`、`officialUrl`、`localFilePath`、`scope`、`status`、`firstRecordedAt`、`lastVerifiedAt`、`knowledgeSummary`、`detailedSummary`，可选 `localAttachments`、`replacesDocumentId` 与 `notes`。`knowledgeSummary` 是 200 字以内摘要，用于表格快速理解该文件讲什么、影响什么；`localFilePath` 指向已下载到本地并可由网页打开的 PDF 来源文件副本，例如 `source-files/2026-01-30-关于完善发电侧容量电价机制的通知(发改价格〔2026〕114号).pdf`。`localAttachments` 用于记录官方网页附件的本地归档，每个附件含 `title`、`officialUrl`、`localFilePath`。`detailedSummary` 必须同时基于政策网页正文和已发现附件内容，说明文件具体讲了什么、提出了哪些要求、影响哪些主体和交易品种，不得只写一句话。
+每条文件含 `id`、`title`、`documentNumber`、`issuer`、`publishedAt`、`officialUrl`、`localFilePath`、`scope`、`status`、`firstRecordedAt`、`lastVerifiedAt`、`knowledgeSummary`、`detailedSummary`，可选 `localAttachments`、`markdownFilePath`、`markdownExtraction`、`attachmentMarkdownFiles`、`replacesDocumentId` 与 `notes`。`knowledgeSummary` 是 200 字以内摘要，用于表格快速理解该文件讲什么、影响什么；`localFilePath` 指向已下载到本地并可由网页打开的 PDF 来源文件副本，例如 `source-files/2026-01-30-关于完善发电侧容量电价机制的通知(发改价格〔2026〕114号).pdf`。`localAttachments` 用于记录官方网页附件的本地归档，每个附件含 `title`、`officialUrl`、`localFilePath`。`detailedSummary` 必须同时基于政策网页正文和已发现附件内容，说明文件具体讲了什么、提出了哪些要求、影响哪些主体和交易品种，不得只写一句话。
+
+`markdownFilePath` 指向由 `scripts/extract_policy_markdown.mjs` 从政策正文归档文件提取出的 Markdown，例如 `knowledge-markdown/doc-ndrc-2026-114/政策正文.md`。`markdownExtraction` 记录提取方式和 OCR 状态，至少含 `method`、`ocrStatus`、`extractedAt`；`ocrStatus` 只能为 `not-needed`、`success`、`partial`、`failed`、`not-run`。`attachmentMarkdownFiles` 记录附件的 Markdown 提取结果，每项含 `title`、`sourceFilePath`、`markdownFilePath`、`extraction`。Markdown 路径必须是站点内安全相对路径，不能包含 `..`，且必须以 `.md` 结尾。
 
 `documentNumber` 必须填写正式文号；官方文件或页面明确未提供正式文号时，填写唯一允许的标识：`未见正式文号`。不得猜测、补写或编造文号。
 
