@@ -6,8 +6,11 @@ import { validateKnowledgeBase } from "./validate_knowledge_base.mjs";
 const PROVINCES = ["江苏", "浙江", "山西", "湖北", "四川", "山东", "甘肃", "安徽"];
 const HERO_ASSET_FILE = "electricity-market-hero.png";
 const HERO_ASSET_RELATIVE_PATH = `assets/${HERO_ASSET_FILE}`;
+const LOGO_ASSET_FILE = "electricity-market-logo.png";
+const LOGO_ASSET_RELATIVE_PATH = `assets/${LOGO_ASSET_FILE}`;
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const HERO_ASSET_SOURCE_PATH = path.resolve(SCRIPT_DIR, "../assets", HERO_ASSET_FILE);
+const LOGO_ASSET_SOURCE_PATH = path.resolve(SCRIPT_DIR, "../assets", LOGO_ASSET_FILE);
 const POLICY_COLUMNS = ["文件标题", "知识摘要", "发文编号", "发布单位", "发布日期", "链接", "查看文件", "附件归档", "状态", "最后核验日期"];
 
 function joinSourceField(documentIds, documents, field) {
@@ -241,6 +244,19 @@ function renderHtml(store, { excelDownloadHref } = {}) {
       gap: 14px;
       min-width: 0;
       flex: 1 1 auto;
+    }
+    .header-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .header-logo {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      flex: 0 0 auto;
+      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .34));
     }
     .header-title-block h1 {
       margin: 0;
@@ -706,6 +722,7 @@ function renderHtml(store, { excelDownloadHref } = {}) {
       .app-header::after { left: 12px; right: 12px; }
       .hero-card { gap: 10px; }
       .header-title-block { grid-template-columns: 1fr; gap: 4px; }
+      .header-logo { width: 30px; height: 30px; }
       .header-title-block h1 { font-size: 20px; }
       .subhead { display: none; }
       .header-meta .meta-chip:nth-child(n+2) { display: none; }
@@ -723,7 +740,10 @@ function renderHtml(store, { excelDownloadHref } = {}) {
   <header class="app-header">
     <section class="hero-card" aria-label="电力市场知识库概览">
       <div class="header-title-block">
-        <h1>电力市场知识库</h1>
+        <div class="header-brand">
+          <img class="header-logo" src="${LOGO_ASSET_RELATIVE_PATH}" alt="" aria-hidden="true" />
+          <h1>电力市场知识库</h1>
+        </div>
         <p class="subhead">政策、概念与省级交易规则一站式查询；长文本折叠展示，来源与本地归档可直接打开。</p>
       </div>
       <div class="header-meta" aria-label="知识库元信息">
@@ -1164,6 +1184,7 @@ async function copyWebAssets(outputPath) {
   const assetDir = path.join(path.dirname(outputPath), "assets");
   await fs.mkdir(assetDir, { recursive: true });
   await fs.copyFile(HERO_ASSET_SOURCE_PATH, path.join(assetDir, HERO_ASSET_FILE));
+  await fs.copyFile(LOGO_ASSET_SOURCE_PATH, path.join(assetDir, LOGO_ASSET_FILE));
 }
 
 export async function exportWebPreview(inputPath, outputPath, options = {}) {

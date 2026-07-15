@@ -141,10 +141,15 @@ test("exports an optimized local HTML web preview", async () => {
 
   const html = await fs.readFile(outputPath, "utf8");
   const heroAsset = await fs.stat(path.join(tmpDir, "assets", "electricity-market-hero.png"));
+  const logoAsset = await fs.stat(path.join(tmpDir, "assets", "electricity-market-logo.png"));
   assert.ok(heroAsset.size > 1000, "网页预览应复制电力元素 hero 背景图资产");
+  assert.ok(logoAsset.size > 1000, "网页预览应复制电力市场知识库标题 icon 资产");
   for (const expectedText of [
     "电力市场知识库",
     "assets/electricity-market-hero.png",
+    "assets/electricity-market-logo.png",
+    "header-brand",
+    "header-logo",
     "hero-card",
     "app-header",
     "header-title-block",

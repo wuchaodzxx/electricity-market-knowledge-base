@@ -93,6 +93,19 @@
       min-width: 0;
       flex: 1 1 auto;
     }
+    .header-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .header-logo {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      flex: 0 0 auto;
+      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .34));
+    }
     .header-title-block h1 {
       margin: 0;
       font-size: 23px;
@@ -557,6 +570,7 @@
       .app-header::after { left: 12px; right: 12px; }
       .hero-card { gap: 10px; }
       .header-title-block { grid-template-columns: 1fr; gap: 4px; }
+      .header-logo { width: 30px; height: 30px; }
       .header-title-block h1 { font-size: 20px; }
       .subhead { display: none; }
       .header-meta .meta-chip:nth-child(n+2) { display: none; }
@@ -574,7 +588,10 @@
   <header class="app-header">
     <section class="hero-card" aria-label="电力市场知识库概览">
       <div class="header-title-block">
-        <h1>电力市场知识库</h1>
+        <div class="header-brand">
+          <img class="header-logo" src="assets/electricity-market-logo.png" alt="" aria-hidden="true" />
+          <h1>电力市场知识库</h1>
+        </div>
         <p class="subhead">政策、概念与省级交易规则一站式查询；长文本折叠展示，来源与本地归档可直接打开。</p>
       </div>
       <div class="header-meta" aria-label="知识库元信息">
