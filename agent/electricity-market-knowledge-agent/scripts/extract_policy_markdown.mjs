@@ -119,7 +119,7 @@ async function extractPdfMarkdown(sourcePath, context) {
     ocrLanguage,
     "--deskew",
     "--rotate-pages",
-    "--skip-text",
+    "--force-ocr",
     "--sidecar",
     sidecarPath,
     sourcePath,
@@ -139,7 +139,11 @@ async function extractPdfMarkdown(sourcePath, context) {
 
   let ocrText = "";
   if (await pathExists(sidecarPath)) {
-    ocrText = await fs.readFile(sidecarPath, "utf8");
+    ocrText = (await fs.readFile(sidecarPath, "utf8"))
+      .split(/\r?\n/)
+      .filter((line) => !/^\[OCR skipped on page\(s\)/.test(line.trim()))
+      .join("\n")
+      .trim();
   }
   if (!ocrText.trim() && await pathExists(ocrPdfPath)) {
     ocrText = await extractPdfText(ocrPdfPath, runCommand);

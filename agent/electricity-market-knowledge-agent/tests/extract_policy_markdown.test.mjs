@@ -117,10 +117,12 @@ test("records OCR fallback status for likely scanned PDFs", async () => {
 
   const store = sampleStore();
   store.policyDocuments[0].localAttachments = [];
+  const calls = [];
   await extractPolicyMarkdown(store, {
     docsRoot,
     extractedAt: "2026-07-15",
-    runCommand: async (command) => {
+    runCommand: async (command, args) => {
+      calls.push([command, args]);
       if (command === "pdftotext") return { stdout: "", stderr: "" };
       if (command === "ocrmypdf") return { stdout: "", stderr: "ocrmypdf missing", exitCode: 127 };
       throw new Error(`unexpected command ${command}`);
@@ -130,6 +132,10 @@ test("records OCR fallback status for likely scanned PDFs", async () => {
   const document = store.policyDocuments[0];
   assert.equal(document.markdownExtraction.method, "ocr");
   assert.equal(document.markdownExtraction.ocrStatus, "failed");
+  assert.ok(
+    calls.some(([command, args]) => command === "ocrmypdf" && args.includes("--force-ocr")),
+    "疑似扫描件应强制 OCR，避免 skip-text 跳过低质量文字层",
+  );
   const markdown = await fs.readFile(path.join(docsRoot, document.markdownFilePath), "utf8");
   assert.match(markdown, /OCR 工具不可用或识别失败/);
 });
