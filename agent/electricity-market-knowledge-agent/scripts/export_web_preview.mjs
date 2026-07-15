@@ -455,6 +455,30 @@ function renderHtml(store, { excelDownloadHref } = {}) {
       font-size: 13px;
       letter-spacing: .02em;
     }
+    .summary-popover strong {
+      color: #083344;
+      background: linear-gradient(180deg, transparent 58%, rgba(34, 211, 238, .22) 0);
+      padding: 0 2px;
+    }
+    .summary-popover mark {
+      border-radius: 6px;
+      padding: 1px 4px;
+      background: #fff1c2;
+      color: #7c2d12;
+    }
+    .summary-popover code {
+      border-radius: 6px;
+      padding: 1px 5px;
+      background: #edf5f7;
+      color: #07566b;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .92em;
+    }
+    .summary-popover ul {
+      margin: 6px 0 0;
+      padding-left: 20px;
+    }
+    .summary-popover li { margin: 4px 0; }
     .empty {
       padding: 42px;
       text-align: center;
@@ -642,7 +666,27 @@ function renderHtml(store, { excelDownloadHref } = {}) {
     function renderInline(value) {
       return escapeHtml(value)
         .replace(/\\*\\*([^*]+)\\*\\*/g, "<strong>$1</strong>")
-        .replace(/==([^=]+)==/g, "<mark>$1</mark>");
+        .replace(/==([^=]+)==/g, "<mark>$1</mark>")
+        .replace(/\\x60([^\\x60]+)\\x60/g, "<code>$1</code>");
+    }
+
+    function renderSummaryMarkdown(value) {
+      const text = String(value ?? "").trim();
+      if (!text) return "未收录知识摘要。";
+      const lines = text.split(/\\r?\\n/).map((line) => line.trim()).filter(Boolean);
+      if (lines.length > 1 && lines.every((line) => /^(?:[-*]|\\d+[.、])\\s+/.test(line))) {
+        return '<ul>' + lines.map((line) => {
+          const item = line.replace(/^(?:[-*]|\\d+[.、])\\s+/, "");
+          return '<li>' + renderInline(item) + '</li>';
+        }).join("") + '</ul>';
+      }
+      return lines.map((line) => {
+        const headingMatch = line.match(/^#{1,3}\\s+(.+)$/);
+        if (headingMatch) return '<strong>' + renderInline(headingMatch[1]) + '</strong>';
+        const listMatch = line.match(/^(?:[-*]|\\d+[.、])\\s+(.+)$/);
+        if (listMatch) return "• " + renderInline(listMatch[1]);
+        return renderInline(line);
+      }).join("<br>");
     }
 
     function splitSentences(value) {
@@ -765,7 +809,7 @@ function renderHtml(store, { excelDownloadHref } = {}) {
       event.stopPropagation();
       const anchor = event.currentTarget;
       const text = anchor.getAttribute("data-summary") || "";
-      summaryPopover.textContent = text || "未收录知识摘要。";
+      summaryPopover.innerHTML = renderSummaryMarkdown(text);
       summaryPopover.classList.add("open");
       positionSummaryPopover(anchor);
     }
@@ -779,7 +823,7 @@ function renderHtml(store, { excelDownloadHref } = {}) {
       if (label === "查看文件") return renderLinks(value, "查看文件");
       if (label === "附件归档") return renderAttachmentLinks(value);
       const safe = escapeHtml(value);
-      if (label === "知识摘要") return '<button class="clamped-text summary-tooltip" type="button" data-summary="' + safe + '" onclick="showSummaryPopover(event)" onmouseenter="showSummaryPopover(event)" onfocus="showSummaryPopover(event)" onmouseleave="hideSummaryPopover()" onblur="hideSummaryPopover()">' + safe + '</button>';
+      if (label === "知识摘要") return '<button class="clamped-text summary-tooltip" type="button" data-summary="' + safe + '" onclick="showSummaryPopover(event)" onmouseenter="showSummaryPopover(event)" onfocus="showSummaryPopover(event)" onmouseleave="hideSummaryPopover()" onblur="hideSummaryPopover()">' + renderInline(value) + '</button>';
       if (longLabels.has(label) || safe.length > 90) return '<div class="clamped-text">' + safe + '</div>';
       if (label === "状态" && value === "待核验") return '<span class="badge">待核验</span>';
       return safe || '<span class="hint">未收录</span>';

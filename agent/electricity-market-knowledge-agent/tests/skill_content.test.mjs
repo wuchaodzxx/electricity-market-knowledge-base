@@ -56,6 +56,8 @@ test("skill preserves web preview requirements", async () => {
     "紧凑工具栏",
     "知识摘要",
     "200 字以内",
+    "Markdown 样式",
+    "安全渲染",
     "导出 Excel",
     "搜索框和页签固定",
     "表格区域滚动",
