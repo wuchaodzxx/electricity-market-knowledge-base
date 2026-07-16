@@ -164,6 +164,7 @@ test("exports an optimized local HTML web preview", async () => {
     "backdrop-filter",
     "knowledge-shell",
     "基础概念",
+    "全部",
     "国家政策",
     "江苏",
     "文件标题",
@@ -220,6 +221,20 @@ test("exports an optimized local HTML web preview", async () => {
   const dataMatch = html.match(/const appData = ([\s\S]*?);\n    let activeSheetIndex/);
   assert.ok(dataMatch, "网页应内嵌 appData");
   const appData = JSON.parse(dataMatch[1]);
+  assert.deepEqual(
+    appData.sheets.slice(0, 3).map((sheet) => sheet.name),
+    ["基础概念", "全部", "国家政策"],
+    "全部页签应位于基础概念之后、国家政策之前",
+  );
+  const allSheet = appData.sheets.find((sheet) => sheet.name === "全部");
+  assert.ok(allSheet, "网页应提供全国及各省政策混合检索的全部页签");
+  assert.ok(allSheet.columns.includes("适用范围"), "全部页签应展示国家/省份适用范围");
+  assert.deepEqual(
+    allSheet.rows.map((row) => row.title),
+    ["更新的江苏政策", "示例国家政策", "示例政策文件"],
+    "全部页签应包含国家与各省政策，并按发布日期倒序展示",
+  );
+  assert.ok(!allSheet.rows.some((row) => row.title === "机制电价"), "全部页签不应混入基础概念");
   const jiangsuSheet = appData.sheets.find((sheet) => sheet.name === "江苏");
   assert.deepEqual(
     jiangsuSheet.rows.map((row) => row.title),

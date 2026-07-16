@@ -13,6 +13,7 @@ const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const HERO_ASSET_SOURCE_PATH = path.resolve(SCRIPT_DIR, "../assets", HERO_ASSET_FILE);
 const LOGO_ASSET_SOURCE_PATH = path.resolve(SCRIPT_DIR, "../assets", LOGO_ASSET_FILE);
 const POLICY_COLUMNS = ["文件标题", "知识摘要", "发文编号", "发布单位", "发布日期", "链接", "查看文件", "附件归档", "状态", "最后核验日期"];
+const ALL_POLICY_COLUMNS = ["文件标题", "知识摘要", "发文编号", "发布单位", "发布日期", "适用范围", "链接", "查看文件", "附件归档", "状态", "最后核验日期"];
 
 function joinSourceField(documentIds, documents, field) {
   return documentIds
@@ -81,6 +82,25 @@ function policyRow(document) {
   };
 }
 
+function allPolicyRow(document) {
+  return {
+    ...policyRow(document),
+    values: [
+      document.title,
+      document.knowledgeSummary,
+      document.documentNumber,
+      document.issuer,
+      document.publishedAt,
+      document.scope,
+      document.officialUrl,
+      document.localFilePath,
+      formatAttachments(document.localAttachments ?? []),
+      document.status,
+      document.lastVerifiedAt,
+    ],
+  };
+}
+
 function buildSheets(store) {
   const documents = new Map(store.policyDocuments.map((document) => [document.id, document]));
   const sortedPolicyDocuments = [...store.policyDocuments].sort(compareByPublishedAtDesc);
@@ -107,6 +127,11 @@ function buildSheets(store) {
           concept.lastVerifiedAt,
         ],
       })),
+    },
+    {
+      name: "全部",
+      columns: ALL_POLICY_COLUMNS,
+      rows: sortedPolicyDocuments.map((document) => allPolicyRow(document)),
     },
     {
       name: "国家政策",
