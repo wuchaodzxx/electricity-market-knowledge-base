@@ -11,7 +11,7 @@
       "甘肃",
       "安徽"
     ],
-    "lastUpdatedAt": "2026-07-15"
+    "lastUpdatedAt": "2026-07-16"
   },
   "concepts": [
     {
@@ -223,7 +223,7 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-15"
+        "extractedAt": "2026-07-16"
       },
       "attachmentMarkdownFiles": [
         {
@@ -233,7 +233,7 @@
           "extraction": {
             "method": "pdf-text",
             "ocrStatus": "not-needed",
-            "extractedAt": "2026-07-15"
+            "extractedAt": "2026-07-16"
           }
         }
       ]
@@ -263,7 +263,7 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-15"
+        "extractedAt": "2026-07-16"
       },
       "attachmentMarkdownFiles": [
         {
@@ -273,7 +273,7 @@
           "extraction": {
             "method": "ocr",
             "ocrStatus": "success",
-            "extractedAt": "2026-07-15"
+            "extractedAt": "2026-07-16"
           }
         }
       ]
@@ -297,7 +297,7 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-15"
+        "extractedAt": "2026-07-16"
       },
       "attachmentMarkdownFiles": []
     },
@@ -320,7 +320,7 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-15"
+        "extractedAt": "2026-07-16"
       },
       "attachmentMarkdownFiles": []
     },
@@ -343,7 +343,7 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-15"
+        "extractedAt": "2026-07-16"
       },
       "attachmentMarkdownFiles": []
     },
@@ -366,7 +366,7 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-15"
+        "extractedAt": "2026-07-16"
       },
       "attachmentMarkdownFiles": []
     },
@@ -395,7 +395,7 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-15"
+        "extractedAt": "2026-07-16"
       },
       "attachmentMarkdownFiles": [
         {
@@ -405,7 +405,7 @@
           "extraction": {
             "method": "pdf-text",
             "ocrStatus": "not-needed",
-            "extractedAt": "2026-07-15"
+            "extractedAt": "2026-07-16"
           }
         }
       ]
@@ -435,7 +435,7 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-15"
+        "extractedAt": "2026-07-16"
       },
       "attachmentMarkdownFiles": [
         {
@@ -445,7 +445,7 @@
           "extraction": {
             "method": "pdf-text",
             "ocrStatus": "not-needed",
-            "extractedAt": "2026-07-15"
+            "extractedAt": "2026-07-16"
           }
         }
       ]
@@ -475,7 +475,7 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-15"
+        "extractedAt": "2026-07-16"
       },
       "attachmentMarkdownFiles": [
         {
@@ -485,7 +485,7 @@
           "extraction": {
             "method": "pdf-text",
             "ocrStatus": "not-needed",
-            "extractedAt": "2026-07-15"
+            "extractedAt": "2026-07-16"
           }
         }
       ]
@@ -510,7 +510,7 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-15"
+        "extractedAt": "2026-07-16"
       },
       "attachmentMarkdownFiles": []
     },
@@ -533,7 +533,7 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-15"
+        "extractedAt": "2026-07-16"
       },
       "attachmentMarkdownFiles": []
     },
@@ -556,7 +556,7 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-15"
+        "extractedAt": "2026-07-16"
       },
       "attachmentMarkdownFiles": []
     },
@@ -579,7 +579,7 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-15"
+        "extractedAt": "2026-07-16"
       },
       "attachmentMarkdownFiles": []
     },
@@ -602,7 +602,7 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-15"
+        "extractedAt": "2026-07-16"
       },
       "attachmentMarkdownFiles": []
     },
@@ -632,7 +632,7 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-15"
+        "extractedAt": "2026-07-16"
       },
       "attachmentMarkdownFiles": [
         {
@@ -642,7 +642,7 @@
           "extraction": {
             "method": "pdf-text",
             "ocrStatus": "not-needed",
-            "extractedAt": "2026-07-15"
+            "extractedAt": "2026-07-16"
           }
         }
       ]
@@ -789,11 +789,18 @@
   ],
   "updateEvents": [
     {
+      "id": "evt-20260716-remove-auto-excel-export",
+      "occurredAt": "2026-07-16",
+      "type": "更新",
+      "subjectId": "web-preview-publish-workflow",
+      "note": "按用户要求移除常规知识维护中的自动 Excel 生成与保存流程；网页预览和 GitHub Pages 发布不再生成或引用 Excel 下载文件，知识库以网页搜索、深度解读、知识浏览和本地归档文件作为主要查看入口。"
+    },
+    {
       "id": "evt-20260715-archive-ndrc-2025-411-source",
       "occurredAt": "2026-07-15",
       "type": "更新",
       "subjectId": "doc-ndrc-2025-411",
-      "note": "归档发改能源规〔2025〕411号PDF正文至本地 source-files，并登记官方PDF附件用于网页“查看文件”和“附件归档”；后续同步生成Markdown原文、Excel和网页数据。"
+      "note": "归档发改能源规〔2025〕411号PDF正文至本地 source-files，并登记官方PDF附件用于网页“查看文件”和“附件归档”；后续同步生成 Markdown 原文和网页数据。"
     },
     {
       "id": "evt-20260715-add-ancillary-service-market-concept",
@@ -863,7 +870,7 @@
       "occurredAt": "2026-07-15",
       "type": "更新",
       "subjectId": "concepts",
-      "note": "按网页快速阅读要求，为已入库基础概念补充 200 字以内知识摘要，完整详细解读继续保留用于详情弹窗和 Excel 全量导出。"
+      "note": "按网页快速阅读要求，为已入库基础概念补充 200 字以内知识摘要，完整详细解读继续保留用于深度解读弹窗和知识浏览。"
     },
     {
       "id": "event-20260715-knowledge-summary-policies",
@@ -877,7 +884,7 @@
       "occurredAt": "2026-07-15",
       "type": "更新",
       "subjectId": "web-preview-export-updateEvents",
-      "note": "优化网页头部、搜索和页签布局，删除当前页描述区域，增加导出 Excel 按钮，并固化所有知识新增、更新必须写入更新记录的维护规则。"
+      "note": "优化网页头部、搜索和页签布局，删除当前页描述区域，并固化所有知识新增、更新必须写入更新记录的维护规则。"
     },
     {
       "id": "event-20260715-markdown-ocr-knowledge-browser",

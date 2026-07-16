@@ -142,11 +142,10 @@ function jsonForHtml(value) {
   return JSON.stringify(value).replaceAll("<", "\\u003c").replaceAll(">", "\\u003e").replaceAll("&", "\\u0026");
 }
 
-function renderHtml(store, { excelDownloadHref } = {}) {
+function renderHtml(store) {
   const data = {
     generatedAt: new Date().toISOString().slice(0, 10),
     lastUpdatedAt: store.metadata.lastUpdatedAt,
-    excelDownloadHref: excelDownloadHref ?? `downloads/电力市场知识库-${store.metadata.lastUpdatedAt}.xlsx`,
     sheets: buildSheets(store),
   };
 
@@ -392,20 +391,6 @@ function renderHtml(store, { excelDownloadHref } = {}) {
       font-size: 12px;
       white-space: nowrap;
     }
-    .export-button {
-      flex: 0 0 auto;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      padding: 9px 13px;
-      background: linear-gradient(135deg, var(--brand-strong), #0e7490);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 750;
-      box-shadow: 0 8px 20px rgba(7, 86, 107, .18);
-    }
-    .export-button:hover { text-decoration: none; filter: brightness(1.04); }
     .card {
       flex: 1 1 auto;
       display: flex;
@@ -760,7 +745,6 @@ function renderHtml(store, { excelDownloadHref } = {}) {
           <input id="searchInput" type="search" placeholder="搜索概念、政策、交易品种、文号、适用对象……" />
           <div id="tabs" class="tabs"></div>
           <span id="resultMeta" class="result-meta"></span>
-          <a id="exportExcelLink" class="export-button" href="${data.excelDownloadHref}" download>导出 Excel</a>
         </div>
       </section>
       <section class="card">

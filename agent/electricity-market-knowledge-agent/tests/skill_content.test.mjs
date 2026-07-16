@@ -11,7 +11,6 @@ test("skill enforces official-source and manual-update safety rules", async () =
     "官方渠道",
     "未见正式文号",
     "仅在用户下达更新指令后",
-    "export_knowledge_base.mjs",
     "extract_policy_markdown.mjs",
     "待核验",
   ]) {
@@ -62,7 +61,8 @@ test("skill preserves web preview requirements", async () => {
     "不得写入 `knowledgeSummary`",
     "Markdown 样式",
     "安全渲染",
-    "导出 Excel",
+    "不再自动生成或保存 Excel",
+    "不得调用 `export_knowledge_base.mjs`",
     "搜索框和页签固定",
     "表格区域滚动",
     "省份页按政策文件维度",
@@ -90,12 +90,14 @@ test("skill preserves GitHub Pages publish requirements", async () => {
     "GitHub Pages",
     "docs/index.html",
     "公开访问",
+    "不再生成 Excel 下载文件",
     "wuchaodzxx/electricity-market-knowledge-base",
     "https://wuchaodzxx.github.io/electricity-market-knowledge-base/",
   ]) {
     assert.match(skill, new RegExp(requiredText.replaceAll("/", "\\/")));
   }
   assert.doesNotMatch(skill, /publish_gitee_pages\.mjs|gitee\.io|gitee main/);
+  assert.doesNotMatch(skill, /导出 Excel|exportExcelLink|docs\/downloads\/电力市场知识库-YYYY-MM-DD\.xlsx/);
 });
 
 test("skill preserves source-file archive requirements", async () => {
