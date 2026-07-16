@@ -12,6 +12,7 @@ test("skill enforces official-source and manual-update safety rules", async () =
     "未见正式文号",
     "仅在用户下达更新指令后",
     "extract_policy_markdown.mjs",
+    "ingest_policy.mjs",
     "待核验",
   ]) {
     assert.match(skill, new RegExp(requiredText));
@@ -122,8 +123,31 @@ test("skill preserves source-file archive requirements", async () => {
     "查看文件",
     "新标签页",
     "官方链接失效",
+    "增量",
+    "--force",
+    "sourceHash",
     "2026-01-30-关于完善发电侧容量电价机制的通知(发改价格〔2026〕114号)",
   ]) {
     assert.match(skill, new RegExp(requiredText.replaceAll("/", "\\/").replaceAll("(", "\\(").replaceAll(")", "\\)")));
+  }
+});
+
+test("skill documents the efficient incremental maintenance workflow", async () => {
+  const skill = await fs.readFile(
+    "agent/electricity-market-knowledge-agent/SKILL.md",
+    "utf8",
+  );
+  for (const requiredText of [
+    "录入加速",
+    "政策草稿",
+    "默认跳过已归档且本地文件存在的政策正文和附件",
+    "默认跳过未变化文件",
+    "sourceHash",
+    "--force",
+    "--force-extract",
+    "常规发布沿用增量 Markdown 提取",
+    "不直接写入正式知识库",
+  ]) {
+    assert.match(skill, new RegExp(requiredText));
   }
 });

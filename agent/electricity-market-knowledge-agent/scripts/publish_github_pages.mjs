@@ -18,6 +18,7 @@ export async function prepareGitHubPagesSite({
   outputsDir = "outputs",
   sitePath = "docs/index.html",
   date = today(),
+  forceExtract = false,
 } = {}) {
   if (!inputPath) {
     throw new Error("缺少 inputPath");
@@ -31,6 +32,7 @@ export async function prepareGitHubPagesSite({
     outputPath: inputPath,
     docsRoot,
     extractedAt: date,
+    force: forceExtract,
   });
   await exportWebPreview(inputPath, archivePath);
   await exportWebPreview(inputPath, sitePath);
@@ -48,8 +50,9 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const outputsDir = readOption("--outputs-dir") ?? "outputs";
   const sitePath = readOption("--site") ?? "docs/index.html";
   const date = readOption("--date") ?? today();
+  const forceExtract = process.argv.includes("--force-extract") || process.argv.includes("--force");
 
-  const result = await prepareGitHubPagesSite({ inputPath, outputsDir, sitePath, date });
+  const result = await prepareGitHubPagesSite({ inputPath, outputsDir, sitePath, date, forceExtract });
   console.log(`网页归档已生成：${result.archivePath}`);
   console.log(`GitHub Pages 首页已更新：${result.sitePath}`);
   console.log(`公开访问地址：${result.pagesUrl}`);

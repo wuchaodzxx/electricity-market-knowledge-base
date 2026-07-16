@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -52,7 +53,23 @@ test("prepares GitHub Pages index and dated web archive", async () => {
   const inputPath = path.join(tmpDir, "knowledge.json");
   const outputsDir = path.join(tmpDir, "outputs");
   const sitePath = path.join(tmpDir, "docs", "index.html");
-  await fs.writeFile(inputPath, JSON.stringify(sampleStore()), "utf8");
+  const sourcePath = path.join(tmpDir, "docs", "source-files", "2026-01-01-示例政策(发改价格〔2026〕1号).pdf");
+  const markdownPath = path.join(tmpDir, "docs", "knowledge-markdown", "doc-1", "政策正文.md");
+  const sourceBody = "示例政策归档文件，用于验证发布流程中的增量 Markdown 提取会跳过未变化文件。";
+  const sourceHash = createHash("sha256").update(sourceBody).digest("hex");
+  await fs.mkdir(path.dirname(sourcePath), { recursive: true });
+  await fs.mkdir(path.dirname(markdownPath), { recursive: true });
+  await fs.writeFile(sourcePath, sourceBody, "utf8");
+  await fs.writeFile(markdownPath, "# 示例政策\n\n已提取的 Markdown。", "utf8");
+  const store = sampleStore();
+  store.policyDocuments[0].markdownFilePath = "knowledge-markdown/doc-1/政策正文.md";
+  store.policyDocuments[0].markdownExtraction = {
+    method: "pdf-text",
+    ocrStatus: "not-needed",
+    extractedAt: "2026-07-14",
+    sourceHash,
+  };
+  await fs.writeFile(inputPath, JSON.stringify(store), "utf8");
 
   const result = await prepareGitHubPagesSite({
     inputPath,

@@ -109,6 +109,50 @@ test("extracts policy files and attachments to markdown and writes metadata", as
   assert.match(markdown, /# 测试政策/);
 });
 
+test("skips unchanged policy files after markdown has already been extracted", async () => {
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "policy-md-skip-"));
+  const docsRoot = path.join(tmpDir, "docs");
+  await fs.mkdir(path.join(docsRoot, "source-files"), { recursive: true });
+  await fs.writeFile(path.join(docsRoot, "source-files", "test-policy.pdf"), "fake pdf unchanged", "utf8");
+
+  const store = sampleStore();
+  store.policyDocuments[0].localAttachments = [];
+  const calls = [];
+  await extractPolicyMarkdown(store, {
+    docsRoot,
+    extractedAt: "2026-07-15",
+    runCommand: async (command) => {
+      calls.push(command);
+      if (command === "pdftotext") {
+        return { stdout: "这是测试政策 PDF 正文，可直接提取为 Markdown。".repeat(20), stderr: "" };
+      }
+      throw new Error(`unexpected command ${command}`);
+    },
+  });
+
+  assert.equal(store.policyDocuments[0].markdownExtraction.sourceHash?.length, 64);
+  assert.ok(calls.includes("pdftotext"), "第一次应实际提取文本");
+
+  const secondRun = await extractPolicyMarkdown(store, {
+    docsRoot,
+    extractedAt: "2026-07-16",
+    runCommand: async (command) => {
+      throw new Error(`unchanged file should not invoke ${command}`);
+    },
+  });
+
+  assert.deepEqual(secondRun, [
+    {
+      documentId: "doc-test",
+      markdownFilePath: "knowledge-markdown/doc-test/政策正文.md",
+      attachmentCount: 0,
+      ocrStatus: "not-needed",
+      skipped: true,
+    },
+  ]);
+  assert.equal(store.policyDocuments[0].markdownExtraction.extractedAt, "2026-07-15");
+});
+
 test("records OCR fallback status for likely scanned PDFs", async () => {
   const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "policy-md-ocr-"));
   const docsRoot = path.join(tmpDir, "docs");

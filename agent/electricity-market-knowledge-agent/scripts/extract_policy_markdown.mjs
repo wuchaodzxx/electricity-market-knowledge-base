@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { spawn } from "node:child_process";
 import { pathToFileURL } from "node:url";
 
@@ -83,6 +84,11 @@ async function pathExists(filePath) {
   } catch {
     return false;
   }
+}
+
+async function fileHash(filePath) {
+  const buffer = await fs.readFile(filePath);
+  return createHash("sha256").update(buffer).digest("hex");
 }
 
 async function extractPdfPageCount(pdfPath, runCommand) {
@@ -239,7 +245,7 @@ function renderMarkdownFile({ title, documentNumber, sourceFilePath, extraction,
   return `---\ntitle: ${yamlValue(title)}\ndocumentNumber: ${yamlValue(documentNumber)}\nsourceFile: ${yamlValue(sourceFilePath)}\nextractionMethod: ${method}\nocrStatus: ${status}\nextractedAt: ${extractedAt}\n${note}---\n\n# ${title}\n\n${markdownEscape(body) || "未提取到可用文本，需人工核验。"}\n`;
 }
 
-async function extractOneSource({ sourcePath, sourceFilePath, title, documentNumber, outputPath, extractedAt, context }) {
+async function extractOneSource({ sourcePath, sourceFilePath, title, documentNumber, outputPath, extractedAt, context, sourceHash }) {
   const kind = classifySourceFile(sourcePath);
   let result;
   if (!SUPPORTED_EXTENSIONS.has(path.extname(sourcePath).toLowerCase())) {
@@ -269,13 +275,21 @@ async function extractOneSource({ sourcePath, sourceFilePath, title, documentNum
     method: result.extraction.method,
     ocrStatus: result.extraction.ocrStatus,
     extractedAt,
+    sourceHash,
     note: result.extraction.note,
   };
+}
+
+async function shouldSkipExtraction({ outputPath, existingExtraction, sourceHash, force }) {
+  if (force) return false;
+  if (!existingExtraction || existingExtraction.sourceHash !== sourceHash) return false;
+  return await pathExists(outputPath);
 }
 
 export async function extractPolicyMarkdown(store, options = {}) {
   const docsRoot = options.docsRoot ?? "docs";
   const extractedAt = options.extractedAt ?? today();
+  const force = Boolean(options.force);
   const runCommand = options.runCommand ?? defaultRunCommand;
   const extractSpreadsheet = options.extractSpreadsheet ?? extractSpreadsheetWithPython;
   const ocrLanguage = options.ocrLanguage ?? DEFAULT_OCR_LANGUAGE;
@@ -287,44 +301,76 @@ export async function extractPolicyMarkdown(store, options = {}) {
     const policyRel = markdownRelativePath(document.id, "政策正文");
     const policyOutputPath = path.join(docsRoot, policyRel);
     const policySourcePath = path.join(docsRoot, document.localFilePath);
-    const policyExtraction = await extractOneSource({
-      sourcePath: policySourcePath,
-      sourceFilePath: document.localFilePath,
-      title: document.title,
-      documentNumber: document.documentNumber,
+    const policySourceHash = await fileHash(policySourcePath);
+    const policySkipped = await shouldSkipExtraction({
       outputPath: policyOutputPath,
-      extractedAt,
-      context,
+      existingExtraction: document.markdownExtraction,
+      sourceHash: policySourceHash,
+      force,
     });
+    const policyExtraction = policySkipped
+      ? document.markdownExtraction
+      : await extractOneSource({
+        sourcePath: policySourcePath,
+        sourceFilePath: document.localFilePath,
+        title: document.title,
+        documentNumber: document.documentNumber,
+        outputPath: policyOutputPath,
+        extractedAt,
+        context,
+        sourceHash: policySourceHash,
+      });
     document.markdownFilePath = policyRel;
     document.markdownExtraction = policyExtraction;
 
-    document.attachmentMarkdownFiles = [];
+    const previousAttachmentMarkdownFiles = Array.isArray(document.attachmentMarkdownFiles)
+      ? document.attachmentMarkdownFiles
+      : [];
+    const nextAttachmentMarkdownFiles = [];
+    let skippedAttachmentCount = 0;
     for (const attachment of document.localAttachments ?? []) {
       const attachmentRel = markdownRelativePath(document.id, attachment.title);
       const attachmentOutputPath = path.join(docsRoot, attachmentRel);
-      const attachmentExtraction = await extractOneSource({
-        sourcePath: path.join(docsRoot, attachment.localFilePath),
-        sourceFilePath: attachment.localFilePath,
-        title: attachment.title,
-        documentNumber: document.documentNumber,
+      const attachmentSourcePath = path.join(docsRoot, attachment.localFilePath);
+      const attachmentSourceHash = await fileHash(attachmentSourcePath);
+      const previousAttachment = previousAttachmentMarkdownFiles.find((item) =>
+        item.sourceFilePath === attachment.localFilePath
+        && item.markdownFilePath === attachmentRel
+      );
+      const attachmentSkipped = await shouldSkipExtraction({
         outputPath: attachmentOutputPath,
-        extractedAt,
-        context,
+        existingExtraction: previousAttachment?.extraction,
+        sourceHash: attachmentSourceHash,
+        force,
       });
-      document.attachmentMarkdownFiles.push({
+      const attachmentExtraction = attachmentSkipped
+        ? previousAttachment.extraction
+        : await extractOneSource({
+          sourcePath: attachmentSourcePath,
+          sourceFilePath: attachment.localFilePath,
+          title: attachment.title,
+          documentNumber: document.documentNumber,
+          outputPath: attachmentOutputPath,
+          extractedAt,
+          context,
+          sourceHash: attachmentSourceHash,
+        });
+      if (attachmentSkipped) skippedAttachmentCount += 1;
+      nextAttachmentMarkdownFiles.push({
         title: attachment.title,
         sourceFilePath: attachment.localFilePath,
         markdownFilePath: attachmentRel,
         extraction: attachmentExtraction,
       });
     }
+    document.attachmentMarkdownFiles = nextAttachmentMarkdownFiles;
 
     results.push({
       documentId: document.id,
       markdownFilePath: document.markdownFilePath,
       attachmentCount: document.attachmentMarkdownFiles.length,
       ocrStatus: document.markdownExtraction.ocrStatus,
+      skipped: policySkipped && skippedAttachmentCount === (document.localAttachments ?? []).length,
     });
   }
 
@@ -336,10 +382,11 @@ export async function extractPolicyMarkdownFile({
   docsRoot = "docs",
   outputPath = inputPath,
   extractedAt = today(),
+  force = false,
 } = {}) {
   if (!inputPath) throw new Error("缺少 inputPath");
   const store = JSON.parse(await fs.readFile(inputPath, "utf8"));
-  const results = await extractPolicyMarkdown(store, { docsRoot, extractedAt });
+  const results = await extractPolicyMarkdown(store, { docsRoot, extractedAt, force });
   await fs.writeFile(outputPath, `${JSON.stringify(store, null, 2)}\n`, "utf8");
   return results;
 }
@@ -349,8 +396,10 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const docsRoot = readOption("--docs-root") ?? "docs";
   const outputPath = readOption("--output") ?? inputPath;
   const extractedAt = readOption("--date") ?? today();
-  const results = await extractPolicyMarkdownFile({ inputPath, docsRoot, outputPath, extractedAt });
+  const force = process.argv.includes("--force");
+  const results = await extractPolicyMarkdownFile({ inputPath, docsRoot, outputPath, extractedAt, force });
   for (const result of results) {
-    console.log(`${result.documentId}: ${result.markdownFilePath}，附件 ${result.attachmentCount} 个，OCR 状态 ${result.ocrStatus}`);
+    const status = result.skipped ? "已跳过未变化文件" : `OCR 状态 ${result.ocrStatus}`;
+    console.log(`${result.documentId}: ${result.markdownFilePath}，附件 ${result.attachmentCount} 个，${status}`);
   }
 }

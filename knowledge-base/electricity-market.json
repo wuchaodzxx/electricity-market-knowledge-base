@@ -263,7 +263,8 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-16"
+        "extractedAt": "2026-07-16",
+        "sourceHash": "b08c09b14dccfe00eb3aeabbf014d47bad8b4ea4aa8316c63b654fbfa504b24f"
       },
       "attachmentMarkdownFiles": [
         {
@@ -273,7 +274,8 @@
           "extraction": {
             "method": "pdf-text",
             "ocrStatus": "not-needed",
-            "extractedAt": "2026-07-16"
+            "extractedAt": "2026-07-16",
+            "sourceHash": "1c8189b1c36fe2eea969a3123f3cae0ee549e4212a46dc167589651d93135da0"
           }
         }
       ]
@@ -303,7 +305,8 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-16"
+        "extractedAt": "2026-07-16",
+        "sourceHash": "0f4c734e60f59ecec31c23b776e4fb4aa22020aa6d78f8402a5487b115127722"
       },
       "attachmentMarkdownFiles": [
         {
@@ -313,7 +316,8 @@
           "extraction": {
             "method": "ocr",
             "ocrStatus": "success",
-            "extractedAt": "2026-07-16"
+            "extractedAt": "2026-07-16",
+            "sourceHash": "3fa07f2beb80e9b2e1f376be0bb5eac47ef8cc0e54244bed48c3f7d88fa27c06"
           }
         }
       ]
@@ -337,7 +341,8 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-16"
+        "extractedAt": "2026-07-16",
+        "sourceHash": "a178a1df20652ee5459eaff872f4e6095e09790c6166e46b702ff76bb8704c59"
       },
       "attachmentMarkdownFiles": []
     },
@@ -360,7 +365,8 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-16"
+        "extractedAt": "2026-07-16",
+        "sourceHash": "95400b54e6b282c5d55d922bf88ed76cb34021396391c61d13dbab97e7e27d74"
       },
       "attachmentMarkdownFiles": []
     },
@@ -383,7 +389,8 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-16"
+        "extractedAt": "2026-07-16",
+        "sourceHash": "418488a9a50a46ad8ec16c0bbf20c7b6fb7cac9432da33e78112e54b539983fa"
       },
       "attachmentMarkdownFiles": []
     },
@@ -406,7 +413,8 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-16"
+        "extractedAt": "2026-07-16",
+        "sourceHash": "cebdea9215ed78b5725200352194b36c952d1a3a6bfbae414bd523e176acd057"
       },
       "attachmentMarkdownFiles": []
     },
@@ -435,7 +443,8 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-16"
+        "extractedAt": "2026-07-16",
+        "sourceHash": "d05ec66b68658e9354c7c4fc18fa14753592062eecc6e2f7356318b9cfe419cd"
       },
       "attachmentMarkdownFiles": [
         {
@@ -445,7 +454,8 @@
           "extraction": {
             "method": "pdf-text",
             "ocrStatus": "not-needed",
-            "extractedAt": "2026-07-16"
+            "extractedAt": "2026-07-16",
+            "sourceHash": "bf66396868a2a0d3956e879a3711c9fb085311d38a7d3f4c79cc959940a32f2f"
           }
         }
       ]
@@ -475,7 +485,8 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-16"
+        "extractedAt": "2026-07-16",
+        "sourceHash": "9d609cbd4d31a059e58cba865f4536231033d590e51ed9015173206fb6a34e0d"
       },
       "attachmentMarkdownFiles": [
         {
@@ -485,7 +496,8 @@
           "extraction": {
             "method": "pdf-text",
             "ocrStatus": "not-needed",
-            "extractedAt": "2026-07-16"
+            "extractedAt": "2026-07-16",
+            "sourceHash": "b6d78a873d5e0d862adb373f3002d16abd3abfd4a27097aaea90c4a1a56e93e6"
           }
         }
       ]
@@ -515,7 +527,8 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-16"
+        "extractedAt": "2026-07-16",
+        "sourceHash": "fa8a5d1201091a50550fe4702ea35d459c29e1f3efbf3819c538f28fed8f570e"
       },
       "attachmentMarkdownFiles": [
         {
@@ -525,7 +538,8 @@
           "extraction": {
             "method": "pdf-text",
             "ocrStatus": "not-needed",
-            "extractedAt": "2026-07-16"
+            "extractedAt": "2026-07-16",
+            "sourceHash": "0745e827bcc147780b368a76f593306feeacb04ac066ff3de48f53ecb4c252f2"
           }
         }
       ]
@@ -550,7 +564,8 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-16"
+        "extractedAt": "2026-07-16",
+        "sourceHash": "6c2553cab505a0ad7185bab6769c03fce5a4b58cd2ed468a6ab350c94ab9ec85"
       },
       "attachmentMarkdownFiles": []
     },
@@ -573,7 +588,8 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-16"
+        "extractedAt": "2026-07-16",
+        "sourceHash": "17c855351d44b8f8b2508a20808aed8218a37519109a133a576242b28382ba2f"
       },
       "attachmentMarkdownFiles": []
     },
@@ -596,7 +612,8 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-16"
+        "extractedAt": "2026-07-16",
+        "sourceHash": "31b14993f6595ea30fb54409a341a891263dbe2561ad542cf388f640c67701d7"
       },
       "attachmentMarkdownFiles": []
     },
@@ -619,7 +636,8 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-16"
+        "extractedAt": "2026-07-16",
+        "sourceHash": "592c7a414e9badddd73b55d0ab46dd12acddab512d650858144f90091c6dcdef"
       },
       "attachmentMarkdownFiles": []
     },
@@ -642,7 +660,8 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-16"
+        "extractedAt": "2026-07-16",
+        "sourceHash": "db9b2d09467faba3dcb3069fd2b08fbd8cb32ab6132047594f160f437138f195"
       },
       "attachmentMarkdownFiles": []
     },
@@ -672,7 +691,8 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-16"
+        "extractedAt": "2026-07-16",
+        "sourceHash": "e331d1e70103806977daa999cd3f39746d0c7226ec6f8ee95e2aa7cb6ce2aa3e"
       },
       "attachmentMarkdownFiles": [
         {
@@ -682,7 +702,8 @@
           "extraction": {
             "method": "pdf-text",
             "ocrStatus": "not-needed",
-            "extractedAt": "2026-07-16"
+            "extractedAt": "2026-07-16",
+            "sourceHash": "e331d1e70103806977daa999cd3f39746d0c7226ec6f8ee95e2aa7cb6ce2aa3e"
           }
         }
       ]
@@ -713,7 +734,8 @@
       "markdownExtraction": {
         "method": "pdf-text",
         "ocrStatus": "not-needed",
-        "extractedAt": "2026-07-16"
+        "extractedAt": "2026-07-16",
+        "sourceHash": "c8c89bb6a8526f3ba3bc68af56709ded7d7bcc3644fd607c05163fba27dffead"
       },
       "attachmentMarkdownFiles": [
         {
@@ -723,7 +745,8 @@
           "extraction": {
             "method": "office",
             "ocrStatus": "not-needed",
-            "extractedAt": "2026-07-16"
+            "extractedAt": "2026-07-16",
+            "sourceHash": "e1bc6b95d81c54f099f3c6f1d3c22a6dacc3fd74edc8b92626b83451c1da8844"
           }
         }
       ]

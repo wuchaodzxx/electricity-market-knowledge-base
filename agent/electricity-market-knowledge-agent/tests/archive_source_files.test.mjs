@@ -179,6 +179,56 @@ test("downloads official attachments and records them for detailed interpretatio
   );
 });
 
+test("skips already archived policy files unless forced", async () => {
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "electricity-source-skip-"));
+  const inputPath = path.join(tmpDir, "knowledge.json");
+  const sourceDir = path.join(tmpDir, "docs", "source-files");
+  await fs.mkdir(sourceDir, { recursive: true });
+  await fs.writeFile(path.join(sourceDir, "archived.pdf"), "%PDF-1.4\n已归档", "utf8");
+  const store = {
+    metadata: {
+      schemaVersion: 1,
+      supportedProvinces: ["江苏", "浙江", "山西", "湖北", "四川", "山东", "甘肃", "安徽"],
+      lastUpdatedAt: "2026-07-16",
+    },
+    concepts: [],
+    provincialRules: [],
+    updateEvents: [],
+    policyDocuments: [
+      {
+        id: "doc-archived",
+        title: "已归档政策",
+        documentNumber: "发改价格〔2026〕9号",
+        issuer: "国家发展改革委",
+        publishedAt: "2026-01-01",
+        officialUrl: "https://example.gov.cn/archived",
+        localFilePath: "source-files/archived.pdf",
+        localAttachments: [],
+        scope: "国家",
+        status: "有效",
+        firstRecordedAt: "2026-07-16",
+        lastVerifiedAt: "2026-07-16",
+        knowledgeSummary: "已归档政策用于验证增量归档跳过逻辑。",
+        detailedSummary: "示例详细解读。",
+      },
+    ],
+  };
+  await fs.writeFile(inputPath, JSON.stringify(store), "utf8");
+
+  const result = await archivePolicyDocuments({
+    inputPath,
+    sourceDir,
+    publicPrefix: "source-files",
+    fetchImpl: async () => {
+      throw new Error("already archived file should not be fetched");
+    },
+  });
+
+  assert.equal(result.archived.length, 0);
+  assert.deepEqual(result.skipped.map((item) => item.id), ["doc-archived"]);
+  assert.equal(result.failed.length, 0);
+});
+
 test("ignores navigation and correction links when extracting attachments", () => {
   const links = extractAttachmentLinks(
     `

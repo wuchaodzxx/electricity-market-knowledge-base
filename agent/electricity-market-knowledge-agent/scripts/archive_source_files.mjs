@@ -316,6 +316,27 @@ async function downloadAttachments({
   return downloaded;
 }
 
+async function pathExists(filePath) {
+  try {
+    await fs.access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function hasCompleteLocalArchive(document, sourceDir) {
+  if (!document.localFilePath) return false;
+  const docsRoot = path.dirname(sourceDir);
+  const policyPath = path.join(docsRoot, document.localFilePath);
+  if (!await pathExists(policyPath)) return false;
+  for (const attachment of document.localAttachments ?? []) {
+    if (!attachment.localFilePath) return false;
+    if (!await pathExists(path.join(docsRoot, attachment.localFilePath))) return false;
+  }
+  return true;
+}
+
 export async function archivePolicyDocuments({
   inputPath,
   sourceDir = "docs/source-files",
@@ -323,6 +344,7 @@ export async function archivePolicyDocuments({
   fetchImpl = fetch,
   renderPdfImpl = defaultRenderPdf,
   siteBaseUrl = "",
+  force = false,
 } = {}) {
   if (!inputPath) throw new Error("缺少 inputPath");
 
@@ -331,9 +353,18 @@ export async function archivePolicyDocuments({
 
   const archived = [];
   const failed = [];
+  const skipped = [];
 
   for (const document of store.policyDocuments ?? []) {
     try {
+      if (!force && await hasCompleteLocalArchive(document, sourceDir)) {
+        skipped.push({
+          id: document.id,
+          localFilePath: document.localFilePath,
+          attachmentCount: (document.localAttachments ?? []).length,
+        });
+        continue;
+      }
       const response = await fetchImpl(document.officialUrl, {
         headers: {
           "user-agent": "Mozilla/5.0 Codex electricity-market-knowledge-agent",
@@ -382,7 +413,7 @@ export async function archivePolicyDocuments({
   }
 
   await fs.writeFile(inputPath, `${JSON.stringify(store, null, 2)}\n`, "utf8");
-  return { archived, failed };
+  return { archived, skipped, failed };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
@@ -390,14 +421,19 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const sourceDir = readOption("--source-dir") ?? "docs/source-files";
   const publicPrefix = readOption("--public-prefix") ?? "source-files";
   const siteBaseUrl = readOption("--site-base-url") ?? "";
+  const force = process.argv.includes("--force");
   const result = await archivePolicyDocuments({
     inputPath,
     sourceDir,
     publicPrefix,
     siteBaseUrl,
+    force,
   });
   for (const item of result.archived) {
     console.log(`已归档：${item.id} -> ${item.localFilePath}，附件 ${item.attachmentCount} 个`);
+  }
+  for (const item of result.skipped) {
+    console.log(`已跳过：${item.id} -> ${item.localFilePath}，本地归档未变化`);
   }
   for (const item of result.failed) {
     console.error(`归档失败：${item.id} ${item.officialUrl} ${item.error}`);
