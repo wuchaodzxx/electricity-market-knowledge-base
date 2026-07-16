@@ -882,6 +882,207 @@
         "sourceHash": "76ae82f7211a815682e24493bcccae5e81c9123860b2476e5ea51d49775b12f1"
       },
       "attachmentMarkdownFiles": []
+    },
+    {
+      "id": "doc-ah-2026-long-term-draft",
+      "title": "安徽电力中长期市场实施细则（征求意见稿）",
+      "documentNumber": "未见正式文号",
+      "issuer": "国家能源局华东监管局（公开附件）",
+      "publishedAt": "2026-02-10",
+      "officialUrl": "https://hdj.nea.gov.cn/hdhy/dczj/202601/P020260130788849464632.pdf",
+      "localFilePath": "source-files/2026-02-10-安徽电力中长期市场实施细则（征求意见稿）(未见正式文号).pdf",
+      "localAttachments": [],
+      "scope": "安徽",
+      "status": "被替代",
+      "firstRecordedAt": "2026-07-16",
+      "lastVerifiedAt": "2026-07-16",
+      "knowledgeSummary": "该征求意见稿拟规范安徽多年、年度、月度及月内中长期电能量交易、合同管理、执行结算和信息披露；2026年3月官方正式版已发布，故仅保留作修订追溯。",
+      "detailedSummary": "### 文件定位\n- 用户提供的征求意见稿与国家能源局华东监管局公开附件相符，覆盖安徽中长期市场注册、交易、执行、结算、信息披露和监督管理。\n- 细则所称中长期交易包括多年、年度、月度和月内（旬、周、多日）等周期的电能量交易；执行政府定价的优先发电电量以厂网间双边交易和购售电合同方式纳入管理。\n\n### 主要机制\n- 市场主体包括发电企业、售电公司、电力用户和符合条件的新型经营主体；交易可通过双边协商、集中交易等市场化方式开展。\n- 合同需要明确电量、电价、执行曲线及偏差处理，并与现货市场、跨省跨区和长三角相关交易衔接。\n- 主体需依规则完成注册、信用和履约管理，并承担合同执行、结算确认及信息披露责任。\n\n### 状态说明\n- 该稿已由2026年3月公开的正式《安徽电力中长期市场实施细则》替代，当前不作为有效规则引用。",
+      "notes": "用户提供PDF与华东能源监管局公开征求意见附件一致；现行文件见 doc-ah-2026-long-term。",
+      "markdownFilePath": "knowledge-markdown/doc-ah-2026-long-term-draft/政策正文.md",
+      "markdownExtraction": {
+        "method": "pdf-text",
+        "ocrStatus": "not-needed",
+        "extractedAt": "2026-07-16",
+        "sourceHash": "afe1b07087a7fde940e63b5d0394dcb20e3c1870295de4e7c85661fa99c26750"
+      },
+      "attachmentMarkdownFiles": []
+    },
+    {
+      "id": "doc-ah-2026-long-term",
+      "title": "安徽电力中长期市场实施细则",
+      "documentNumber": "未见正式文号",
+      "issuer": "国家能源局华东监管局（公开附件）",
+      "publishedAt": "2026-03-31",
+      "officialUrl": "https://hdj.nea.gov.cn/xxgk/fdzdgknr/gfxwj/hdnyjgfxwj/202603/P020260331593555268345.pdf",
+      "localFilePath": "source-files/2026-03-31-安徽电力中长期市场实施细则(未见正式文号).pdf",
+      "localAttachments": [],
+      "scope": "安徽",
+      "status": "有效",
+      "firstRecordedAt": "2026-07-16",
+      "lastVerifiedAt": "2026-07-16",
+      "replacesDocumentId": "doc-ah-2026-long-term-draft",
+      "knowledgeSummary": "现行安徽中长期细则规范多年、年度、月度和月内电能量交易，明确经营主体注册、交易组织、合同执行、结算、信息披露及与现货市场衔接要求。",
+      "detailedSummary": "### 文件定位\n- 该细则是2026年3月公开的安徽中长期市场正式规则，适用于已完成市场注册的经营主体通过双边协商、集中交易等方式开展的中长期电能量交易。\n- 中长期交易覆盖多年、年度、月度和月内（旬、周、多日）等时间维度；政府定价优先发电电量通过厂网间双边交易及购售电合同纳入合同管理。\n\n### 交易与合同\n- 发电企业、售电公司、电力用户和符合条件的新型经营主体按各自市场身份参与，交易组织、合同签订和执行需要遵守交易公告及市场运营安排。\n- 合同应形成可执行的电量、电价和曲线等要素，并按照规则参与校核、变更、执行和结算；相关安排需与现货市场、省间及长三角交易衔接。\n\n### 管理重点\n- 规则把注册、信用、履约、信息披露、技术支持和争议处理纳入统一管理。对经营主体而言，关注交易资格、合同曲线、偏差风险和结算确认是参与中长期交易的核心环节。",
+      "notes": "官方附件为扫描版，已完成视觉核验并归档；由其替代同题征求意见稿。",
+      "markdownFilePath": "knowledge-markdown/doc-ah-2026-long-term/政策正文.md",
+      "markdownExtraction": {
+        "method": "ocr",
+        "ocrStatus": "success",
+        "extractedAt": "2026-07-16",
+        "sourceHash": "3f54c78b0f37c3817aa7e45d7e451353578e70dea34bac7c94c7059878058ae8"
+      },
+      "attachmentMarkdownFiles": []
+    },
+    {
+      "id": "doc-ah-2026-credit-evaluation-draft",
+      "title": "安徽电力市场信用评价实施细则（征求意见稿）",
+      "documentNumber": "未见正式文号",
+      "issuer": "安徽电力交易中心（待官方发布页核验）",
+      "publishedAt": "2026-02-10",
+      "officialUrl": "https://pmos.ah.sgcc.com.cn/",
+      "localFilePath": "source-files/2026-02-10-安徽电力市场信用评价实施细则（征求意见稿）(未见正式文号).pdf",
+      "localAttachments": [],
+      "scope": "安徽",
+      "status": "待核验",
+      "firstRecordedAt": "2026-07-16",
+      "lastVerifiedAt": "2026-07-16",
+      "knowledgeSummary": "该征求意见稿拟对安徽发电企业、售电公司和电力用户实行信用评价；以基础分、激励和惩戒相结合，并将评价结果用于市场管理。",
+      "detailedSummary": "### 文件定位\n- 用户提供文本显示，安徽电力交易中心在省政府主管部门授权下开展市场经营主体信用评价评级；适用对象包括发电企业、售电公司和电力用户。\n- 文件明确评价应遵循科学合理、公开透明、守信激励和失信惩戒原则。\n\n### 评价框架\n- 文本采用基础信用分、守信激励和失信惩戒相结合的框架，基础分为1000分，外部信用与市场现场评价分别构成评价依据；守信行为可加分，失信行为可扣分直至零分。\n- 指标覆盖主体资质、履约、信息报送、交易行为、违法违规和监管处理等，并设置信用等级、评价周期和异议处理安排。\n\n### 状态说明\n- 本条依据用户提供PDF录入，尚未定位到对应的官方公告或官方附件直链；发布程序、正式文号、最终指标及当前效力均待安徽电力交易中心或主管部门官网核验。",
+      "notes": "仅作为待核验征求意见材料保存，不能作为现行信用管理的确定性依据。",
+      "markdownFilePath": "knowledge-markdown/doc-ah-2026-credit-evaluation-draft/政策正文.md",
+      "markdownExtraction": {
+        "method": "pdf-text",
+        "ocrStatus": "not-needed",
+        "extractedAt": "2026-07-16",
+        "sourceHash": "a87b29edabde905c6b291a4971b5d96ab83a881ccd80df7bae1875b806613c65"
+      },
+      "attachmentMarkdownFiles": []
+    },
+    {
+      "id": "doc-ah-2026-spot-settlement-6-1",
+      "title": "安徽电力现货市场结算实施细则（结算试运行第6-1版）",
+      "documentNumber": "未见正式文号",
+      "issuer": "安徽电力交易中心（待官方发布页核验）",
+      "publishedAt": "2026-01-31",
+      "officialUrl": "https://pmos.ah.sgcc.com.cn/",
+      "localFilePath": "source-files/2026-01-31-安徽电力现货市场结算实施细则（结算试运行第6-1版）(未见正式文号).pdf",
+      "localAttachments": [],
+      "scope": "安徽",
+      "status": "待核验",
+      "firstRecordedAt": "2026-07-16",
+      "lastVerifiedAt": "2026-07-16",
+      "knowledgeSummary": "第6-1版结算试运行细则提出市场化机组和市场用户原则上日清月结，明确中长期与现货衔接、日清分、月结算、偏差处理和不平衡资金结算。",
+      "detailedSummary": "### 文件定位\n- 用户提供的第6-1版结算试运行文本覆盖现货市场结算权责、结算原则、流程、电能量电费、市场运行费用、不平衡资金和违约信用等内容。\n- 市场化机组和市场用户原则上按日进行交易结果清分、按月结算电费；未参与中长期市场且接受市场价格的新能源项目采用月清月结。\n\n### 结算逻辑\n- 中长期合约电量按合同价格结算，并按照机组或用户所在节点与日前、实时市场统一结算点的差额机制衔接；独立储能充放电采用所在节点电价结算。\n- 日清分预结算依据原则上在运行日后第3个工作日前形成，经营主体对日清或月结核对版有异议时，应在1个工作日内反馈；正式日清依据原则上在运行日后第5个工作日前发布。\n- 细则还规定市场价格限值、二级价格限值、调平、偏差收益回收、费用追退补等安排，具体参数以附表和主管部门最终发布为准。\n\n### 状态说明\n- 原文标明“结算试运行第6-1版”。本地原文完整归档，但尚未定位到对应官方发布页，故不作为正式有效规则作确定性引用。",
+      "notes": "需与结算参数表联动理解；正式口径待官方公告核验。",
+      "markdownFilePath": "knowledge-markdown/doc-ah-2026-spot-settlement-6-1/政策正文.md",
+      "markdownExtraction": {
+        "method": "pdf-text",
+        "ocrStatus": "not-needed",
+        "extractedAt": "2026-07-16",
+        "sourceHash": "f4d598d792400bd1ae9c22ff5506799dfda986362c8047fde4547cf29cbc1e2e"
+      },
+      "attachmentMarkdownFiles": []
+    },
+    {
+      "id": "doc-ah-2025-spot-entry-exit-6",
+      "title": "安徽电力现货市场准入退出实施细则（结算试运行第6版）",
+      "documentNumber": "未见正式文号",
+      "issuer": "安徽电力交易中心（待官方发布页核验）",
+      "publishedAt": "2025-12-30",
+      "officialUrl": "https://pmos.ah.sgcc.com.cn/",
+      "localFilePath": "source-files/2025-12-30-安徽电力现货市场准入退出实施细则（结算试运行第6版）(未见正式文号).pdf",
+      "localAttachments": [],
+      "scope": "安徽",
+      "status": "待核验",
+      "firstRecordedAt": "2026-07-16",
+      "lastVerifiedAt": "2026-07-16",
+      "knowledgeSummary": "第6版准入退出细则规定参与安徽现货市场的主体需满足资质、技术和注册信息要求；退出分为申请退出和强制注销，并要求处理未履约合同和结算事项。",
+      "detailedSummary": "### 文件定位\n- 文本用于规范参与安徽现货市场的市场主体准入和退出，涉及发电企业、售电公司、电力用户和新型市场主体的定义、注册及资料管理。\n- 参与主体需满足现货市场所需的电力、电量、计量、通信和技术支持等条件，并按要求提交身份、企业和基础参数信息。\n\n### 准入与退出\n- 新型市场主体参与现货交易时，需完成相应注册并满足技术和业务要求；市场运营机构可对影响交易组织的机组商业运行、容量调整等关键信息进行管理。\n- 退出包括申请退出和强制注销。已选择市场化交易的经营主体原则上不得自行退出；符合正当理由退出的，应履行申请、公示、合同处理和结算等程序。\n- 省交易中心受理自愿退出申请后通过交易平台等渠道公示，无异议后方可办理；售电公司退出还需遵循售电公司管理办法。\n\n### 状态说明\n- 本条为用户提供的结算试运行第6版原文，尚未找到对应官方公告或附件直链，准入门槛和退出条件需以主管部门或交易中心最终公开版本为准。",
+      "notes": "本地原文已归档；当前状态为待核验。",
+      "markdownFilePath": "knowledge-markdown/doc-ah-2025-spot-entry-exit-6/政策正文.md",
+      "markdownExtraction": {
+        "method": "pdf-text",
+        "ocrStatus": "not-needed",
+        "extractedAt": "2026-07-16",
+        "sourceHash": "b9b6d01d401194d258f3bf2ab13bfb563d780d09bb22bd2ba020856c1d6de5e8"
+      },
+      "attachmentMarkdownFiles": []
+    },
+    {
+      "id": "doc-ah-2026-settlement-parameters-draft",
+      "title": "安徽电力市场结算参数表（征求意见稿）",
+      "documentNumber": "未见正式文号",
+      "issuer": "安徽电力交易中心（待官方发布页核验）",
+      "publishedAt": "2026-01-23",
+      "officialUrl": "https://pmos.ah.sgcc.com.cn/",
+      "localFilePath": "source-files/2026-01-23-安徽电力市场结算参数表（征求意见稿）(未见正式文号).pdf",
+      "localAttachments": [],
+      "scope": "安徽",
+      "status": "待核验",
+      "firstRecordedAt": "2026-07-16",
+      "lastVerifiedAt": "2026-07-16",
+      "knowledgeSummary": "该征求意见参数表列出煤电、新能源、虚拟电厂及用户侧中长期偏差、曲线偏差和日前申报偏差等22项暂定结算参数，并明确以政府主管部门发布为准。",
+      "detailedSummary": "### 文件定位\n- 参数表为用户提供的征求意见材料，共列示22项暂定参数，用于配合现货市场结算细则中的收益回收、偏差、曲线偏差、日前申报偏差和电量调平计算。\n\n### 参数要点\n- 表中列有煤电机组月度超额收益回收系数0.91、月度缺额收益补偿系数0.82、月度超额收益回收系数h10为1.05；供需调节系数在1、7、8、12月暂定1.1，其余月份暂定1。\n- 用户侧中长期交易允许负偏差在1、7、8、12月暂定30%、其他月份暂定40%；煤电和生物质机组中长期欠签允许负偏差暂定20%。新能源和虚拟电厂交易单元的中长期超签允许正偏差暂定30%。\n- 表尾明确“以政府主管部门发布为准”，因此参数不得脱离正式发布状态直接用于结算测算或合规判断。\n\n### 状态说明\n- 尚未定位到该表的官方发布页或附件直链，完整本地原文已归档，当前仅作为待核验的征求意见参数记录。",
+      "notes": "参数为暂定值，不能视作已生效结算参数。",
+      "markdownFilePath": "knowledge-markdown/doc-ah-2026-settlement-parameters-draft/政策正文.md",
+      "markdownExtraction": {
+        "method": "pdf-text",
+        "ocrStatus": "not-needed",
+        "extractedAt": "2026-07-16",
+        "sourceHash": "f14dbc8c0d78423ac8f458eece4fa25742cf4012cf59b207499055e98ee7a405"
+      },
+      "attachmentMarkdownFiles": []
+    },
+    {
+      "id": "doc-ah-2026-spot-energy-6-1",
+      "title": "安徽电力现货电能量市场交易实施细则（结算试运行第6-1版）",
+      "documentNumber": "未见正式文号",
+      "issuer": "安徽电力交易中心（待官方发布页核验）",
+      "publishedAt": "2026-01-31",
+      "officialUrl": "https://pmos.ah.sgcc.com.cn/",
+      "localFilePath": "source-files/2026-01-31-安徽电力现货电能量市场交易实施细则（结算试运行第6-1版）(未见正式文号).pdf",
+      "localAttachments": [],
+      "scope": "安徽",
+      "status": "待核验",
+      "firstRecordedAt": "2026-07-16",
+      "lastVerifiedAt": "2026-07-16",
+      "knowledgeSummary": "第6-1版现货电能量交易细则规范市场成员、日前和实时市场申报与出清、价格机制、市场监测及风险处置，是安徽现货结算试运行配套交易文本。",
+      "detailedSummary": "### 文件定位\n- 用户提供的第6-1版文本为安徽现货电能量市场结算试运行配套交易细则，覆盖市场成员、交易组织、申报、日前与实时出清、价格、信息披露、市场监测和风险处置。\n\n### 交易机制\n- 发电侧、用户侧及符合条件的新型主体按照市场身份参与申报和出清；交易组织以日前市场与实时市场衔接为主，并与中长期合同、调度运行和结算规则配合。\n- 原文明确电能量申报价格限值为上限1100元/兆瓦时、下限0元/兆瓦时；具体出清、约束处理和价格形成按细则与市场参数执行。\n- 主体需按要求报送可用能力、预测、报价或报量等数据，接受市场出清和调度安排；市场运营机构负责信息发布、监测异常报价和实施风险处置。\n\n### 状态说明\n- 文件封面标注“结算试运行第6.1版—20260130”。因未定位到相应官方发布页或官方附件直链，当前按待核验试运行材料入库。",
+      "notes": "不得据此推定已转为正式运行或替代后续版本。",
+      "markdownFilePath": "knowledge-markdown/doc-ah-2026-spot-energy-6-1/政策正文.md",
+      "markdownExtraction": {
+        "method": "pdf-text",
+        "ocrStatus": "not-needed",
+        "extractedAt": "2026-07-16",
+        "sourceHash": "3b30adeb2228f20f93b88315354c7cc9fc1085f2babd0a0a398d61813ccec2e8"
+      },
+      "attachmentMarkdownFiles": []
+    },
+    {
+      "id": "doc-ah-2025-spot-information-disclosure-6",
+      "title": "安徽电力现货市场信息披露实施细则（结算试运行第6版）",
+      "documentNumber": "未见正式文号",
+      "issuer": "安徽电力交易中心（待官方发布页核验）",
+      "publishedAt": "2025-12-30",
+      "officialUrl": "https://pmos.ah.sgcc.com.cn/",
+      "localFilePath": "source-files/2025-12-30-安徽电力现货市场信息披露实施细则（结算试运行第6版）(未见正式文号).pdf",
+      "localAttachments": [],
+      "scope": "安徽",
+      "status": "待核验",
+      "firstRecordedAt": "2026-07-16",
+      "lastVerifiedAt": "2026-07-16",
+      "knowledgeSummary": "第6版信息披露细则要求市场主体和运营机构通过安徽电力市场交易系统披露真实、准确、完整、及时的信息，并规定公开、公开后、特定和保密信息的范围及时限。",
+      "detailedSummary": "### 文件定位\n- 文本规范安徽现货市场信息披露，适用于市场经营主体和市场运营机构；主要披露平台为安徽电力市场交易系统。\n- 信息披露应遵循安全、真实、准确、完整、及时、易于使用原则，并按公开范围区分公众信息、公开后信息、特定信息和保密信息。\n\n### 披露内容与时限\n- 发电企业、售电公司、电力用户和新型主体需披露基本信息、关联关系、经营和履约相关信息；市场运营机构需披露交易公告、交易申报与结果、出清算法和运行参数、价格限值、结算总体情况、市场主体注册及信用评价等信息。\n- 基本信息原则上在市场准入完成后10个工作日内披露；现货市场边界、预测等信息及日清分结算依据按细则规定的时间节点发布，其中日清分依据原则上在运行日后6个工作日内披露。\n- 细则另设信息变更、监督管理、保密责任和违规处理要求。\n\n### 状态说明\n- 本地原文已完整归档，但未定位到对应官方发布页或官方附件直链，披露清单与时限应以最终公开有效版本为准。",
+      "notes": "当前为待核验的结算试运行第6版材料。",
+      "markdownFilePath": "knowledge-markdown/doc-ah-2025-spot-information-disclosure-6/政策正文.md",
+      "markdownExtraction": {
+        "method": "pdf-text",
+        "ocrStatus": "not-needed",
+        "extractedAt": "2026-07-16",
+        "sourceHash": "427f78a1d5d680045ab800b931bee38600243e9e35461157b0cf28f772ec8259"
+      },
+      "attachmentMarkdownFiles": []
     }
   ],
   "provincialRules": [
@@ -1038,6 +1239,78 @@
       "status": "有效",
       "lastVerifiedAt": "2026-07-14",
       "knowledgeSummary": "浙江2026年修订并发布《浙江电力中长期市场实施细则》《浙江电力零售市场实施细则》《浙江电力市场管理实施细则》《浙江电力市场结算实施细则》等四项细则，形成中长期交易、零售交易、市场管理和结算口径联动更新的规则组合。"
+    },
+    {
+      "id": "rule-ah-2026-long-term",
+      "province": "安徽",
+      "tradingProduct": "中长期电能量交易",
+      "knowledgeSummary": "安徽现行中长期细则覆盖多年、年度、月度和月内电能量交易，要求已注册主体完成交易、合同执行、结算和信息披露，并与现货及省间交易衔接。",
+      "detailedSummary": "### 规则定位\n- 安徽中长期市场以多年、年度、月度和月内交易为主要周期，发电企业、售电公司、电力用户和符合条件的新型经营主体按市场身份参与。\n- 规则既管理市场化电能量交易，也将政府定价优先发电电量的厂网间合同纳入合同管理衔接。\n\n### 参与和执行\n- 主体需完成市场注册，遵守交易公告、交易组织和合同管理要求；成交后围绕电量、电价、曲线、变更和执行开展校核与确认。\n- 中长期合同与现货、省间及长三角相关交易衔接，主体应关注合同曲线、偏差风险、结算确认和信息披露。\n\n### 管理重点\n- 市场运营机构围绕注册、信用、履约、技术支持和争议处理实施管理；经营主体应保证信息真实并履行合同、电费结算和相关披露义务。",
+      "eligibleParticipants": "已完成安徽电力市场注册的发电企业、售电公司、电力用户及符合条件的新型经营主体。",
+      "managementRequirements": "遵守交易公告、合同管理、结算确认、信息披露、信用履约和技术支持系统要求，并按规则处理合同变更与争议。",
+      "admissionCriteria": "完成市场注册并满足相应市场身份、计量结算、信息披露和交易资格要求。",
+      "participationProcess": "按交易周期和公告参与双边协商或集中交易，成交后签订并执行合同，完成合同曲线、结算和信息确认。",
+      "assessmentMethod": "依据信用履约、合同执行、信息披露及市场监管要求实施管理；具体违约和争议处理按细则及配套规则执行。",
+      "sourceDocumentIds": [
+        "doc-ah-2026-long-term"
+      ],
+      "status": "有效",
+      "lastVerifiedAt": "2026-07-16",
+      "notes": "征求意见阶段文本见 doc-ah-2026-long-term-draft。"
+    },
+    {
+      "id": "rule-ah-2026-credit-evaluation-draft",
+      "province": "安徽",
+      "tradingProduct": "市场信用评价",
+      "knowledgeSummary": "待核验的信用评价征求意见稿拟以基础分、激励和惩戒相结合，对发电企业、售电公司和电力用户开展信用评级，并用于市场管理。",
+      "detailedSummary": "### 规则定位\n- 用户提供的征求意见稿拟由安徽电力交易中心在授权下开展经营主体信用评价评级，覆盖发电企业、售电公司和电力用户。\n- 评价强调科学合理、公开透明、守信激励和失信惩戒。\n\n### 管理框架\n- 文本设置基础信用分、守信加分、失信扣分、信用等级和异议处理等机制，指标关联资质、履约、信息报送、交易行为和监管处理。\n- 市场主体应真实报送信息、履行市场义务；信用结果拟用于交易与市场管理。\n\n### 状态说明\n- 未定位到官方公告或正式附件直链，发布程序、正式口径和效力待核验，不能作为现行信用评价标准引用。",
+      "eligibleParticipants": "征求意见稿所列发电企业、售电公司和电力用户。",
+      "managementRequirements": "按征求意见稿拟定要求维护资质、履约、信息真实性和市场行为记录；最终要求待核验。",
+      "admissionCriteria": "不适用；本条为信用评价征求意见材料。",
+      "participationProcess": "按拟定评价周期提交或核验信用相关信息，评价结果和异议处理以最终发布规则为准。",
+      "assessmentMethod": "拟采用基础分、守信激励、失信惩戒和信用等级；最终指标与应用方式待官方核验。",
+      "sourceDocumentIds": [
+        "doc-ah-2026-credit-evaluation-draft"
+      ],
+      "status": "待核验",
+      "lastVerifiedAt": "2026-07-16"
+    },
+    {
+      "id": "rule-ah-2026-spot-energy-settlement-6-1",
+      "province": "安徽",
+      "tradingProduct": "现货电能量交易、结算",
+      "knowledgeSummary": "待核验的第6-1版试运行文本以日前、实时电能量交易及日清月结为核心，规定中长期与现货衔接、价格限值、偏差处理和结算确认流程。",
+      "detailedSummary": "### 规则定位\n- 第6-1版材料由现货电能量交易细则和结算细则共同构成，文本封面标注为结算试运行版本。\n- 交易侧组织市场成员参与日前、实时申报和出清；结算侧以市场化机组和市场用户日清月结、中长期合同与现货差额衔接为核心。\n\n### 交易与结算\n- 原文列示申报价格上限1100元/兆瓦时、下限0元/兆瓦时，并要求市场运营机构开展信息发布、市场监测和风险处置。\n- 日清分预结算依据原则上在运行日后第3个工作日前形成，正式依据原则上在第5个工作日前发布；日清或月结核对版异议原则上应在1个工作日内提出。\n- 偏差收益回收、价格限值、调平和费用追退补等需结合结算参数表理解。\n\n### 状态说明\n- 尚未找到对应官方公告或附件直链，交易、结算参数及适用状态均待核验。",
+      "eligibleParticipants": "用户提供文本所列市场化机组、市场用户、独立储能及符合现货市场规则的其他主体；最终范围待核验。",
+      "managementRequirements": "按试运行文本拟定要求申报、接受出清和调度、核对结算依据，并履行信息报送、信用和结算义务。",
+      "admissionCriteria": "需满足现货市场注册、计量、通信、技术支持和调度运行要求；最终条件待核验。",
+      "participationProcess": "按日前与实时市场组织申报和出清，依据中长期合同及现货结果进行日清分、月结算和异议处理。",
+      "assessmentMethod": "依据市场监测、偏差收益回收、价格限值、违约信用和风险处置安排执行；正式口径待核验。",
+      "sourceDocumentIds": [
+        "doc-ah-2026-spot-energy-6-1",
+        "doc-ah-2026-spot-settlement-6-1",
+        "doc-ah-2026-settlement-parameters-draft"
+      ],
+      "status": "待核验",
+      "lastVerifiedAt": "2026-07-16"
+    },
+    {
+      "id": "rule-ah-2025-spot-entry-information-6",
+      "province": "安徽",
+      "tradingProduct": "现货市场准入退出、信息披露",
+      "knowledgeSummary": "待核验的第6版材料规定现货主体注册、准入和退出程序，并要求主体和运营机构通过交易系统按公开范围和时限披露市场信息。",
+      "detailedSummary": "### 规则定位\n- 准入退出材料管理发电企业、售电公司、电力用户和新型主体进入及退出安徽现货市场的事项；信息披露材料规范主体和运营机构在交易系统披露市场信息。\n\n### 准入、退出和披露\n- 参与主体需满足市场身份、计量、通信和技术支持条件，完成注册并维护信息。市场退出包括申请退出和强制注销，原则上需处理未履约合同和结算事项。\n- 信息披露遵循安全、真实、准确、完整、及时原则，区分公众、公开后、特定和保密信息；基本信息原则上在准入完成后10个工作日内披露。\n- 运营机构还需披露交易公告、交易结果、出清参数、价格限值、结算、注册和信用等规定范围内信息。\n\n### 状态说明\n- 两份材料均为用户提供的结算试运行第6版文件，暂未找到官方公告或附件直链，不作为已生效的确定性准入或披露规则。",
+      "eligibleParticipants": "用户提供文本所列发电企业、售电公司、电力用户、新型市场主体及市场运营机构；最终范围待核验。",
+      "managementRequirements": "维护注册与基础信息，履行合同和结算义务，并按规定范围、频次和时限披露信息。",
+      "admissionCriteria": "拟要求满足市场身份、技术、计量、通信和信息系统条件并完成注册；正式条件待核验。",
+      "participationProcess": "通过交易平台办理注册、信息变更、退出申请和信息披露；退出前需按规则处理合同和结算。",
+      "assessmentMethod": "依据信息披露监督、保密责任、退出公示和市场监管安排执行；正式口径待核验。",
+      "sourceDocumentIds": [
+        "doc-ah-2025-spot-entry-exit-6",
+        "doc-ah-2025-spot-information-disclosure-6"
+      ],
+      "status": "待核验",
+      "lastVerifiedAt": "2026-07-16"
     }
   ],
   "updateEvents": [
@@ -1201,6 +1474,69 @@
       "type": "新增",
       "subjectId": "concept-virtual-power-plant",
       "note": "新增“虚拟电厂”基础概念，说明资源聚合、市场准入、系统接入、调度调用、收益机制与安全考核。"
+    },
+    {
+      "id": "evt-20260716-add-ah-long-term-draft",
+      "occurredAt": "2026-07-16",
+      "type": "替代",
+      "subjectId": "doc-ah-2026-long-term-draft",
+      "note": "归档用户提供且经华东能源监管局公开附件核验的安徽中长期市场征求意见稿；已关联2026年3月公开正式版，状态标记为被替代。"
+    },
+    {
+      "id": "evt-20260716-add-ah-long-term",
+      "occurredAt": "2026-07-16",
+      "type": "新增",
+      "subjectId": "rule-ah-2026-long-term",
+      "note": "新增安徽现行中长期市场规则知识，覆盖市场主体、交易周期与方式、合同执行、结算、信息披露及与现货市场衔接。"
+    },
+    {
+      "id": "evt-20260716-add-ah-credit-evaluation-draft",
+      "occurredAt": "2026-07-16",
+      "type": "待核验",
+      "subjectId": "doc-ah-2026-credit-evaluation-draft",
+      "note": "归档用户提供的安徽电力市场信用评价征求意见稿；原文可读但尚未找到官方发布页或正式附件直链，评价指标、效力和发布状态待核验。"
+    },
+    {
+      "id": "evt-20260716-add-ah-spot-settlement-6-1",
+      "occurredAt": "2026-07-16",
+      "type": "待核验",
+      "subjectId": "doc-ah-2026-spot-settlement-6-1",
+      "note": "归档用户提供的安徽现货市场结算试运行第6-1版原文；整理日清月结、结算确认和中长期现货衔接要点，正式发布状态待核验。"
+    },
+    {
+      "id": "evt-20260716-add-ah-spot-entry-exit-6",
+      "occurredAt": "2026-07-16",
+      "type": "待核验",
+      "subjectId": "doc-ah-2025-spot-entry-exit-6",
+      "note": "归档用户提供的安徽现货市场准入退出试运行第6版原文；整理注册、退出、公示、合同和结算处理要点，正式发布状态待核验。"
+    },
+    {
+      "id": "evt-20260716-add-ah-settlement-parameters-draft",
+      "occurredAt": "2026-07-16",
+      "type": "待核验",
+      "subjectId": "doc-ah-2026-settlement-parameters-draft",
+      "note": "归档用户提供的安徽结算参数表征求意见稿；22项参数均保留暂定和以主管部门发布为准的状态提示。"
+    },
+    {
+      "id": "evt-20260716-add-ah-spot-energy-6-1",
+      "occurredAt": "2026-07-16",
+      "type": "待核验",
+      "subjectId": "doc-ah-2026-spot-energy-6-1",
+      "note": "归档用户提供的安徽现货电能量市场交易试运行第6-1版原文；整理申报、日前实时出清、价格限值和市场监测要点，正式发布状态待核验。"
+    },
+    {
+      "id": "evt-20260716-add-ah-spot-information-disclosure-6",
+      "occurredAt": "2026-07-16",
+      "type": "待核验",
+      "subjectId": "doc-ah-2025-spot-information-disclosure-6",
+      "note": "归档用户提供的安徽现货市场信息披露试运行第6版原文；整理披露主体、范围、内容、时限、保密和监管要点，正式发布状态待核验。"
+    },
+    {
+      "id": "evt-20260716-add-ah-spot-rule-batch",
+      "occurredAt": "2026-07-16",
+      "type": "待核验",
+      "subjectId": "安徽",
+      "note": "新增安徽信用评价、现货交易结算、准入退出和信息披露规则知识。除中长期正式版外，其余用户提供材料未定位到对应官方公告或附件直链，均按待核验展示。"
     }
   ]
 }
