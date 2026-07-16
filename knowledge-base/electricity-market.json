@@ -750,6 +750,93 @@
           }
         }
       ]
+    },
+    {
+      "id": "doc-hb-2022-frequency-regulation",
+      "title": "关于印发《湖北电力调频辅助服务市场运营规则》的通知",
+      "documentNumber": "华中监能市场〔2022〕251号",
+      "issuer": "国家能源局华中监管局",
+      "publishedAt": "2022-11-08",
+      "officialUrl": "https://hzj.nea.gov.cn/xxgk/zcfg/202310/t20231021_165676.html",
+      "localFilePath": "source-files/2022-11-08-关于印发《湖北电力调频辅助服务市场运营规则》的通知(华中监能市场〔2022〕251号).pdf",
+      "localAttachments": [
+        {
+          "title": "湖北电力调频辅助服务市场运营规则.pdf",
+          "officialUrl": "https://hzj.nea.gov.cn/UploadFiles/2022/66041667875617046_69a73349-1de4-4e91-b0a4-c4a672e101d5.pdf",
+          "localFilePath": "source-files/attachments/2022-11-08-关于印发《湖北电力调频辅助服务市场运营规则》的通知(华中监能市场〔2022〕251号)/湖北电力调频辅助服务市场运营规则.pdf"
+        }
+      ],
+      "scope": "湖北",
+      "status": "被替代",
+      "firstRecordedAt": "2026-07-16",
+      "lastVerifiedAt": "2026-07-16",
+      "knowledgeSummary": "该历史规则明确湖北调频辅助服务以AGC或APC自动调节为基础，按调频里程、性能及市场价格补偿，并规范主体准入、报价、出清、结算和考核。",
+      "detailedSummary": "### 文件定位\n- 华中监能市场〔2022〕251号印发《湖北电力调频辅助服务市场运营规则》，于2022年11月发布，是湖北调频辅助服务市场早期运行规则。\n- 本文件已被华中监能市场规〔2025〕35号修订替代，保留在知识库中用于追溯2022年至2025年初的制度设计。\n\n### 市场机制\n- 规则以AGC或APC自动调节为基础，调频服务效果主要采用调频里程和性能指标衡量；市场采用日前预出清、日内滚动出清等组织方式。\n- 参与主体需满足调度运行、AGC或APC及性能测试等要求；性能系数低于规定门槛或不服从AGC指令的，可能失去补偿并受到限制。\n- 补偿以调频里程、性能系数和市场出清价格为核心，另配套容量补偿、偏差及违约考核安排。\n\n### 归档说明\n- 用户提供的PDF与国家能源局华中监管局公开附件内容一致，已以官方页面和附件链接归档。",
+      "notes": "该规则已由华中监能市场规〔2025〕35号修订替代；现行规则见 doc-hb-jx-cq-2025-frequency-regulation。",
+      "markdownFilePath": "knowledge-markdown/doc-hb-2022-frequency-regulation/政策正文.md",
+      "markdownExtraction": {
+        "method": "pdf-text",
+        "ocrStatus": "not-needed",
+        "extractedAt": "2026-07-16",
+        "sourceHash": "526f394fd002e3a0792aedb9ae7cf36700eef6f7cc88ecfc7a31e3c8a3636c80"
+      },
+      "attachmentMarkdownFiles": [
+        {
+          "title": "湖北电力调频辅助服务市场运营规则.pdf",
+          "sourceFilePath": "source-files/attachments/2022-11-08-关于印发《湖北电力调频辅助服务市场运营规则》的通知(华中监能市场〔2022〕251号)/湖北电力调频辅助服务市场运营规则.pdf",
+          "markdownFilePath": "knowledge-markdown/doc-hb-2022-frequency-regulation/湖北电力调频辅助服务市场运营规则.pdf.md",
+          "extraction": {
+            "method": "pdf-text",
+            "ocrStatus": "not-needed",
+            "extractedAt": "2026-07-16",
+            "sourceHash": "fc4c2555333b13b8633d65e4b2926c7e1ff269a759836463a8c6d3904a25b433"
+          }
+        }
+      ]
+    },
+    {
+      "id": "doc-hb-jx-cq-2025-frequency-regulation",
+      "title": "国家能源局华中监管局关于印发《湖北、江西、重庆电力调频辅助服务市场运行规则》的通知",
+      "documentNumber": "华中监能市场规〔2025〕35号",
+      "issuer": "国家能源局华中监管局",
+      "publishedAt": "2025-04-02",
+      "officialUrl": "https://hzj.nea.gov.cn/dtyw/tzgg/202504/t20250402_279001.html",
+      "localFilePath": "source-files/2025-04-02-关于印发《湖北、江西、重庆电力调频辅助服务市场运行规则》的通知(华中监能市场规〔2025〕35号).pdf",
+      "localAttachments": [
+        {
+          "title": "湖北、江西、重庆电力调频辅助服务市场运行规则.pdf",
+          "officialUrl": "https://hzj.nea.gov.cn/dtyw/tzgg/202504/P020250402414856913103.pdf",
+          "localFilePath": "source-files/attachments/2025-04-02-关于印发《湖北、江西、重庆电力调频辅助服务市场运行规则》的通知(华中监能市场规〔2025〕35号)/P020250402414856913103.pdf"
+        }
+      ],
+      "scope": "湖北",
+      "status": "有效",
+      "firstRecordedAt": "2026-07-16",
+      "lastVerifiedAt": "2026-07-16",
+      "replacesDocumentId": "doc-hb-2022-frequency-regulation",
+      "knowledgeSummary": "现行三省联合调频规则以调频里程为结算基础，采用容量和里程报价、日前预出清与日内滚动出清，明确Kp准入、性能考核、日清月结和费用分摊。",
+      "detailedSummary": "### 文件定位\n- 华中监能市场规〔2025〕35号适用于湖北、江西、重庆三省（市）调频辅助服务市场，统一修订并替代了包括湖北2022版在内的原有规则。\n- 规则将调频辅助服务定义为经营主体通过调节有功出力，跟踪自动发电控制指令、维持系统频率稳定而提供的服务。\n\n### 交易机制与价格\n- 调频服务以调频里程为核心结算对象，经营主体按时段申报调频容量价格和调频里程价格；容量费用相关主体未申报时按规则自动参与。\n- 交易采用集中交易、日前预出清、日内滚动出清和实时调用的组织方式。日前按24个时段组织，规则设定容量价格上下限为5至15元/兆瓦。\n- 调频性能系数Kp由调节速率、调节精度和响应时间等构成，准入门槛为0.6；未达到门槛或不服从AGC指令的调频里程不予补偿。\n\n### 结算、考核与衔接\n- 市场日清月结，调频补偿以性能系数、实际调频里程和市场出清价格计算，并扣减相应考核费用。\n- 连续现货市场运行前，调频辅助服务费用原则上由发电侧承担；连续现货市场运行后，按规则由工商业用户和未参与电能量市场交易的发电主体共同分摊。\n- 市场设置信息披露、运行监测、市场干预、暂停与恢复以及违规处理机制。",
+      "notes": "官方政策解读：https://hzj.nea.gov.cn/xxgk/zcjd/202504/t20250408_279288.html",
+      "markdownFilePath": "knowledge-markdown/doc-hb-jx-cq-2025-frequency-regulation/政策正文.md",
+      "markdownExtraction": {
+        "method": "pdf-text",
+        "ocrStatus": "not-needed",
+        "extractedAt": "2026-07-16",
+        "sourceHash": "b6335c75334b08cf3b7eabd1dfcc048d7c3da17a53b4048f0d0ddbe0d98798bf"
+      },
+      "attachmentMarkdownFiles": [
+        {
+          "title": "湖北、江西、重庆电力调频辅助服务市场运行规则.pdf",
+          "sourceFilePath": "source-files/attachments/2025-04-02-关于印发《湖北、江西、重庆电力调频辅助服务市场运行规则》的通知(华中监能市场规〔2025〕35号)/P020250402414856913103.pdf",
+          "markdownFilePath": "knowledge-markdown/doc-hb-jx-cq-2025-frequency-regulation/湖北、江西、重庆电力调频辅助服务市场运行规则.pdf.md",
+          "extraction": {
+            "method": "pdf-text",
+            "ocrStatus": "not-needed",
+            "extractedAt": "2026-07-16",
+            "sourceHash": "cb963993905ba8a0d18e78db4819ae8a6e683bac79ad1c6b449c91ea16d14b3c"
+          }
+        }
+      ]
     }
   ],
   "provincialRules": [
@@ -786,6 +873,23 @@
       "status": "有效",
       "lastVerifiedAt": "2026-07-14",
       "knowledgeSummary": "湖北中长期交易规则以2026年《湖北省电力中长期市场实施细则》为依据，覆盖注册、交易、执行、结算、信息披露和监督管理。 规则强调中长期市场与现货市场在交易时序、出清和结算方面衔接，并要求湖北电力市场按统一标准开展注册、交易组织、结算和信息披露。 经营主体包括发电企业、售电公司、电力用户和资源聚合类新型经营主体；"
+    },
+    {
+      "id": "rule-hb-2025-frequency-regulation",
+      "province": "湖北",
+      "tradingProduct": "调频辅助服务市场",
+      "detailedSummary": "### 规则定位\n- 湖北调频辅助服务市场现行适用华中监能市场规〔2025〕35号《湖北、江西、重庆电力调频辅助服务市场运行规则》。该规则为三省（市）统一规则，取代湖北2022版单省规则。\n- 服务对象是电力系统有功平衡和频率稳定，经营主体通过跟踪AGC指令调节有功出力提供调频服务；调频里程反映实际调节贡献。\n\n### 参与主体与准入\n- 符合条件、可监视和可调度的发电企业、储能、可调节负荷、虚拟电厂、负荷聚合商等经营主体可按规则参与。\n- 主体应完成市场注册，具备相应调度、通信、AGC或同等控制能力并通过性能测试。调频性能系数Kp由调节速率、精度和响应时间等构成，准入门槛为0.6。\n\n### 申报、出清与调用\n- 市场按时段申报调频容量价格和调频里程价格，容量费用相关主体须参与；不申报时按规则自动参与。容量价格申报范围为5至15元/兆瓦。\n- 交易按集中方式组织，形成日前预出清、日内滚动出清与实时调用的衔接；日前发布需求与预测后，经营主体按24个时段申报，交易机构组织出清。\n\n### 结算、考核与风险\n- 调频补偿按性能系数、实际调频里程和市场出清价格计算，市场日清月结。Kp低于0.6、未按指令调节或未经批准退出AGC等情形，可能不予补偿并承担考核。\n- 连续现货市场运行前，费用原则上由发电侧承担；连续现货市场运行后，工商业用户和未参与电能量市场交易的发电主体按规则分摊。\n- 市场运营机构还开展信息披露、运行监测、市场干预、暂停恢复和违规处理。",
+      "eligibleParticipants": "符合调度、通信、控制和性能要求的发电企业、储能、可调节负荷、虚拟电厂、负荷聚合商等经营主体；市场运营和调度机构按规则组织运行。",
+      "managementRequirements": "经营主体应如实申报容量和里程价格、保持调频能力并服从AGC调度；运营机构应开展信息披露、市场监测、出清、结算、干预和风险管理。",
+      "admissionCriteria": "完成市场注册，具备可监视、可调度和自动控制能力，通过调频性能测试；调频性能系数Kp达到0.6及以上。",
+      "participationProcess": "按交易公告在日前24个时段申报调频容量和里程价格，参加日前预出清、日内滚动出清并接受实时调用；执行结果进入日清月结。",
+      "assessmentMethod": "以调频性能系数、实际调频里程和调度执行情况核算补偿；Kp低于0.6、未服从指令或违规退出AGC等情形按规则不予补偿或实施考核。",
+      "sourceDocumentIds": [
+        "doc-hb-jx-cq-2025-frequency-regulation"
+      ],
+      "status": "有效",
+      "lastVerifiedAt": "2026-07-16",
+      "knowledgeSummary": "湖北现行调频辅助服务市场按三省联合规则运行，以调频里程为核心结算对象，采用容量和里程报价、日前预出清、日内滚动出清和性能考核机制。"
     },
     {
       "id": "rule-js-2026-long-term",
@@ -1024,6 +1128,20 @@
       "type": "新增",
       "subjectId": "concept-voltage-regulation-ancillary-service",
       "note": "新增“调压辅助服务”基础概念，说明无功调节、AVC与调频的区别，并标明其交易、补偿和考核以区域、省级现行细则为准。"
+    },
+    {
+      "id": "evt-20260716-archive-hb-2022-frequency-regulation",
+      "occurredAt": "2026-07-16",
+      "type": "新增",
+      "subjectId": "doc-hb-2022-frequency-regulation",
+      "note": "归档用户提供并经国家能源局华中监管局官网核验的华中监能市场〔2022〕251号湖北调频辅助服务市场运营规则；该规则已标记为被2025年规则替代。"
+    },
+    {
+      "id": "evt-20260716-add-hb-2025-frequency-regulation",
+      "occurredAt": "2026-07-16",
+      "type": "新增",
+      "subjectId": "rule-hb-2025-frequency-regulation",
+      "note": "新增湖北现行调频辅助服务市场知识，依据华中监能市场规〔2025〕35号，覆盖准入、容量与里程报价、出清调用、性能考核、结算和费用分摊。"
     }
   ]
 }
