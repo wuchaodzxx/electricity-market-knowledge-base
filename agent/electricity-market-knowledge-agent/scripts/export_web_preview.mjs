@@ -295,17 +295,6 @@ function renderHtml(store, options = {}) {
       white-space: nowrap;
       text-shadow: 0 8px 24px rgba(0, 0, 0, .28);
     }
-    .subhead {
-      margin: 0;
-      color: rgba(255, 255, 255, .88);
-      line-height: 1.35;
-      font-size: 12px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      padding-left: 14px;
-      border-left: 1px solid rgba(191, 247, 255, .34);
-    }
     .header-meta {
       display: flex;
       align-items: center;
@@ -739,7 +728,6 @@ function renderHtml(store, options = {}) {
       .header-title-block { grid-template-columns: 1fr; gap: 4px; }
       .header-logo { width: 32px; height: 32px; border-radius: 10px; }
       .header-title-block h1 { font-size: 20px; }
-      .subhead { display: none; }
       .header-meta .meta-chip:nth-child(n+2) { display: none; }
       main { padding: 10px 10px 16px; }
       .knowledge-shell { border-radius: 18px; }
@@ -759,7 +747,6 @@ function renderHtml(store, options = {}) {
           <img class="header-logo" src="${logoAssetUrl}" alt="" aria-hidden="true" />
           <h1>电力市场知识库</h1>
         </div>
-        <p class="subhead">政策、概念与省级交易规则一站式查询；长文本折叠展示，来源与本地归档可直接打开。</p>
       </div>
       <div class="header-meta" aria-label="知识库元信息">
         <span class="meta-chip">数据更新 <strong>${data.lastUpdatedAt}</strong></span>

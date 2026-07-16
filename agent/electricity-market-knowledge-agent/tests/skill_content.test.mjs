@@ -53,6 +53,7 @@ test("skill preserves web preview requirements", async () => {
     "整体美学设计",
     "头部固定",
     "头部不展示英文标题",
+    "头部不展示副标题说明文案",
     "中文标题和元信息排版紧凑清晰",
     "紧凑工具栏",
     "知识摘要",

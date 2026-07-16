@@ -212,6 +212,8 @@ test("exports an optimized local HTML web preview", async () => {
   assert.ok(!html.includes("excelDownloadHref"), "网页数据不应继续内嵌 Excel 下载地址");
   assert.ok(!html.includes("downloads/电力市场知识库-"), "网页不应引用自动生成的 Excel 下载文件");
   assert.ok(!html.includes("class=\"eyebrow\""), "头部不应继续使用英文 eyebrow 排版");
+  assert.ok(!html.includes("政策、概念与省级交易规则一站式查询；长文本折叠展示，来源与本地归档可直接打开。"), "头部不应展示旧副标题文案");
+  assert.ok(!html.includes("class=\"subhead\""), "头部不应继续渲染副标题元素");
   assert.ok(!html.includes("当前页："), "页面不应保留当前页描述区域");
   assert.ok(!html.includes(">详细解读</th>"), "网页表格不应继续显示详细解读列名");
   assert.ok(!html.includes("background: linear-gradient(135deg, #0f4c5c, #167182)"), "头部不应继续使用旧的纯色渐变背景");
