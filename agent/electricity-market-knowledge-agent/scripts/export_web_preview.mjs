@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { validateKnowledgeBase } from "./validate_knowledge_base.mjs";
 
@@ -142,9 +143,12 @@ function jsonForHtml(value) {
   return JSON.stringify(value).replaceAll("<", "\\u003c").replaceAll(">", "\\u003e").replaceAll("&", "\\u0026");
 }
 
-function renderHtml(store) {
+function renderHtml(store, options = {}) {
+  const assetVersion = options.assetVersion ? `?v=${options.assetVersion}` : "";
+  const heroAssetUrl = `${HERO_ASSET_RELATIVE_PATH}${assetVersion}`;
+  const logoAssetUrl = `${LOGO_ASSET_RELATIVE_PATH}${assetVersion}`;
   const data = {
-    generatedAt: new Date().toISOString().slice(0, 10),
+    generatedAt: options.generatedAt ?? new Date().toISOString().slice(0, 10),
     lastUpdatedAt: store.metadata.lastUpdatedAt,
     sheets: buildSheets(store),
   };
@@ -193,7 +197,7 @@ function renderHtml(store) {
       padding: 0 24px;
       background-image:
         linear-gradient(90deg, rgba(3, 19, 35, .94) 0%, rgba(6, 41, 61, .82) 34%, rgba(6, 58, 76, .38) 72%, rgba(5, 24, 41, .58) 100%),
-        url("${HERO_ASSET_RELATIVE_PATH}");
+        url("${heroAssetUrl}");
       background-size: cover;
       background-position: center 42%;
       color: #fff;
@@ -727,7 +731,7 @@ function renderHtml(store) {
     <section class="hero-card" aria-label="电力市场知识库概览">
       <div class="header-title-block">
         <div class="header-brand">
-          <img class="header-logo" src="${LOGO_ASSET_RELATIVE_PATH}" alt="" aria-hidden="true" />
+          <img class="header-logo" src="${logoAssetUrl}" alt="" aria-hidden="true" />
           <h1>电力市场知识库</h1>
         </div>
         <p class="subhead">政策、概念与省级交易规则一站式查询；长文本折叠展示，来源与本地归档可直接打开。</p>
@@ -1172,6 +1176,18 @@ async function copyWebAssets(outputPath) {
   await fs.copyFile(LOGO_ASSET_SOURCE_PATH, path.join(assetDir, LOGO_ASSET_FILE));
 }
 
+async function webAssetVersion() {
+  const [heroAsset, logoAsset] = await Promise.all([
+    fs.readFile(HERO_ASSET_SOURCE_PATH),
+    fs.readFile(LOGO_ASSET_SOURCE_PATH),
+  ]);
+  return createHash("sha256")
+    .update(heroAsset)
+    .update(logoAsset)
+    .digest("hex")
+    .slice(0, 12);
+}
+
 export async function exportWebPreview(inputPath, outputPath, options = {}) {
   const store = JSON.parse(await fs.readFile(inputPath, "utf8"));
   const validationErrors = validateKnowledgeBase(store);
@@ -1181,7 +1197,8 @@ export async function exportWebPreview(inputPath, outputPath, options = {}) {
 
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   await copyWebAssets(outputPath);
-  await fs.writeFile(outputPath, renderHtml(store, options), "utf8");
+  const assetVersion = options.assetVersion ?? await webAssetVersion();
+  await fs.writeFile(outputPath, renderHtml(store, { ...options, assetVersion }), "utf8");
 }
 
 function readOption(name) {
