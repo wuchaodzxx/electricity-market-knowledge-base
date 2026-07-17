@@ -176,12 +176,24 @@ test("exports an optimized local HTML web preview", async () => {
   const html = await fs.readFile(outputPath, "utf8");
   const heroAsset = await fs.stat(path.join(tmpDir, "assets", "electricity-market-hero.png"));
   const logoAsset = await fs.stat(path.join(tmpDir, "assets", "electricity-market-logo.png"));
+  const faviconSvgAsset = await fs.stat(path.join(tmpDir, "assets", "favicon.svg"));
+  const faviconPngAsset = await fs.stat(path.join(tmpDir, "assets", "favicon-32.png"));
+  const appleTouchIconAsset = await fs.stat(path.join(tmpDir, "assets", "apple-touch-icon.png"));
   assert.ok(heroAsset.size > 1000, "网页预览应复制电力元素 hero 背景图资产");
   assert.ok(logoAsset.size > 1000, "网页预览应复制电力市场知识库标题 icon 资产");
+  assert.ok(faviconSvgAsset.size > 500, "网页预览应复制浏览器页签 SVG favicon");
+  assert.ok(faviconPngAsset.size > 100, "网页预览应复制 32px PNG favicon");
+  assert.ok(appleTouchIconAsset.size > 100, "网页预览应复制 Apple touch icon");
   for (const expectedText of [
     "电力市场知识库",
     "assets/electricity-market-hero.png",
     "assets/electricity-market-logo.png",
+    "assets/favicon.svg",
+    "assets/favicon-32.png",
+    "assets/apple-touch-icon.png",
+    "rel=\"icon\" type=\"image/svg+xml\"",
+    "rel=\"icon\" type=\"image/png\" sizes=\"32x32\"",
+    "rel=\"apple-touch-icon\"",
     "header-brand",
     "header-logo",
     "hero-card",

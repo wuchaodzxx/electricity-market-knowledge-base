@@ -1686,6 +1686,13 @@
       "type": "更新",
       "subjectId": "web-preview-province-tabs",
       "note": "修复“展开省份”按钮仍被主页签弹性布局顶到右侧的问题：主页签区域改为按内容宽度排列，更新记录使用自动左边距固定靠右，确保展开省份视觉上紧跟国家政策。"
+    },
+    {
+      "id": "evt-20260717-add-browser-favicon",
+      "occurredAt": "2026-07-17",
+      "type": "更新",
+      "subjectId": "web-preview-favicon",
+      "note": "按用户要求为网页设计并接入浏览器页签图标，新增深青底闪电与书页元素的 SVG favicon、32px PNG favicon 和 Apple touch icon，并在网页 head 中引用。"
     }
   ]
 }

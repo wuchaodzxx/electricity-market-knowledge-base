@@ -41,9 +41,18 @@ const HERO_ASSET_FILE = "electricity-market-hero.png";
 const HERO_ASSET_RELATIVE_PATH = `assets/${HERO_ASSET_FILE}`;
 const LOGO_ASSET_FILE = "electricity-market-logo.png";
 const LOGO_ASSET_RELATIVE_PATH = `assets/${LOGO_ASSET_FILE}`;
+const FAVICON_SVG_FILE = "favicon.svg";
+const FAVICON_32_FILE = "favicon-32.png";
+const APPLE_TOUCH_ICON_FILE = "apple-touch-icon.png";
+const FAVICON_SVG_RELATIVE_PATH = `assets/${FAVICON_SVG_FILE}`;
+const FAVICON_32_RELATIVE_PATH = `assets/${FAVICON_32_FILE}`;
+const APPLE_TOUCH_ICON_RELATIVE_PATH = `assets/${APPLE_TOUCH_ICON_FILE}`;
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const HERO_ASSET_SOURCE_PATH = path.resolve(SCRIPT_DIR, "../assets", HERO_ASSET_FILE);
 const LOGO_ASSET_SOURCE_PATH = path.resolve(SCRIPT_DIR, "../assets", LOGO_ASSET_FILE);
+const FAVICON_SVG_SOURCE_PATH = path.resolve(SCRIPT_DIR, "../assets", FAVICON_SVG_FILE);
+const FAVICON_32_SOURCE_PATH = path.resolve(SCRIPT_DIR, "../assets", FAVICON_32_FILE);
+const APPLE_TOUCH_ICON_SOURCE_PATH = path.resolve(SCRIPT_DIR, "../assets", APPLE_TOUCH_ICON_FILE);
 const POLICY_COLUMNS = ["文件标题", "知识摘要", "发文编号", "发布单位", "发布日期", "链接", "查看文件", "附件归档", "状态", "最后核验日期"];
 const ALL_POLICY_COLUMNS = ["文件标题", "知识摘要", "发文编号", "发布单位", "发布日期", "适用范围", "链接", "查看文件", "附件归档", "状态", "最后核验日期"];
 
@@ -204,6 +213,9 @@ function renderHtml(store, options = {}) {
   const assetVersion = options.assetVersion ? `?v=${options.assetVersion}` : "";
   const heroAssetUrl = `${HERO_ASSET_RELATIVE_PATH}${assetVersion}`;
   const logoAssetUrl = `${LOGO_ASSET_RELATIVE_PATH}${assetVersion}`;
+  const faviconSvgUrl = `${FAVICON_SVG_RELATIVE_PATH}${assetVersion}`;
+  const favicon32Url = `${FAVICON_32_RELATIVE_PATH}${assetVersion}`;
+  const appleTouchIconUrl = `${APPLE_TOUCH_ICON_RELATIVE_PATH}${assetVersion}`;
   const data = {
     generatedAt: options.generatedAt ?? new Date().toISOString().slice(0, 10),
     lastUpdatedAt: store.metadata.lastUpdatedAt,
@@ -216,6 +228,9 @@ function renderHtml(store, options = {}) {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>电力市场知识库网页预览</title>
+  <link rel="icon" type="image/svg+xml" href="${faviconSvgUrl}" />
+  <link rel="icon" type="image/png" sizes="32x32" href="${favicon32Url}" />
+  <link rel="apple-touch-icon" href="${appleTouchIconUrl}" />
   <style>
     :root {
       color-scheme: light;
@@ -1331,16 +1346,25 @@ async function copyWebAssets(outputPath) {
   await fs.mkdir(assetDir, { recursive: true });
   await fs.copyFile(HERO_ASSET_SOURCE_PATH, path.join(assetDir, HERO_ASSET_FILE));
   await fs.copyFile(LOGO_ASSET_SOURCE_PATH, path.join(assetDir, LOGO_ASSET_FILE));
+  await fs.copyFile(FAVICON_SVG_SOURCE_PATH, path.join(assetDir, FAVICON_SVG_FILE));
+  await fs.copyFile(FAVICON_32_SOURCE_PATH, path.join(assetDir, FAVICON_32_FILE));
+  await fs.copyFile(APPLE_TOUCH_ICON_SOURCE_PATH, path.join(assetDir, APPLE_TOUCH_ICON_FILE));
 }
 
 async function webAssetVersion() {
-  const [heroAsset, logoAsset] = await Promise.all([
+  const [heroAsset, logoAsset, faviconSvgAsset, favicon32Asset, appleTouchIconAsset] = await Promise.all([
     fs.readFile(HERO_ASSET_SOURCE_PATH),
     fs.readFile(LOGO_ASSET_SOURCE_PATH),
+    fs.readFile(FAVICON_SVG_SOURCE_PATH),
+    fs.readFile(FAVICON_32_SOURCE_PATH),
+    fs.readFile(APPLE_TOUCH_ICON_SOURCE_PATH),
   ]);
   return createHash("sha256")
     .update(heroAsset)
     .update(logoAsset)
+    .update(faviconSvgAsset)
+    .update(favicon32Asset)
+    .update(appleTouchIconAsset)
     .digest("hex")
     .slice(0, 12);
 }
