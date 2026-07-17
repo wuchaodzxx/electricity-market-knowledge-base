@@ -441,6 +441,9 @@ function renderHtml(store, options = {}) {
     .province-toggle[aria-expanded="true"] .toggle-chevron {
       transform: rotate(180deg);
     }
+    .update-tab {
+      flex: 0 0 auto;
+    }
     .province-panel {
       position: absolute;
       top: calc(100% + 8px);
@@ -859,6 +862,7 @@ function renderHtml(store, options = {}) {
           <div id="tabs" class="tab-shell">
             <div id="primaryTabs" class="tabs primary-tabs"></div>
             <button id="provinceToggle" class="province-toggle" type="button" aria-expanded="false" aria-controls="provinceTabs" onclick="toggleProvincePanel()"><span class="province-toggle-label">展开省份</span><span class="toggle-chevron" aria-hidden="true">▾</span></button>
+            <button id="updateTab" class="tab update-tab" type="button" onclick="switchSheet(appData.sheets.length - 1)">更新记录</button>
             <div id="provinceTabs" class="province-panel" hidden></div>
           </div>
           <span id="resultMeta" class="result-meta"></span>
@@ -899,6 +903,7 @@ function renderHtml(store, options = {}) {
     const primaryTabs = document.getElementById("primaryTabs");
     const provinceTabs = document.getElementById("provinceTabs");
     const provinceToggle = document.getElementById("provinceToggle");
+    const updateTab = document.getElementById("updateTab");
     const tableWrap = document.getElementById("tableWrap");
     const searchInput = document.getElementById("searchInput");
     const resultMeta = document.getElementById("resultMeta");
@@ -1170,7 +1175,6 @@ function renderHtml(store, options = {}) {
       const isProvinceActive = activeSheetIndex >= provinceStartIndex && activeSheetIndex <= provinceEndIndex;
       const primaryIndexes = [0, 1, 2];
       if (isProvinceActive) primaryIndexes.push(activeSheetIndex);
-      primaryIndexes.push(appData.sheets.length - 1);
 
       primaryTabs.innerHTML = primaryIndexes.map((index) => {
         const sheet = appData.sheets[index];
@@ -1188,6 +1192,7 @@ function renderHtml(store, options = {}) {
       provinceTabs.hidden = !provinceTabsExpanded;
       provinceToggle.setAttribute("aria-expanded", provinceTabsExpanded ? "true" : "false");
       provinceToggle.querySelector(".province-toggle-label").textContent = provinceTabsExpanded ? "收起省份" : "展开省份";
+      updateTab.className = "tab update-tab" + (activeSheetIndex === appData.sheets.length - 1 ? " active" : "");
     }
 
     function toggleProvincePanel() {

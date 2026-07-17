@@ -1665,6 +1665,13 @@
       "type": "更新",
       "subjectId": "web-preview-province-tabs",
       "note": "按用户确认的方案A优化省级页签体验：常用页签默认紧凑展示，右侧提供“展开省份”箭头，点击后向下展开全部31个省级页签为多行网格，选择省份后自动收起，避免横向长距离滑动。"
+    },
+    {
+      "id": "evt-20260717-swap-update-province-tabs",
+      "occurredAt": "2026-07-17",
+      "type": "更新",
+      "subjectId": "web-preview-province-tabs",
+      "note": "按用户要求将“更新记录”和“展开省份”入口位置对调：展开省份按钮位于更新记录左侧，更新记录固定在工具栏最右侧。"
     }
   ]
 }
