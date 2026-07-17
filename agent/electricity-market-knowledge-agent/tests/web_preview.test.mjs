@@ -185,6 +185,7 @@ test("exports an optimized local HTML web preview", async () => {
   assert.ok(faviconPngAsset.size > 100, "网页预览应复制 32px PNG favicon");
   assert.ok(appleTouchIconAsset.size > 100, "网页预览应复制 Apple touch icon");
   for (const expectedText of [
+    "<title>电力市场知识库</title>",
     "电力市场知识库",
     "assets/electricity-market-hero.png",
     "assets/electricity-market-logo.png",
@@ -199,8 +200,21 @@ test("exports an optimized local HTML web preview", async () => {
     "hero-card",
     "app-header",
     "header-title-block",
-    "header-meta",
-    "meta-chip",
+    "work-chain-button",
+    "工作链",
+    "workChainModal",
+    "openWorkChain",
+    "closeWorkChain",
+    "智能体工作链",
+    "用户下达更新指令",
+    "官方来源检索",
+    "网页正文与附件归档",
+    "Markdown / OCR 提取",
+    "知识摘要与深度解读",
+    "知识库校验",
+    "网页生成与发布",
+    "后续手动更新",
+    "work-chain-flow",
     "height: 70px",
     "position: fixed",
     "fixed-workbench",
@@ -227,7 +241,6 @@ test("exports an optimized local HTML web preview", async () => {
     "table-scroll-region",
     "backdrop-filter",
     "knowledge-shell",
-    "覆盖 <strong>国家 + 大陆31省级行政区</strong>",
     "基础概念",
     "全部",
     "国家政策",
@@ -276,6 +289,13 @@ test("exports an optimized local HTML web preview", async () => {
     assert.ok(html.includes(expectedText), `网页应包含：${expectedText}`);
   }
   assert.ok(!html.includes("Electricity Market Knowledge Base"), "头部不应展示英文标题");
+  assert.ok(!html.includes("<title>电力市场知识库网页预览</title>"), "浏览器页签名称不应继续包含网页预览");
+  assert.ok(!html.includes("网页更新时间"), "头部不应展示网页更新时间");
+  assert.ok(!html.includes(">网页生成 <strong>"), "头部不应展示网页生成时间");
+  assert.ok(!html.includes("数据更新"), "头部不应展示数据更新时间");
+  assert.ok(!html.includes("覆盖 <strong>国家 + 大陆31省级行政区</strong>"), "头部不应展示覆盖范围信息");
+  assert.ok(!html.includes("header-meta"), "头部不应继续渲染元信息区域");
+  assert.ok(!html.includes("meta-chip"), "头部不应继续渲染元信息标签");
   assert.ok(!html.includes("exportExcelLink"), "网页不应继续提供 Excel 导出入口");
   assert.ok(!html.includes("导出 Excel"), "网页不应继续展示导出 Excel 按钮");
   assert.ok(!html.includes("excelDownloadHref"), "网页数据不应继续内嵌 Excel 下载地址");

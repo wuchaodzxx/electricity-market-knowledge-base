@@ -227,7 +227,7 @@ function renderHtml(store, options = {}) {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>电力市场知识库网页预览</title>
+  <title>电力市场知识库</title>
   <link rel="icon" type="image/svg+xml" href="${faviconSvgUrl}" />
   <link rel="icon" type="image/png" sizes="32x32" href="${favicon32Url}" />
   <link rel="apple-touch-icon" href="${appleTouchIconUrl}" />
@@ -342,28 +342,31 @@ function renderHtml(store, options = {}) {
       white-space: nowrap;
       text-shadow: 0 8px 24px rgba(0, 0, 0, .28);
     }
-    .header-meta {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 8px;
-      margin: 0;
-      flex: 0 0 auto;
-    }
-    .meta-chip {
+    .work-chain-button {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      border: 1px solid rgba(255, 255, 255, .18);
-      border-radius: 12px;
-      padding: 5px 9px;
-      background: rgba(4, 28, 44, .24);
-      color: rgba(255, 255, 255, .92);
-      font-size: 11px;
+      justify-content: center;
+      gap: 8px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(255, 255, 255, .26);
+      border-radius: 999px;
+      padding: 9px 14px;
+      background: rgba(4, 28, 44, .36);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
       white-space: nowrap;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12);
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 10px 26px rgba(0, 0, 0, .12);
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
     }
-    .meta-chip strong { color: #fff; font-size: 12px; }
+    .work-chain-button:hover,
+    .work-chain-button:focus {
+      transform: translateY(-1px);
+      border-color: rgba(34, 211, 238, .68);
+      background: rgba(8, 83, 102, .48);
+      outline: none;
+    }
     main {
       position: fixed;
       top: 70px;
@@ -830,6 +833,64 @@ function renderHtml(store, options = {}) {
       border: 1px solid #e4edf4;
       background: #fff;
     }
+    .work-chain-body {
+      padding: 18px 22px 28px;
+      color: #263546;
+      line-height: 1.72;
+      font-size: 14px;
+    }
+    .work-chain-intro {
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+    .work-chain-flow {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+    }
+    .work-chain-step {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      padding: 13px 14px;
+      border: 1px solid #e3edf4;
+      border-radius: 16px;
+      background:
+        linear-gradient(135deg, rgba(224, 251, 255, .72), rgba(255, 247, 230, .52)),
+        #fff;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, .05);
+      position: relative;
+    }
+    .work-chain-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: 34px;
+      bottom: -11px;
+      width: 2px;
+      height: 11px;
+      background: linear-gradient(180deg, rgba(7, 86, 107, .34), rgba(246, 165, 26, .36));
+    }
+    .work-chain-index {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: inline-grid;
+      place-items: center;
+      background: linear-gradient(135deg, #083344, #0e7490);
+      color: #fff;
+      font-weight: 900;
+      box-shadow: 0 10px 20px rgba(7, 86, 107, .18);
+    }
+    .work-chain-step h3 {
+      margin: 0 0 4px;
+      color: #07566b;
+      font-size: 15px;
+    }
+    .work-chain-step p {
+      margin: 0;
+      color: #475467;
+    }
     .badge {
       display: inline-flex;
       align-items: center;
@@ -847,7 +908,7 @@ function renderHtml(store, options = {}) {
       .header-title-block { grid-template-columns: 1fr; gap: 4px; }
       .header-logo { width: 32px; height: 32px; border-radius: 10px; }
       .header-title-block h1 { font-size: 20px; }
-      .header-meta .meta-chip:nth-child(n+2) { display: none; }
+      .work-chain-button { padding: 8px 11px; font-size: 12px; }
       main { padding: 10px 10px 16px; }
       .knowledge-shell { border-radius: 18px; }
       .toolbar { padding: 8px; }
@@ -869,11 +930,7 @@ function renderHtml(store, options = {}) {
           <h1>电力市场知识库</h1>
         </div>
       </div>
-      <div class="header-meta" aria-label="知识库元信息">
-        <span class="meta-chip">数据更新 <strong>${data.lastUpdatedAt}</strong></span>
-        <span class="meta-chip">网页生成 <strong>${data.generatedAt}</strong></span>
-        <span class="meta-chip">覆盖 <strong>国家 + 大陆31省级行政区</strong></span>
-      </div>
+      <button class="work-chain-button" type="button" onclick="openWorkChain()" aria-haspopup="dialog">工作链</button>
     </section>
   </header>
   <main class="fixed-workbench">
@@ -915,6 +972,51 @@ function renderHtml(store, options = {}) {
       <div id="browserDetails" class="markdown-browser-body"></div>
     </article>
   </div>
+  <div id="workChainModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="workChainTitle">
+    <article class="modal">
+      <div class="modal-header">
+        <h2 id="workChainTitle" class="modal-title">智能体工作链</h2>
+        <button class="close-button" type="button" onclick="closeWorkChain()">关闭</button>
+      </div>
+      <div class="work-chain-body">
+        <p class="work-chain-intro">从接收指令到发布网页，智能体按这条链路维护知识库，确保每条知识可追溯、可核验、可浏览。</p>
+        <div class="work-chain-flow" aria-label="电力市场知识库智能体工作逻辑流程图">
+          <section class="work-chain-step">
+            <span class="work-chain-index">1</span>
+            <div><h3>用户下达更新指令</h3><p>明确国家、省份、交易品种、政策链接或本地文件范围；没有更新指令时只查询解释，不改库。</p></div>
+          </section>
+          <section class="work-chain-step">
+            <span class="work-chain-index">2</span>
+            <div><h3>官方来源检索</h3><p>优先核验政府、监管机构、交易中心等官方网页、正式文号、附件和政策解读，非官方材料仅作线索。</p></div>
+          </section>
+          <section class="work-chain-step">
+            <span class="work-chain-index">3</span>
+            <div><h3>网页正文与附件归档</h3><p>将政策正文保存为本地 PDF，下载附件并登记本地路径，避免官方链接失效后无法查看。</p></div>
+          </section>
+          <section class="work-chain-step">
+            <span class="work-chain-index">4</span>
+            <div><h3>Markdown / OCR 提取</h3><p>对政策正文和附件提取 Markdown；扫描 PDF 触发本地 OCR，记录提取方式、哈希和识别状态。</p></div>
+          </section>
+          <section class="work-chain-step">
+            <span class="work-chain-index">5</span>
+            <div><h3>知识摘要与深度解读</h3><p>生成 200 字以内知识摘要，并按文件复杂度撰写结构化深度解读，覆盖适用对象、流程、准入、考核和结算影响。</p></div>
+          </section>
+          <section class="work-chain-step">
+            <span class="work-chain-index">6</span>
+            <div><h3>知识库校验</h3><p>检查文号、来源、归档文件、Markdown 路径、摘要长度、省份范围和更新记录，失败则修复后再继续。</p></div>
+          </section>
+          <section class="work-chain-step">
+            <span class="work-chain-index">7</span>
+            <div><h3>网页生成与发布</h3><p>生成固定页签、搜索、深度解读、知识浏览和来源文件入口，提交并推送到 GitHub Pages。</p></div>
+          </section>
+          <section class="work-chain-step">
+            <span class="work-chain-index">8</span>
+            <div><h3>后续手动更新</h3><p>用户再次下发更新指令后，按增量策略复用已归档文件和 Markdown，减少重复处理时间。</p></div>
+          </section>
+        </div>
+      </div>
+    </article>
+  </div>
   <script>
     const appData = ${jsonForHtml(data)};
     let activeSheetIndex = 0;
@@ -938,6 +1040,7 @@ function renderHtml(store, options = {}) {
     const browserModal = document.getElementById("knowledgeBrowserModal");
     const browserTitle = document.getElementById("browserTitle");
     const browserDetails = document.getElementById("browserDetails");
+    const workChainModal = document.getElementById("workChainModal");
 
     function escapeHtml(value) {
       return String(value ?? "")
@@ -1311,11 +1414,23 @@ function renderHtml(store, options = {}) {
       browserModal.classList.remove("open");
     }
 
+    function openWorkChain() {
+      hideSummaryPopover();
+      workChainModal.classList.add("open");
+    }
+
+    function closeWorkChain() {
+      workChainModal.classList.remove("open");
+    }
+
     modal.addEventListener("click", (event) => {
       if (event.target === modal) closeModal();
     });
     browserModal.addEventListener("click", (event) => {
       if (event.target === browserModal) closeKnowledgeBrowser();
+    });
+    workChainModal.addEventListener("click", (event) => {
+      if (event.target === workChainModal) closeWorkChain();
     });
     document.addEventListener("click", (event) => {
       if (!event.target.closest(".summary-tooltip") && !summaryPopover.contains(event.target)) hideSummaryPopover();
@@ -1324,6 +1439,7 @@ function renderHtml(store, options = {}) {
       if (event.key === "Escape") {
         closeModal();
         closeKnowledgeBrowser();
+        closeWorkChain();
         hideSummaryPopover();
       }
     });
