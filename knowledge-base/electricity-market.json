@@ -1679,6 +1679,13 @@
       "type": "更新",
       "subjectId": "web-preview-province-tabs",
       "note": "按用户要求将“展开省份”按钮靠左，固定紧跟在“国家政策”后面；当前选中省份显示在展开省份按钮之后，更新记录继续固定在最右侧。"
+    },
+    {
+      "id": "evt-20260717-fix-province-toggle-visual-position",
+      "occurredAt": "2026-07-17",
+      "type": "更新",
+      "subjectId": "web-preview-province-tabs",
+      "note": "修复“展开省份”按钮仍被主页签弹性布局顶到右侧的问题：主页签区域改为按内容宽度排列，更新记录使用自动左边距固定靠右，确保展开省份视觉上紧跟国家政策。"
     }
   ]
 }

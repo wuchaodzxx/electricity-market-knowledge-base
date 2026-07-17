@@ -196,12 +196,14 @@ test("exports an optimized local HTML web preview", async () => {
     "toolbar-row",
     "tab-shell",
     "primary-tabs",
+    ".primary-tabs {\n      flex: 0 1 auto",
     "selected-province-tabs",
     "selectedProvinceTab",
     "province-toggle",
     "provinceToggle",
     "update-tab",
     "updateTab",
+    "margin-left: auto",
     "toggleProvincePanel",
     "provinceTabsExpanded",
     "province-panel",
@@ -277,6 +279,7 @@ test("exports an optimized local HTML web preview", async () => {
   assert.ok(!html.includes(">查看详情</button>"), "详情按钮应改名为深度解读");
   assert.ok(!html.includes("overflow-x: auto"), "省份页签不应继续依赖横向滑动展示");
   assert.ok(!html.includes("tabs.innerHTML = appData.sheets.map"), "页签不应继续把所有页签平铺到同一个横向容器");
+  assert.ok(!html.includes(".primary-tabs {\n      flex: 1 1 auto"), "主页签不应占满剩余空间，否则展开省份按钮会被顶到右侧");
   assert.ok(
     html.indexOf('id="provinceToggle"') < html.indexOf('id="updateTab"'),
     "展开省份按钮应位于更新记录左侧，更新记录应靠右展示",

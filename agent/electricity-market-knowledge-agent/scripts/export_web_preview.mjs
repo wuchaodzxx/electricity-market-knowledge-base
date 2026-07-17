@@ -406,7 +406,7 @@ function renderHtml(store, options = {}) {
       position: relative;
     }
     .primary-tabs {
-      flex: 1 1 auto;
+      flex: 0 1 auto;
       flex-wrap: wrap;
       align-items: center;
       max-height: 42px;
@@ -449,6 +449,7 @@ function renderHtml(store, options = {}) {
     }
     .update-tab {
       flex: 0 0 auto;
+      margin-left: auto;
     }
     .province-panel {
       position: absolute;
