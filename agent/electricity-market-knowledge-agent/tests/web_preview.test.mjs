@@ -194,6 +194,18 @@ test("exports an optimized local HTML web preview", async () => {
     "fixed-workbench",
     "compact-toolbar",
     "toolbar-row",
+    "tab-shell",
+    "primary-tabs",
+    "province-toggle",
+    "provinceToggle",
+    "toggleProvincePanel",
+    "provinceTabsExpanded",
+    "province-panel",
+    "province-tab-grid",
+    "展开省份",
+    "收起省份",
+    "aria-expanded",
+    "data-tab-role=\"province\"",
     "table-scroll-region",
     "backdrop-filter",
     "knowledge-shell",
@@ -259,6 +271,8 @@ test("exports an optimized local HTML web preview", async () => {
   assert.ok(!html.includes("modalDetails.innerHTML = sheet.columns.map"), "详情弹窗不应重复展示所有字段");
   assert.ok(!html.includes("grid-template-columns: 140px 1fr"), "详情弹窗不应继续使用字段-值详情表格");
   assert.ok(!html.includes(">查看详情</button>"), "详情按钮应改名为深度解读");
+  assert.ok(!html.includes("overflow-x: auto"), "省份页签不应继续依赖横向滑动展示");
+  assert.ok(!html.includes("tabs.innerHTML = appData.sheets.map"), "页签不应继续把所有页签平铺到同一个横向容器");
   const dataMatch = html.match(/const appData = ([\s\S]*?);\n    let activeSheetIndex/);
   assert.ok(dataMatch, "网页应内嵌 appData");
   const appData = JSON.parse(dataMatch[1]);

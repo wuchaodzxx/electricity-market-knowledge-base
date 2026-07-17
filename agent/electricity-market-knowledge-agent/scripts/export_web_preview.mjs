@@ -394,9 +394,71 @@ function renderHtml(store, options = {}) {
       display: flex;
       flex: 1 1 auto;
       gap: 6px;
-      overflow-x: auto;
       padding: 2px 0;
       min-width: 0;
+    }
+    .tab-shell {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      position: relative;
+    }
+    .primary-tabs {
+      flex: 1 1 auto;
+      flex-wrap: wrap;
+      align-items: center;
+      max-height: 42px;
+      overflow: hidden;
+    }
+    .province-toggle {
+      flex: 0 0 auto;
+      min-height: 38px;
+      border: 1px solid rgba(7, 86, 107, .18);
+      border-radius: 999px;
+      padding: 7px 12px;
+      background: linear-gradient(135deg, #ffffff, #eefcff);
+      color: #07566b;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 6px 16px rgba(7, 86, 107, .08);
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+    }
+    .province-toggle:hover,
+    .province-toggle:focus {
+      transform: translateY(-1px);
+      border-color: rgba(34, 211, 238, .55);
+      outline: none;
+      box-shadow: 0 10px 24px rgba(7, 86, 107, .13);
+    }
+    .toggle-chevron {
+      display: inline-block;
+      margin-left: 4px;
+      transition: transform .18s ease;
+    }
+    .province-toggle[aria-expanded="true"] .toggle-chevron {
+      transform: rotate(180deg);
+    }
+    .province-panel {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      left: 0;
+      z-index: 20;
+      padding: 12px;
+      border: 1px solid rgba(207, 219, 231, .94);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .97);
+      box-shadow: 0 18px 44px rgba(15, 23, 42, .18);
+      backdrop-filter: blur(16px);
+    }
+    .province-panel[hidden] { display: none; }
+    .province-tab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(74px, 1fr));
+      gap: 8px;
     }
     .tab {
       border: 1px solid var(--line);
@@ -766,7 +828,9 @@ function renderHtml(store, options = {}) {
       .toolbar { padding: 8px; }
       .toolbar-row { flex-wrap: wrap; }
       #searchInput { flex: 1 1 100%; }
-      .tabs { order: 2; flex-basis: 100%; }
+      .tab-shell { order: 2; flex-basis: 100%; flex-wrap: wrap; }
+      .primary-tabs { max-height: none; }
+      .province-panel { position: static; flex-basis: 100%; width: 100%; margin-top: 8px; }
       .modal-backdrop { padding: 10px; }
     }
   </style>
@@ -792,7 +856,11 @@ function renderHtml(store, options = {}) {
       <section class="toolbar" aria-label="筛选工具">
         <div class="compact-toolbar toolbar-row">
           <input id="searchInput" type="search" placeholder="搜索概念、政策、交易品种、文号、适用对象……" />
-          <div id="tabs" class="tabs"></div>
+          <div id="tabs" class="tab-shell">
+            <div id="primaryTabs" class="tabs primary-tabs"></div>
+            <button id="provinceToggle" class="province-toggle" type="button" aria-expanded="false" aria-controls="provinceTabs" onclick="toggleProvincePanel()"><span class="province-toggle-label">展开省份</span><span class="toggle-chevron" aria-hidden="true">▾</span></button>
+            <div id="provinceTabs" class="province-panel" hidden></div>
+          </div>
           <span id="resultMeta" class="result-meta"></span>
         </div>
       </section>
@@ -824,9 +892,13 @@ function renderHtml(store, options = {}) {
     const appData = ${jsonForHtml(data)};
     let activeSheetIndex = 0;
     let visibleRows = [];
+    let provinceTabsExpanded = false;
 
     const longLabels = new Set(["知识摘要", "政策/规则总结", "通俗解释", "适用对象", "管理要求", "准入条件", "参与流程", "考核方式", "说明"]);
     const tabs = document.getElementById("tabs");
+    const primaryTabs = document.getElementById("primaryTabs");
+    const provinceTabs = document.getElementById("provinceTabs");
+    const provinceToggle = document.getElementById("provinceToggle");
     const tableWrap = document.getElementById("tableWrap");
     const searchInput = document.getElementById("searchInput");
     const resultMeta = document.getElementById("resultMeta");
@@ -1093,10 +1165,34 @@ function renderHtml(store, options = {}) {
     }
 
     function renderTabs() {
-      tabs.innerHTML = appData.sheets.map((sheet, index) => {
+      const provinceStartIndex = 3;
+      const provinceEndIndex = appData.sheets.length - 2;
+      const isProvinceActive = activeSheetIndex >= provinceStartIndex && activeSheetIndex <= provinceEndIndex;
+      const primaryIndexes = [0, 1, 2];
+      if (isProvinceActive) primaryIndexes.push(activeSheetIndex);
+      primaryIndexes.push(appData.sheets.length - 1);
+
+      primaryTabs.innerHTML = primaryIndexes.map((index) => {
+        const sheet = appData.sheets[index];
         const active = index === activeSheetIndex ? " active" : "";
-        return '<button class="tab' + active + '" type="button" onclick="switchSheet(' + index + ')">' + escapeHtml(sheet.name) + '</button>';
+        const role = index === activeSheetIndex && isProvinceActive ? ' data-tab-role="selected-province"' : "";
+        return '<button class="tab' + active + '" type="button" onclick="switchSheet(' + index + ')"' + role + '>' + escapeHtml(sheet.name) + '</button>';
       }).join("");
+
+      provinceTabs.innerHTML = '<div class="province-tab-grid">' + appData.sheets.slice(provinceStartIndex, provinceEndIndex + 1).map((sheet, offset) => {
+        const index = provinceStartIndex + offset;
+        const active = index === activeSheetIndex ? " active" : "";
+        return '<button class="tab' + active + '" type="button" data-tab-role="province" onclick="switchSheet(' + index + ')">' + escapeHtml(sheet.name) + '</button>';
+      }).join("") + '</div>';
+
+      provinceTabs.hidden = !provinceTabsExpanded;
+      provinceToggle.setAttribute("aria-expanded", provinceTabsExpanded ? "true" : "false");
+      provinceToggle.querySelector(".province-toggle-label").textContent = provinceTabsExpanded ? "收起省份" : "展开省份";
+    }
+
+    function toggleProvincePanel() {
+      provinceTabsExpanded = !provinceTabsExpanded;
+      renderTabs();
     }
 
     function renderTable() {
@@ -1126,6 +1222,7 @@ function renderHtml(store, options = {}) {
       activeSheetIndex = index;
       searchInput.value = "";
       hideSummaryPopover();
+      if (index >= 3 && index <= appData.sheets.length - 2) provinceTabsExpanded = false;
       renderTabs();
       renderTable();
     }
