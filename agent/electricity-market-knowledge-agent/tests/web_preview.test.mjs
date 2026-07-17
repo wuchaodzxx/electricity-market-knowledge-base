@@ -206,15 +206,31 @@ test("exports an optimized local HTML web preview", async () => {
     "openWorkChain",
     "closeWorkChain",
     "智能体工作链",
-    "用户下达更新指令",
-    "官方来源检索",
-    "网页正文与附件归档",
-    "Markdown / OCR 提取",
-    "知识摘要与深度解读",
-    "知识库校验",
-    "网页生成与发布",
-    "后续手动更新",
-    "work-chain-flow",
+    "mermaid.esm.min.mjs",
+    "initMermaidWorkChain",
+    "renderMermaidFallback",
+    "workChainMermaid",
+    "workChainSource",
+    "mermaid-source",
+    "工作链 Mermaid 源码",
+    "graph TD",
+    "A[用户下达指令]",
+    "B{是否为更新/发布指令?}",
+    "D[明确范围: 国家/省份/交易品种/链接/本地文件]",
+    "E[官方来源检索与去重]",
+    "F{是否找到官方依据?}",
+    "I[归档政策正文为本地 PDF]",
+    "J{是否存在附件?}",
+    "L[提取正文与附件 Markdown]",
+    "M{PDF 是否疑似扫描件?}",
+    "N[调用 OCRmyPDF + Tesseract]",
+    "Q[撰写 200 字以内知识摘要]",
+    "R[撰写结构化深度解读]",
+    "T{校验是否通过?}",
+    "W[生成网页: 搜索/页签/深度解读/知识浏览/来源归档]",
+    "X[提交并推送 GitHub Pages]",
+    "Y{发布是否成功?}",
+    "AB[等待下一次手动增量更新]",
     "height: 70px",
     "position: fixed",
     "fixed-workbench",
@@ -296,6 +312,8 @@ test("exports an optimized local HTML web preview", async () => {
   assert.ok(!html.includes("覆盖 <strong>国家 + 大陆31省级行政区</strong>"), "头部不应展示覆盖范围信息");
   assert.ok(!html.includes("header-meta"), "头部不应继续渲染元信息区域");
   assert.ok(!html.includes("meta-chip"), "头部不应继续渲染元信息标签");
+  assert.ok(!html.includes("work-chain-step"), "工作链不应继续使用旧的卡片式流程，应改为 Mermaid 渲染");
+  assert.ok(!html.includes("work-chain-index"), "工作链不应继续使用旧的编号卡片流程");
   assert.ok(!html.includes("exportExcelLink"), "网页不应继续提供 Excel 导出入口");
   assert.ok(!html.includes("导出 Excel"), "网页不应继续展示导出 Excel 按钮");
   assert.ok(!html.includes("excelDownloadHref"), "网页数据不应继续内嵌 Excel 下载地址");

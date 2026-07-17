@@ -843,53 +843,55 @@ function renderHtml(store, options = {}) {
       margin: 0 0 16px;
       color: var(--muted);
     }
-    .work-chain-flow {
-      display: grid;
-      gap: 10px;
-      margin: 0;
-    }
-    .work-chain-step {
-      display: grid;
-      grid-template-columns: 42px minmax(0, 1fr);
-      gap: 12px;
-      align-items: start;
-      padding: 13px 14px;
+    .mermaid-panel {
       border: 1px solid #e3edf4;
       border-radius: 16px;
       background:
-        linear-gradient(135deg, rgba(224, 251, 255, .72), rgba(255, 247, 230, .52)),
+        radial-gradient(circle at 8% 0%, rgba(34, 211, 238, .12), transparent 28%),
+        linear-gradient(180deg, rgba(248, 252, 255, .96), rgba(255, 255, 255, .98)),
         #fff;
-      box-shadow: 0 8px 22px rgba(15, 23, 42, .05);
-      position: relative;
+      padding: 16px;
+      overflow: auto;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), 0 10px 30px rgba(15, 23, 42, .06);
     }
-    .work-chain-step:not(:last-child)::after {
-      content: "";
-      position: absolute;
-      left: 34px;
-      bottom: -11px;
-      width: 2px;
-      height: 11px;
-      background: linear-gradient(180deg, rgba(7, 86, 107, .34), rgba(246, 165, 26, .36));
-    }
-    .work-chain-index {
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      display: inline-grid;
+    .mermaid-diagram {
+      min-width: 980px;
+      min-height: 520px;
+      display: grid;
       place-items: center;
-      background: linear-gradient(135deg, #083344, #0e7490);
-      color: #fff;
-      font-weight: 900;
-      box-shadow: 0 10px 20px rgba(7, 86, 107, .18);
     }
-    .work-chain-step h3 {
-      margin: 0 0 4px;
-      color: #07566b;
-      font-size: 15px;
-    }
-    .work-chain-step p {
+    .mermaid-fallback {
       margin: 0;
+      border: 1px dashed #bfd7e4;
+      border-radius: 14px;
+      padding: 14px;
+      background: #f8fcff;
       color: #475467;
+    }
+    .mermaid-source-wrap {
+      margin-top: 14px;
+      border: 1px solid #e3edf4;
+      border-radius: 14px;
+      background: #fbfdff;
+      overflow: hidden;
+    }
+    .mermaid-source-wrap summary {
+      cursor: pointer;
+      padding: 11px 14px;
+      color: #07566b;
+      font-weight: 800;
+      background: linear-gradient(135deg, #e0fbff, #fff7e6);
+    }
+    .mermaid-source {
+      margin: 0;
+      padding: 14px 16px;
+      overflow: auto;
+      max-height: 420px;
+      background: #0f172a;
+      color: #dbeafe;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.7;
     }
     .badge {
       display: inline-flex;
@@ -979,41 +981,77 @@ function renderHtml(store, options = {}) {
         <button class="close-button" type="button" onclick="closeWorkChain()">关闭</button>
       </div>
       <div class="work-chain-body">
-        <p class="work-chain-intro">从接收指令到发布网页，智能体按这条链路维护知识库，确保每条知识可追溯、可核验、可浏览。</p>
-        <div class="work-chain-flow" aria-label="电力市场知识库智能体工作逻辑流程图">
-          <section class="work-chain-step">
-            <span class="work-chain-index">1</span>
-            <div><h3>用户下达更新指令</h3><p>明确国家、省份、交易品种、政策链接或本地文件范围；没有更新指令时只查询解释，不改库。</p></div>
-          </section>
-          <section class="work-chain-step">
-            <span class="work-chain-index">2</span>
-            <div><h3>官方来源检索</h3><p>优先核验政府、监管机构、交易中心等官方网页、正式文号、附件和政策解读，非官方材料仅作线索。</p></div>
-          </section>
-          <section class="work-chain-step">
-            <span class="work-chain-index">3</span>
-            <div><h3>网页正文与附件归档</h3><p>将政策正文保存为本地 PDF，下载附件并登记本地路径，避免官方链接失效后无法查看。</p></div>
-          </section>
-          <section class="work-chain-step">
-            <span class="work-chain-index">4</span>
-            <div><h3>Markdown / OCR 提取</h3><p>对政策正文和附件提取 Markdown；扫描 PDF 触发本地 OCR，记录提取方式、哈希和识别状态。</p></div>
-          </section>
-          <section class="work-chain-step">
-            <span class="work-chain-index">5</span>
-            <div><h3>知识摘要与深度解读</h3><p>生成 200 字以内知识摘要，并按文件复杂度撰写结构化深度解读，覆盖适用对象、流程、准入、考核和结算影响。</p></div>
-          </section>
-          <section class="work-chain-step">
-            <span class="work-chain-index">6</span>
-            <div><h3>知识库校验</h3><p>检查文号、来源、归档文件、Markdown 路径、摘要长度、省份范围和更新记录，失败则修复后再继续。</p></div>
-          </section>
-          <section class="work-chain-step">
-            <span class="work-chain-index">7</span>
-            <div><h3>网页生成与发布</h3><p>生成固定页签、搜索、深度解读、知识浏览和来源文件入口，提交并推送到 GitHub Pages。</p></div>
-          </section>
-          <section class="work-chain-step">
-            <span class="work-chain-index">8</span>
-            <div><h3>后续手动更新</h3><p>用户再次下发更新指令后，按增量策略复用已归档文件和 Markdown，减少重复处理时间。</p></div>
-          </section>
+        <p class="work-chain-intro">这张图用 Mermaid 展示智能体维护知识库的完整流程思路：先判断是否需要更新，再完成官方核验、归档、内容提取、总结入库、校验发布，并把失败分支回流到待核验或修复环节。</p>
+        <div class="mermaid-panel" aria-label="电力市场知识库智能体工作逻辑 Mermaid 流程图">
+          <div id="workChainMermaid" class="mermaid mermaid-diagram">
+graph TD
+  A[用户下达指令] --> B{是否为更新/发布指令?}
+  B -- 否 --> C[查询解释: 读取知识库并回答 不修改数据]
+  B -- 是 --> D[明确范围: 国家/省份/交易品种/链接/本地文件]
+  D --> E[官方来源检索与去重]
+  E --> F{是否找到官方依据?}
+  F -- 否 --> G[记录待核验: 不写确定性结论]
+  F -- 是 --> H[提取标题 文号 发布单位 日期 适用范围]
+  H --> I[归档政策正文为本地 PDF]
+  I --> J{是否存在附件?}
+  J -- 是 --> K[下载附件并登记 localAttachments]
+  J -- 否 --> L[提取正文与附件 Markdown]
+  K --> L
+  L --> M{PDF 是否疑似扫描件?}
+  M -- 是 --> N[调用 OCRmyPDF + Tesseract]
+  M -- 否 --> O[pdftotext / Office 转换 / 表格转 Markdown]
+  N --> P[记录 OCR 状态与 sourceHash]
+  O --> P
+  P --> Q[撰写 200 字以内知识摘要]
+  Q --> R[撰写结构化深度解读]
+  R --> S[写入政策文件 概念 省份规则和更新记录]
+  S --> T{校验是否通过?}
+  T -- 否 --> U[修复字段 来源 路径 摘要长度或引用关系]
+  U --> T
+  T -- 是 --> V[同步智能体规则和测试]
+  V --> W[生成网页: 搜索/页签/深度解读/知识浏览/来源归档]
+  W --> X[提交并推送 GitHub Pages]
+  X --> Y{发布是否成功?}
+  Y -- 否 --> Z[说明阻塞点并保留本地产物]
+  Y -- 是 --> AA[公开网页更新并提示缓存刷新]
+  AA --> AB[等待下一次手动增量更新]
+          </div>
+          <p id="mermaidFallback" class="mermaid-fallback" hidden>Mermaid 渲染组件暂时无法加载，下面保留完整 Mermaid 源码，可复制到 Mermaid 编辑器查看。</p>
         </div>
+        <details class="mermaid-source-wrap">
+          <summary>工作链 Mermaid 源码</summary>
+          <pre id="workChainSource" class="mermaid-source">graph TD
+  A[用户下达指令] --&gt; B{是否为更新/发布指令?}
+  B -- 否 --&gt; C[查询解释: 读取知识库并回答 不修改数据]
+  B -- 是 --&gt; D[明确范围: 国家/省份/交易品种/链接/本地文件]
+  D --&gt; E[官方来源检索与去重]
+  E --&gt; F{是否找到官方依据?}
+  F -- 否 --&gt; G[记录待核验: 不写确定性结论]
+  F -- 是 --&gt; H[提取标题 文号 发布单位 日期 适用范围]
+  H --&gt; I[归档政策正文为本地 PDF]
+  I --&gt; J{是否存在附件?}
+  J -- 是 --&gt; K[下载附件并登记 localAttachments]
+  J -- 否 --&gt; L[提取正文与附件 Markdown]
+  K --&gt; L
+  L --&gt; M{PDF 是否疑似扫描件?}
+  M -- 是 --&gt; N[调用 OCRmyPDF + Tesseract]
+  M -- 否 --&gt; O[pdftotext / Office 转换 / 表格转 Markdown]
+  N --&gt; P[记录 OCR 状态与 sourceHash]
+  O --&gt; P
+  P --&gt; Q[撰写 200 字以内知识摘要]
+  Q --&gt; R[撰写结构化深度解读]
+  R --&gt; S[写入政策文件 概念 省份规则和更新记录]
+  S --&gt; T{校验是否通过?}
+  T -- 否 --&gt; U[修复字段 来源 路径 摘要长度或引用关系]
+  U --&gt; T
+  T -- 是 --&gt; V[同步智能体规则和测试]
+  V --&gt; W[生成网页: 搜索/页签/深度解读/知识浏览/来源归档]
+  W --&gt; X[提交并推送 GitHub Pages]
+  X --&gt; Y{发布是否成功?}
+  Y -- 否 --&gt; Z[说明阻塞点并保留本地产物]
+  Y -- 是 --&gt; AA[公开网页更新并提示缓存刷新]
+  AA --&gt; AB[等待下一次手动增量更新]</pre>
+        </details>
       </div>
     </article>
   </div>
@@ -1417,6 +1455,7 @@ function renderHtml(store, options = {}) {
     function openWorkChain() {
       hideSummaryPopover();
       workChainModal.classList.add("open");
+      if (window.initMermaidWorkChain) window.initMermaidWorkChain();
     }
 
     function closeWorkChain() {
@@ -1452,6 +1491,44 @@ function renderHtml(store, options = {}) {
 
     renderTabs();
     renderTable();
+  </script>
+  <script type="module">
+    let workChainMermaidRendered = false;
+
+    window.renderMermaidFallback = function renderMermaidFallback() {
+      const fallback = document.getElementById("mermaidFallback");
+      const diagram = document.getElementById("workChainMermaid");
+      if (fallback) fallback.hidden = false;
+      if (diagram) diagram.classList.add("mermaid-render-failed");
+    };
+
+    window.initMermaidWorkChain = async function initMermaidWorkChain() {
+      const diagram = document.getElementById("workChainMermaid");
+      if (!diagram || workChainMermaidRendered) return;
+      try {
+        const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs");
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: "strict",
+          theme: "base",
+          themeVariables: {
+            primaryColor: "#e0fbff",
+            primaryTextColor: "#083344",
+            primaryBorderColor: "#0e7490",
+            lineColor: "#64748b",
+            secondaryColor: "#fff7e6",
+            tertiaryColor: "#f8fafc",
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif',
+          },
+        });
+        await mermaid.run({ nodes: [diagram] });
+        workChainMermaidRendered = true;
+      } catch (error) {
+        window.renderMermaidFallback(error);
+      }
+    };
+
+    window.initMermaidWorkChain();
   </script>
 </body>
 </html>`;
