@@ -4,6 +4,40 @@ import { createRequire } from "node:module";
 import { pathToFileURL } from "node:url";
 import { exportKnowledgeBase } from "../scripts/export_knowledge_base.mjs";
 
+const MAINLAND_PROVINCE_TABS = [
+  "北京",
+  "天津",
+  "河北",
+  "山西",
+  "内蒙古",
+  "山东",
+  "辽宁",
+  "吉林",
+  "黑龙江",
+  "上海",
+  "江苏",
+  "浙江",
+  "安徽",
+  "福建",
+  "河南",
+  "湖北",
+  "湖南",
+  "江西",
+  "重庆",
+  "四川",
+  "西藏",
+  "陕西",
+  "甘肃",
+  "青海",
+  "宁夏",
+  "新疆",
+  "广东",
+  "广西",
+  "海南",
+  "贵州",
+  "云南",
+];
+
 async function loadArtifactTool() {
   try {
     return await import("@oai/artifact-tool");
@@ -27,19 +61,7 @@ test("exports all required knowledge-base sheets", async () => {
     await FileBlob.load(outputPath),
   );
   const result = await workbook.inspect({ kind: "sheet", include: "name" });
-  for (const sheetName of [
-    "基础概念",
-    "国家政策",
-    "江苏",
-    "浙江",
-    "山西",
-    "湖北",
-    "四川",
-    "山东",
-    "甘肃",
-    "安徽",
-    "更新记录",
-  ]) {
+  for (const sheetName of ["基础概念", "国家政策", ...MAINLAND_PROVINCE_TABS, "更新记录"]) {
     assert.match(result.ndjson, new RegExp(sheetName));
   }
 

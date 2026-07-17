@@ -4,7 +4,39 @@ import { createHash } from "node:crypto";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { validateKnowledgeBase } from "./validate_knowledge_base.mjs";
 
-const PROVINCES = ["江苏", "浙江", "山西", "湖北", "四川", "山东", "甘肃", "安徽"];
+const PROVINCES = [
+  "北京",
+  "天津",
+  "河北",
+  "山西",
+  "内蒙古",
+  "山东",
+  "辽宁",
+  "吉林",
+  "黑龙江",
+  "上海",
+  "江苏",
+  "浙江",
+  "安徽",
+  "福建",
+  "河南",
+  "湖北",
+  "湖南",
+  "江西",
+  "重庆",
+  "四川",
+  "西藏",
+  "陕西",
+  "甘肃",
+  "青海",
+  "宁夏",
+  "新疆",
+  "广东",
+  "广西",
+  "海南",
+  "贵州",
+  "云南",
+];
 const HERO_ASSET_FILE = "electricity-market-hero.png";
 const HERO_ASSET_RELATIVE_PATH = `assets/${HERO_ASSET_FILE}`;
 const LOGO_ASSET_FILE = "electricity-market-logo.png";
@@ -751,7 +783,7 @@ function renderHtml(store, options = {}) {
       <div class="header-meta" aria-label="知识库元信息">
         <span class="meta-chip">数据更新 <strong>${data.lastUpdatedAt}</strong></span>
         <span class="meta-chip">网页生成 <strong>${data.generatedAt}</strong></span>
-        <span class="meta-chip">覆盖 <strong>国家 + 8 省</strong></span>
+        <span class="meta-chip">覆盖 <strong>国家 + 大陆31省级行政区</strong></span>
       </div>
     </section>
   </header>

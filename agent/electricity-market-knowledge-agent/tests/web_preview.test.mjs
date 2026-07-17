@@ -8,11 +8,45 @@ import { exportWebPreview } from "../scripts/export_web_preview.mjs";
 const longSummary =
   "这是一段较长的详细解读，用来验证网页表格默认不把长文本全部铺开，而是通过摘要和查看详情按钮改善阅读体验。".repeat(8);
 
+const MAINLAND_PROVINCE_TABS = [
+  "北京",
+  "天津",
+  "河北",
+  "山西",
+  "内蒙古",
+  "山东",
+  "辽宁",
+  "吉林",
+  "黑龙江",
+  "上海",
+  "江苏",
+  "浙江",
+  "安徽",
+  "福建",
+  "河南",
+  "湖北",
+  "湖南",
+  "江西",
+  "重庆",
+  "四川",
+  "西藏",
+  "陕西",
+  "甘肃",
+  "青海",
+  "宁夏",
+  "新疆",
+  "广东",
+  "广西",
+  "海南",
+  "贵州",
+  "云南",
+];
+
 function sampleStore() {
   return {
     metadata: {
       schemaVersion: 1,
-      supportedProvinces: ["江苏", "浙江", "山西", "湖北", "四川", "山东", "甘肃", "安徽"],
+      supportedProvinces: MAINLAND_PROVINCE_TABS,
       lastUpdatedAt: "2026-07-14",
     },
     policyDocuments: [
@@ -163,10 +197,15 @@ test("exports an optimized local HTML web preview", async () => {
     "table-scroll-region",
     "backdrop-filter",
     "knowledge-shell",
+    "覆盖 <strong>国家 + 大陆31省级行政区</strong>",
     "基础概念",
     "全部",
     "国家政策",
+    "北京",
     "江苏",
+    "新疆",
+    "广东",
+    "云南",
     "文件标题",
     "知识摘要",
     "发布单位",
@@ -228,6 +267,17 @@ test("exports an optimized local HTML web preview", async () => {
     ["基础概念", "全部", "国家政策"],
     "全部页签应位于基础概念之后、国家政策之前",
   );
+  assert.deepEqual(
+    appData.sheets.slice(3, 34).map((sheet) => sheet.name),
+    MAINLAND_PROVINCE_TABS,
+    "省级页签应覆盖大陆 31 个省级行政区，并按国网区在前、南网区在后排序",
+  );
+  assert.deepEqual(
+    appData.sheets.slice(-6).map((sheet) => sheet.name),
+    ["广东", "广西", "海南", "贵州", "云南", "更新记录"],
+    "南网经营区页签应排在省级页签末尾，更新记录仍位于最后",
+  );
+  assert.equal(appData.sheets.length, 35, "网页应包含基础概念、全部、国家政策、31 个省级页签和更新记录");
   const allSheet = appData.sheets.find((sheet) => sheet.name === "全部");
   assert.ok(allSheet, "网页应提供全国及各省政策混合检索的全部页签");
   assert.ok(allSheet.columns.includes("适用范围"), "全部页签应展示国家/省份适用范围");

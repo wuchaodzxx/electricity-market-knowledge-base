@@ -59,6 +59,39 @@ test("accepts a policy document with traceable fields", () => {
   assert.deepEqual(validateKnowledgeBase(store), []);
 });
 
+test("accepts mainland provincial scope beyond the original eight provinces", () => {
+  const validStore = structuredClone(store);
+  validStore.policyDocuments[0].scope = "云南";
+  validStore.provincialRules.push({
+    id: "rule-yn-1",
+    province: "广东",
+    tradingProduct: "虚拟电厂",
+    knowledgeSummary: "广东虚拟电厂规则摘要，用于验证大陆31省级行政区范围内的省份规则可被接受。",
+    detailedSummary: "这是一段用于测试的省份规则详细总结，说明广东作为南网经营区省份时也应被校验器接受。",
+    eligibleParticipants: "完成注册的经营主体",
+    managementRequirements: "按规则执行",
+    admissionCriteria: "完成市场注册",
+    participationProcess: "注册后申报",
+    assessmentMethod: "按规则考核",
+    sourceDocumentIds: ["doc-1"],
+    status: "有效",
+    lastVerifiedAt: "2026-07-17",
+  });
+
+  assert.deepEqual(validateKnowledgeBase(validStore), []);
+});
+
+test("rejects Hong Kong, Macao and Taiwan as provincial scopes", () => {
+  for (const scope of ["香港", "澳门", "台湾"]) {
+    const invalidStore = structuredClone(store);
+    invalidStore.policyDocuments[0].scope = scope;
+    assert.match(
+      validateKnowledgeBase(invalidStore).join("\n"),
+      /大陆31省级行政区/,
+    );
+  }
+});
+
 test("rejects blank documentNumber", () => {
   const invalidStore = structuredClone(store);
   invalidStore.policyDocuments[0].documentNumber = "";

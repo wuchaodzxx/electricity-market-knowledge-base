@@ -1,14 +1,37 @@
 import { pathToFileURL } from "node:url";
 
 const SUPPORTED_PROVINCES = new Set([
+  "北京",
+  "天津",
+  "河北",
+  "山西",
+  "内蒙古",
+  "山东",
+  "辽宁",
+  "吉林",
+  "黑龙江",
+  "上海",
   "江苏",
   "浙江",
-  "山西",
-  "湖北",
-  "四川",
-  "山东",
-  "甘肃",
   "安徽",
+  "福建",
+  "河南",
+  "湖北",
+  "湖南",
+  "江西",
+  "重庆",
+  "四川",
+  "西藏",
+  "陕西",
+  "甘肃",
+  "青海",
+  "宁夏",
+  "新疆",
+  "广东",
+  "广西",
+  "海南",
+  "贵州",
+  "云南",
 ]);
 
 const VALID_STATUSES = new Set(["有效", "已废止", "被替代", "待核验"]);
@@ -164,7 +187,7 @@ export function validateKnowledgeBase(store) {
       errors.push(`政策文件 ${document.id || "<空>"} 的状态无效`);
     }
     if (hasText(document.scope) && document.scope !== "国家" && !SUPPORTED_PROVINCES.has(document.scope)) {
-      errors.push(`政策文件 ${document.id || "<空>"} 的适用范围不在首期范围内`);
+      errors.push(`政策文件 ${document.id || "<空>"} 的适用范围不在大陆31省级行政区范围内`);
     }
   }
 
@@ -178,7 +201,7 @@ export function validateKnowledgeBase(store) {
 
   for (const rule of store.provincialRules) {
     if (!hasText(rule.id) || !SUPPORTED_PROVINCES.has(rule.province)) {
-      errors.push(`省份规则 ${rule.id || "<空>"} 的省份不在首期范围内`);
+      errors.push(`省份规则 ${rule.id || "<空>"} 的省份不在大陆31省级行政区范围内`);
     }
     for (const field of ["tradingProduct", "detailedSummary", "eligibleParticipants", "managementRequirements", "admissionCriteria", "participationProcess", "assessmentMethod", "status", "lastVerifiedAt"]) {
       if (!hasText(rule[field])) errors.push(`省份规则 ${rule.id || "<空>"} 缺少 ${field}`);

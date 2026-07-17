@@ -4,7 +4,39 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { validateKnowledgeBase } from "./validate_knowledge_base.mjs";
 
-const PROVINCES = ["江苏", "浙江", "山西", "湖北", "四川", "山东", "甘肃", "安徽"];
+const PROVINCES = [
+  "北京",
+  "天津",
+  "河北",
+  "山西",
+  "内蒙古",
+  "山东",
+  "辽宁",
+  "吉林",
+  "黑龙江",
+  "上海",
+  "江苏",
+  "浙江",
+  "安徽",
+  "福建",
+  "河南",
+  "湖北",
+  "湖南",
+  "江西",
+  "重庆",
+  "四川",
+  "西藏",
+  "陕西",
+  "甘肃",
+  "青海",
+  "宁夏",
+  "新疆",
+  "广东",
+  "广西",
+  "海南",
+  "贵州",
+  "云南",
+];
 const POLICY_HEADERS = [
   "文件标题",
   "知识摘要",
