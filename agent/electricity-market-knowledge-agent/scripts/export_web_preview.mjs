@@ -412,6 +412,12 @@ function renderHtml(store, options = {}) {
       max-height: 42px;
       overflow: hidden;
     }
+    .selected-province-tabs {
+      flex: 0 1 auto;
+      align-items: center;
+      max-width: 140px;
+      overflow: hidden;
+    }
     .province-toggle {
       flex: 0 0 auto;
       min-height: 38px;
@@ -862,6 +868,7 @@ function renderHtml(store, options = {}) {
           <div id="tabs" class="tab-shell">
             <div id="primaryTabs" class="tabs primary-tabs"></div>
             <button id="provinceToggle" class="province-toggle" type="button" aria-expanded="false" aria-controls="provinceTabs" onclick="toggleProvincePanel()"><span class="province-toggle-label">展开省份</span><span class="toggle-chevron" aria-hidden="true">▾</span></button>
+            <div id="selectedProvinceTab" class="tabs selected-province-tabs"></div>
             <button id="updateTab" class="tab update-tab" type="button" onclick="switchSheet(appData.sheets.length - 1)">更新记录</button>
             <div id="provinceTabs" class="province-panel" hidden></div>
           </div>
@@ -901,6 +908,7 @@ function renderHtml(store, options = {}) {
     const longLabels = new Set(["知识摘要", "政策/规则总结", "通俗解释", "适用对象", "管理要求", "准入条件", "参与流程", "考核方式", "说明"]);
     const tabs = document.getElementById("tabs");
     const primaryTabs = document.getElementById("primaryTabs");
+    const selectedProvinceTab = document.getElementById("selectedProvinceTab");
     const provinceTabs = document.getElementById("provinceTabs");
     const provinceToggle = document.getElementById("provinceToggle");
     const updateTab = document.getElementById("updateTab");
@@ -1174,14 +1182,16 @@ function renderHtml(store, options = {}) {
       const provinceEndIndex = appData.sheets.length - 2;
       const isProvinceActive = activeSheetIndex >= provinceStartIndex && activeSheetIndex <= provinceEndIndex;
       const primaryIndexes = [0, 1, 2];
-      if (isProvinceActive) primaryIndexes.push(activeSheetIndex);
 
       primaryTabs.innerHTML = primaryIndexes.map((index) => {
         const sheet = appData.sheets[index];
         const active = index === activeSheetIndex ? " active" : "";
-        const role = index === activeSheetIndex && isProvinceActive ? ' data-tab-role="selected-province"' : "";
-        return '<button class="tab' + active + '" type="button" onclick="switchSheet(' + index + ')"' + role + '>' + escapeHtml(sheet.name) + '</button>';
+        return '<button class="tab' + active + '" type="button" onclick="switchSheet(' + index + ')">' + escapeHtml(sheet.name) + '</button>';
       }).join("");
+
+      selectedProvinceTab.innerHTML = isProvinceActive
+        ? '<button class="tab active" type="button" data-tab-role="selected-province" onclick="switchSheet(' + activeSheetIndex + ')">' + escapeHtml(appData.sheets[activeSheetIndex].name) + '</button>'
+        : "";
 
       provinceTabs.innerHTML = '<div class="province-tab-grid">' + appData.sheets.slice(provinceStartIndex, provinceEndIndex + 1).map((sheet, offset) => {
         const index = provinceStartIndex + offset;

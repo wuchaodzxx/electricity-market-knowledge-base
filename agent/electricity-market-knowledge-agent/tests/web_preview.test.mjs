@@ -196,6 +196,8 @@ test("exports an optimized local HTML web preview", async () => {
     "toolbar-row",
     "tab-shell",
     "primary-tabs",
+    "selected-province-tabs",
+    "selectedProvinceTab",
     "province-toggle",
     "provinceToggle",
     "update-tab",
@@ -279,6 +281,13 @@ test("exports an optimized local HTML web preview", async () => {
     html.indexOf('id="provinceToggle"') < html.indexOf('id="updateTab"'),
     "展开省份按钮应位于更新记录左侧，更新记录应靠右展示",
   );
+  assert.ok(
+    html.indexOf('id="primaryTabs"') < html.indexOf('id="provinceToggle"') &&
+      html.indexOf('id="provinceToggle"') < html.indexOf('id="selectedProvinceTab"') &&
+      html.indexOf('id="selectedProvinceTab"') < html.indexOf('id="updateTab"'),
+    "展开省份按钮应紧跟国家政策所在的主页签区，当前选中省份应位于展开省份和更新记录之间",
+  );
+  assert.ok(!html.includes("if (isProvinceActive) primaryIndexes.push(activeSheetIndex)"), "当前选中省份不应继续放在国家政策与展开省份之间");
   const dataMatch = html.match(/const appData = ([\s\S]*?);\n    let activeSheetIndex/);
   assert.ok(dataMatch, "网页应内嵌 appData");
   const appData = JSON.parse(dataMatch[1]);

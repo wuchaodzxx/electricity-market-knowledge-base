@@ -1672,6 +1672,13 @@
       "type": "更新",
       "subjectId": "web-preview-province-tabs",
       "note": "按用户要求将“更新记录”和“展开省份”入口位置对调：展开省份按钮位于更新记录左侧，更新记录固定在工具栏最右侧。"
+    },
+    {
+      "id": "evt-20260717-move-province-toggle-after-national",
+      "occurredAt": "2026-07-17",
+      "type": "更新",
+      "subjectId": "web-preview-province-tabs",
+      "note": "按用户要求将“展开省份”按钮靠左，固定紧跟在“国家政策”后面；当前选中省份显示在展开省份按钮之后，更新记录继续固定在最右侧。"
     }
   ]
 }
