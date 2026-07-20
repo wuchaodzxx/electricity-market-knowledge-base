@@ -1494,6 +1494,7 @@ graph TD
   </script>
   <script type="module">
     let workChainMermaidRendered = false;
+    let workChainMermaidRendering = false;
 
     window.renderMermaidFallback = function renderMermaidFallback() {
       const fallback = document.getElementById("mermaidFallback");
@@ -1504,7 +1505,10 @@ graph TD
 
     window.initMermaidWorkChain = async function initMermaidWorkChain() {
       const diagram = document.getElementById("workChainMermaid");
-      if (!diagram || workChainMermaidRendered) return;
+      const workChainSource = document.getElementById("workChainSource")?.textContent;
+      const fallback = document.getElementById("mermaidFallback");
+      if (!diagram || !workChainSource || workChainMermaidRendered || workChainMermaidRendering) return;
+      workChainMermaidRendering = true;
       try {
         const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs");
         mermaid.initialize({
@@ -1521,10 +1525,15 @@ graph TD
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif',
           },
         });
-        await mermaid.run({ nodes: [diagram] });
+        const { svg } = await mermaid.render("workChainDiagram", workChainSource, diagram);
+        diagram.innerHTML = svg;
+        diagram.classList.remove("mermaid-render-failed");
+        if (fallback) fallback.hidden = true;
         workChainMermaidRendered = true;
       } catch (error) {
         window.renderMermaidFallback(error);
+      } finally {
+        workChainMermaidRendering = false;
       }
     };
 

@@ -314,6 +314,46 @@ test("exports an optimized local HTML web preview", async () => {
   assert.ok(!html.includes("meta-chip"), "头部不应继续渲染元信息标签");
   assert.ok(!html.includes("work-chain-step"), "工作链不应继续使用旧的卡片式流程，应改为 Mermaid 渲染");
   assert.ok(!html.includes("work-chain-index"), "工作链不应继续使用旧的编号卡片流程");
+  assert.ok(
+    html.includes('const workChainSource = document.getElementById("workChainSource")?.textContent;'),
+    "工作链应从源码区读取未被 HTML 转义的 Mermaid 文本",
+  );
+  assert.ok(
+    html.includes('const { svg } = await mermaid.render("workChainDiagram", workChainSource, diagram);'),
+    "工作链应显式传入容器并用 Mermaid render() 生成 SVG，避免 run() 二次解析 HTML",
+  );
+  assert.ok(
+    html.includes("diagram.innerHTML = svg;"),
+    "工作链应将 Mermaid 返回的 SVG 写入流程图容器",
+  );
+  assert.ok(
+    !html.includes("await mermaid.run({ nodes: [diagram] });"),
+    "工作链不应再通过 Mermaid run() 直接读取流程图容器内容",
+  );
+  assert.ok(
+    !html.includes("bindFunctions?.(diagram);"),
+    "工作链无需绑定交互函数，避免 SVG 已生成后仍触发降级提示",
+  );
+  assert.ok(
+    html.includes("let workChainMermaidRendering = false;"),
+    "工作链应记录 Mermaid 的渲染中状态，防止重复渲染",
+  );
+  assert.ok(
+    html.includes("workChainMermaidRendering = true;"),
+    "工作链开始渲染前应锁定渲染状态",
+  );
+  assert.ok(
+    html.includes("finally {\n        workChainMermaidRendering = false;\n      }"),
+    "工作链无论渲染成功或失败都应释放渲染锁",
+  );
+  assert.ok(
+    html.includes('diagram.classList.remove("mermaid-render-failed");'),
+    "工作链成功渲染后应清除降级状态",
+  );
+  assert.ok(
+    html.includes("if (fallback) fallback.hidden = true;"),
+    "工作链成功渲染后应隐藏降级提示",
+  );
   assert.ok(!html.includes("exportExcelLink"), "网页不应继续提供 Excel 导出入口");
   assert.ok(!html.includes("导出 Excel"), "网页不应继续展示导出 Excel 按钮");
   assert.ok(!html.includes("excelDownloadHref"), "网页数据不应继续内嵌 Excel 下载地址");
